@@ -20,6 +20,14 @@ const tours = [
         name: "jhon doe",
         rating: 4.6,
       },
+      {
+        name: "pham hieu",
+        rating: 4.7,
+      },
+      {
+        name: "big will",
+        rating: 4.8,
+      },
     ],
     avgRating: 4.5,
     photo: tourImg01,
@@ -37,6 +45,10 @@ const tours = [
       {
         name: "jhon doe",
         rating: 4.6,
+      },
+      {
+        name: "dat le",
+        rating: 5,
       },
     ],
     avgRating: 4.5,
@@ -124,10 +136,6 @@ const tours = [
     maxGroupSize: 8,
     desc: "this is the description",
     reviews: [
-      {
-        name: "jhon doe",
-        rating: 4.6,
-      },
     ],
     avgRating: 4.5,
     photo: tourImg07,
@@ -142,10 +150,6 @@ const tours = [
     maxGroupSize: 8,
     desc: "this is the description",
     reviews: [
-      {
-        name: "jhon doe",
-        rating: 4.6,
-      },
     ],
     avgRating: 4.5,
     photo: tourImg03,
