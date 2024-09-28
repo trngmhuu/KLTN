@@ -71,7 +71,7 @@ const Header = () => {
             {/*======= menu end ======= */}
             <div className="nav__right d-flex align-items-center gap-4">
               <div className="nav__btns d-flex align-items-center gap-4">
-                <Button className="btn secondary__btn">
+                <Button className=" btn secondary__btn">
                   <Link to="/login">Đăng nhập</Link>
                 </Button>
                 <Button className="btn primary__btn">
