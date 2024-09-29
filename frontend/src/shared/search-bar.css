@@ -2,8 +2,14 @@
     padding: 0.5rem 1rem;
     border-radius: 50px;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-    width: max-content;
+    width: fit-content;
     margin-top: 50px;
+}
+
+.search__bar form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .form__group span {
@@ -26,9 +32,6 @@
     margin-bottom: 0;
 }
 
-.form__group-fast {
-    border-right: 2px solid #ddd;
-}
 
 .search__icon i {
     font-size: 1.6rem;
@@ -37,4 +40,22 @@
     color: #fff;
     border-radius: 10px 5px 10px 5px;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .search__bar {
+        border-radius: 25px;
+        padding: 0.5rem;
+    }
+
+    .form__group {
+        flex-basis: 100%;
+    }
+
+    .search__icon {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
 }

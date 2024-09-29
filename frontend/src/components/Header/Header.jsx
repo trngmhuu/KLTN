@@ -72,7 +72,7 @@ const Header = () => {
             <div className="nav__right d-flex align-items-center gap-4">
               <div className="nav__btns d-flex align-items-center gap-4">
                 <Button className="btn__login btn secondary__btn">
-                  <Link className="dangNhap" to="/login">Đăng nhập</Link>
+                  <Link to="/login">Đăng nhập</Link>
                 </Button>
                 <Button className="btn__register btn primary__btn">
                   <Link to="/register">Đăng ký</Link>

@@ -1,11 +1,8 @@
-* {
-
-}
-
 .header {
     width: 100%;
     height: 80px;
     line-height: 80px;
+    margin: 0 auto;
 }
 
 .logo img {
@@ -22,6 +19,8 @@
     font-weight: 500;
     font-size: 1rem;
     white-space: nowrap;
+    margin-left: -50px;
+    margin-right: 25px;
 }
 
 .nav__wrapper {
@@ -59,10 +58,9 @@
 
 .btn__login {
     white-space: nowrap;
-    border: 1px solid black;
-    padding: 150px;
 }
 
 .btn__register {
     white-space: nowrap;
+    margin-left: -25px;
 }
