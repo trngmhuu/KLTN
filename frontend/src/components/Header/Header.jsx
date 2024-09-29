@@ -55,7 +55,7 @@ const Header = () => {
             <div className="navigation">
               <ul className="menu d-flex align-items-center gap-5">
                 {nav_links.map((item, index) => (
-                  <li className="nav__item" key={index}>
+                  <li className="nav__item" key={index} >
                     <NavLink
                       to={item.path}
                       className={(navClass) =>
@@ -71,10 +71,10 @@ const Header = () => {
             {/*======= menu end ======= */}
             <div className="nav__right d-flex align-items-center gap-4">
               <div className="nav__btns d-flex align-items-center gap-4">
-                <Button className=" btn secondary__btn">
-                  <Link to="/login">Đăng nhập</Link>
+                <Button className="btn__login btn secondary__btn">
+                  <Link className="dangNhap" to="/login">Đăng nhập</Link>
                 </Button>
-                <Button className="btn primary__btn">
+                <Button className="btn__register btn primary__btn">
                   <Link to="/register">Đăng ký</Link>
                 </Button>
               </div>

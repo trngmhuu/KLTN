@@ -1,3 +1,7 @@
+* {
+
+}
+
 .header {
     width: 100%;
     height: 80px;
@@ -16,7 +20,15 @@
     text-decoration: none;
     color: var(--heading-color);
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.nav__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .nav__item a:hover {
@@ -30,7 +42,7 @@
 .mobile__menu {
     font-size: 1.3rem;
     color: var(--heading-color);
-    display: none;
+    display: flex;
 }
 
 .sticky__header {
@@ -43,4 +55,14 @@
     left: 0;
     box-shadow: 3px 3px 8px -3px #ddd;
     z-index: 999;
+}
+
+.btn__login {
+    white-space: nowrap;
+    border: 1px solid black;
+    padding: 150px;
+}
+
+.btn__register {
+    white-space: nowrap;
 }
