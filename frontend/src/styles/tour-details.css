@@ -106,3 +106,18 @@
     font-style: 0.9rem;
     color: var(--text-color)
 }
+
+.review__item h6 {
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.review__item span i {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+.review__item span {
+    font-weight: 500;
+}
+

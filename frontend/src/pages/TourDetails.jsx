@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import "../styles/tour-details.css";
 import { Container, Row, Col, Form, ListGroup } from "reactstrap";
 import { useParams } from "react-router-dom";
 import tourData from "../assets/data/tours";
 import calculateAvgRating from "../utils/avgRating";
 import avatar from "../assets/images/avatar.jpg";
+import Booking from "../components/Booking/Booking"
 
 const TourDetails = () => {
   const { id } = useParams();
+  const reviewMsgRef = useRef("");
+  const [tourRating, setTourRating] = useState(null);
   const tour = tourData.find((tour) => tour.id === id);
   const {
     photo,
@@ -23,6 +26,10 @@ const TourDetails = () => {
 
   //format date
   const options = { day: "numeric", month: "long", year: "numeric" };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const reviewText = reviewMsgRef.current.value;
+  };
 
   const { totalRating, avgRating } = calculateAvgRating(reviews);
   return (
@@ -41,7 +48,7 @@ const TourDetails = () => {
                         class="ri-star-fill"
                         style={{ color: "var(--secondary-color" }}
                       ></i>{" "}
-                      {calculateAvgRating === 0 ? null : avgRating}
+                      {avgRating === 0 ? null : avgRating}
                       {totalRating === 0 ? (
                         "Chưa có đánh giá"
                       ) : (
@@ -59,11 +66,15 @@ const TourDetails = () => {
                     </span>
                     <span>
                       <i class="ri-money-dollar-circle-line"></i>
-                      {price} /người
+                      {price}/người
+                    </span>
+                    <span>
+                      <i class="ri-pin-distance-line"></i>
+                      {distance} km
                     </span>
                     <span>
                       <i class="ri-group-line"></i>
-                      {maxGroupSize}
+                      {maxGroupSize} người
                     </span>
                   </div>
                   <h5>Lịch trình</h5>
@@ -73,28 +84,30 @@ const TourDetails = () => {
                 {/*======= tour reviews section start =======*/}
                 <div className="tour__reviews mt-4">
                   <h4>Đánh giá ({reviews?.length})</h4>
-                  <Form>
+                  <Form onSubmit={submitHandler}>
                     <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-                      <span>
+                      <span onClick={() => setTourRating(1)}>
                         1 <i class="ri-star-fill"></i>
                       </span>
-                      <span>
+                      <span onClick={() => setTourRating(2)}>
                         2 <i class="ri-star-fill"></i>
                       </span>
-                      <span>
+                      <span onClick={() => setTourRating(3)}>
                         3 <i class="ri-star-fill"></i>
                       </span>
-                      <span>
+                      <span onClick={() => setTourRating(4)}>
                         4 <i class="ri-star-fill"></i>
                       </span>
-                      <span>
+                      <span onClick={() => setTourRating(5)}>
                         5 <i class="ri-star-fill"></i>
                       </span>
                     </div>
                     <div className="review__input">
                       <input
                         type="text"
+                        ref={reviewMsgRef}
                         placeholder="Bạn nghĩ gì về tour này?"
+                        required
                       />
                       <button
                         className="btn primary__btn text-white"
@@ -132,6 +145,9 @@ const TourDetails = () => {
                 </div>
                 {/*======= tour reviews section end =======*/}
               </div>
+            </Col>
+            <Col lg="4">
+              <Booking tour={tour} avgRating={avgRating}/>
             </Col>
           </Row>
         </Container>
