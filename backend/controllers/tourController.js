@@ -10,4 +10,9 @@ export const createTour = async (req, res) => {
     catch (err) {
         res.status(500).json({ success: false, message: "Tạo tour mới thất bại" })
     }
+};
+
+// Update tour
+export const updateTour = async(req, res) => {
+    
 }
