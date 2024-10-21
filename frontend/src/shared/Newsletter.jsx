@@ -16,8 +16,7 @@ const Newsletter = () => {
                             Đăng ký
                         </button>
                     </div>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-                    Voluptas praesentium adipisci fugit molestias veniam voluptatem aliquid deleniti enim eos? Doloribus nostrum facilis assumenda itaque eius aut atque rem nobis magnam!</p>
+                    <p>Chúng tôi sẽ gửi thông báo đến ngay cho bạn khi chương trình giảm giá diễn ra</p>
                 </div>
             </Col>
             <Col lg="6">

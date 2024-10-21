@@ -46,7 +46,7 @@ const Home = () => {
             </Col>
             <Col lg="2">
               <div className="hero__img-box mt-4">
-                <video src={heroVideo} alt="" autoplay loop muted playsinline/>
+                <video src={heroVideo} alt="" autoplay muted loop playsinline />
               </div>
             </Col>
             <Col lg="2">
@@ -60,7 +60,7 @@ const Home = () => {
       </section>
       {/*======= hero section end =======*/}
 
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="3">
@@ -70,15 +70,43 @@ const Home = () => {
             <ServiceList />
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       {/*======= featured tour section start =======*/}
       <section>
         <Container>
           <Row>
             <Col lg="12" className="mb-5">
-              <Subtitle subtitle={"Explore"} />
-              <h2 className="featured__tour-title">Our featured tours</h2>
+              <Subtitle subtitle={"Các loại tour"} />
+              <h2 className="featured__tour-title">Tour nổi bật</h2>
+            </Col>
+            <FeaturedTourList />
+          </Row>
+        </Container>
+      </section>
+      {/*======= featured tour section end =======*/}
+
+      {/*======= featured tour section start =======*/}
+      <section>
+        <Container>
+          <Row>
+            <Col lg="12" className="mb-5">
+              <Subtitle subtitle={"Các loại tour"} />
+              <h2 className="featured__tour-title">Tour miền Tây</h2>
+            </Col>
+            <FeaturedTourList />
+          </Row>
+        </Container>
+      </section>
+      {/*======= featured tour section end =======*/}
+
+      {/*======= featured tour section start =======*/}
+      <section>
+        <Container>
+          <Row>
+            <Col lg="12" className="mb-5">
+              <Subtitle subtitle={"Các loại tour"} />
+              <h2 className="featured__tour-title">Tour miền Trung</h2>
             </Col>
             <FeaturedTourList />
           </Row>
@@ -87,14 +115,14 @@ const Home = () => {
       {/*======= featured tour section end =======*/}
 
       {/*======= experience section start =======*/}
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="6">
               <div className="experience__content">
                 <Subtitle subtitle={"Experience"} />
                 <h2>
-                  With our all experience <br /> we will serve you
+                  Với <br /> we will serve you
                 </h2>
                 <p>
                   fdsggggggggggasdfsdlkgkgfdkgfdkjgfkgfkgjkfjgdfjgfl.
@@ -105,15 +133,15 @@ const Home = () => {
               <div className="counter__wrapper d-flex align-items-center gap-5">
                 <div className="counter__box">
                   <span>12k+</span>
-                  <h6>Successful trip</h6>
+                  <h6>Tour đặt mỗi tháng</h6>
                 </div>
                 <div className="counter__box">
                   <span>2k+</span>
-                  <h6>Regular clients</h6>
+                  <h6>Khách hàng lựa chọn</h6>
                 </div>
                 <div className="counter__box">
-                  <span>15</span>
-                  <h6>Year experiences</h6>
+                  <span>5</span>
+                  <h6>Năm kinh nghiệm</h6>
                 </div>
               </div>
             </Col>
@@ -124,11 +152,11 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/*======= experience section end =======*/}
 
       {/*======= gallery section start =======*/}
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12">
@@ -142,11 +170,11 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/*======= gallery section end =======*/}
 
       {/*======= testimonial section start =======*/}
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12">
@@ -160,9 +188,9 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/*======= testimonial section end =======*/}
-      <Newsletter/>
+      <Newsletter />
     </>
   );
 };

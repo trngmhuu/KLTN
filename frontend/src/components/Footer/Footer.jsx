@@ -13,24 +13,12 @@ const quick_links_1 = [
     path: "/about",
     display: "Về chúng tôi",
   },
-  {
-    path: "/tours",
-    display: "Tour",
-  },
 ];
 
 const quick_links_2 = [
   {
-    path: "/gallery",
-    display: "Gallery",
-  },
-  {
-    path: "/login",
-    display: "Đăng nhập",
-  },
-  {
-    path: "/register",
-    display: "Đăng ký",
+    path: "/tours",
+    display: "Các loại tour",
   },
 ];
 
@@ -47,22 +35,22 @@ const Footer = () => {
               <img src={logo} alt="" />
               <div className="social__links d-flex align-items-center gap-4">
                 <span>
-                  <Link to="#"><i class="ri-facebook-circle-fill"></i></Link>
+                  <a href="https://www.facebook.com/huu.minh.7583/"><i class="ri-facebook-circle-fill"></i></a>
                 </span>
                 <span>
-                  <Link to="#"><i class="ri-instagram-line"></i></Link>
+                  <a href="https://www.instagram.com/trngmhuu/"><i class="ri-instagram-line"></i></a>
                 </span>
                 <span>
-                  <Link to="#"><i class="ri-github-line"></i></Link>
+                  <a href="https://github.com/trngmhuu"><i class="ri-github-line"></i></a>
                 </span>
                 <span>
-                  <Link to="#"><i class="ri-youtube-line"></i></Link>
+                  <a href="https://www.youtube.com/@whisdoom7324"><i class="ri-youtube-line"></i></a>
                 </span>
               </div>
             </div>
           </Col>
           <Col lg="3">
-            <h5 className='footer__link-title'>Discovery</h5>
+            {/* <h5 className='footer__link-title'>Discovery</h5> */}
             <ListGroup className="footer__quick-links">
               {
                 quick_links_1.map((item, index) => (
@@ -74,7 +62,7 @@ const Footer = () => {
             </ListGroup>
           </Col>
           <Col lg="3">
-            <h5 className='footer__link-title'>Quick Links</h5>
+            {/* <h5 className='footer__link-title'>Quick Links</h5> */}
             <ListGroup className="footer__quick-links">
               {
                 quick_links_2.map((item, index) => (
@@ -86,7 +74,7 @@ const Footer = () => {
             </ListGroup>
           </Col>
           <Col lg="3">
-            <h5 className='footer__link-title'>Contact</h5>
+            <h5 className='footer__link-title'>Thông tin liên lạc</h5>
             <ListGroup className="footer__quick-links">
               <ListGroupItem className="ps-0 border-0 d-flex align-items-center gap-3">
                 <h6 className='mb-0 d-flex align-items-center gap-2'>
