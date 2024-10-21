@@ -30,15 +30,15 @@ const SearchBar = () => {
                 <FormGroup className="d-flex gap-3 form__group form__group-fast">
                     <span><i class="ri-map-pin-2-line"></i></span>
                     <div>
-                        <h6>Khoảng cách</h6>
-                        <input type="number" placeholder="Ki-lo-met" ref={distanceRef} />
+                        <h6>Từ ngày</h6>
+                        <input type="date"/>
                     </div>
                 </FormGroup>
                 <FormGroup className="d-flex gap-3 form__group form__group-last">
                     <span><i class="ri-group-line"></i></span>
                     <div>
-                        <h6>Số người</h6>
-                        <input type="number" placeholder="0" ref={maxGroupSizeRef} />
+                        <h6>Tới ngày</h6>
+                        <input type="date" placeholder="0" />
                     </div>
                 </FormGroup>
                 <span className="search__icon" type="submit" onClick={searchHandler}>

@@ -32,7 +32,7 @@ const Footer = () => {
         <Row>
           <Col lg="3">
             <div className="logo">
-              <img src={logo} alt="" />
+              <Link to="/home"><img src={logo} alt="" /></Link>
               <div className="social__links d-flex align-items-center gap-4">
                 <span>
                   <a href="https://www.facebook.com/huu.minh.7583/"><i class="ri-facebook-circle-fill"></i></a>

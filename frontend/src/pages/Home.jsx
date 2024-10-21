@@ -7,7 +7,7 @@ import heroImg02 from "../assets/images/hero-img02.jpg";
 import worldImg from "../assets/images/world.png";
 import experienceImg from "../assets/images/experience.png";
 
-import heroVideo from "../assets/images/hero-video.mp4";
+import heroImg03 from "../assets/images/hero-img03.jpg";
 
 import Subtitle from "./../shared/Subtitle";
 import SearchBar from "../shared/SearchBar";
@@ -46,7 +46,7 @@ const Home = () => {
             </Col>
             <Col lg="2">
               <div className="hero__img-box mt-4">
-                <video src={heroVideo} alt="" autoplay muted loop playsinline />
+                <img src={heroImg03} alt="" />
               </div>
             </Col>
             <Col lg="2">
