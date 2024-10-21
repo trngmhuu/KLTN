@@ -79,9 +79,23 @@ export const getSingleTour = async (req, res) => {
 
 // Get all tours
 export const getAllTours = async (req, res) => {
+
+    // for pagination
+    const page = parseInt(req.query.page)
+    console.log(page);
+
     try {
         const tours = await Tour.find({})
-    } catch (error) {
-        
+        res.status(200).json({
+            success: true,
+            message: "Tìm thấy các tour phù hợp",
+            data: tours
+        })
+    } 
+    catch (error) {
+        res.status(404).json({
+            success: false,
+            message: "Không tìm thấy tour phù hợp"
+        })
     }
 }
