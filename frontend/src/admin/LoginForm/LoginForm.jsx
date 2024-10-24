@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import loginImg from "../../assets/images/login.png"
 import userIcon from "../../assets/images/user.png"
-import { Link } from "react-router-dom"
 
 function LoginForm() {
     const [email, setEmail] = useState('');
