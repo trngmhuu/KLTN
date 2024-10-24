@@ -1,0 +1,14 @@
+#main{
+    margin-top: 60px;
+    padding: 20px 30px;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0px; /* Khoảng cách từ trên cùng của màn hình */
+    left: 10px;
+}
+
+@media (max-width: 1199px) {
+    #main{
+        padding: 20px;
+    }
+}

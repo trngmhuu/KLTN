@@ -1,0 +1,86 @@
+/* Container chính */
+.searchtable-container {
+    width: 100%;
+    padding: 0;
+    margin-top: 30px;
+    list-style: none;
+}
+
+.searchtable-container li {
+    padding-left: 45px;
+    margin: 0;
+    list-style: none;
+}
+
+/* Khung tìm kiếm */
+.search-container {
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header của bảng */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin-bottom: 16px;
+    background-color: white;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid #f0f0f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-header h6 {
+    margin: 0;
+}
+
+/* Nút trong header */
+.table-header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Khung chứa bảng */
+.table-container {
+    padding: 0 20px 20px 20px;
+    background: white;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Các nút hành động */
+.action-buttons {
+    display: flex;
+    gap: 8px; /* Khoảng cách nhỏ hơn giữa các nút */
+    justify-content: center;
+}
+
+.action-buttons button {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Form tìm kiếm tùy chỉnh */
+.custom-inline-form-typetour {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+/* Tăng chiều rộng ô tìm kiếm */
+.custom-inline-form-typetour input {
+    width: 897px; /* Tăng chiều dài ô tìm kiếm */
+    margin-top: 10px;
+}
+
+/* Khoảng cách giữa các nút tìm kiếm */
+.custom-inline-form-typetour button {
+    margin-top: 10px;
+}
