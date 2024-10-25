@@ -1,12 +1,13 @@
 .header {
     width: 100%;
-    height: 80px;
+    height: 100px;
     line-height: 80px;
     margin: 0 auto;
 }
 
 .logo img {
-    width: 30%;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .menu {
@@ -31,7 +32,7 @@
 }
 
 .nav__item a:hover {
-    color: inherit;
+    color: var(--secondary-color);
 }
 
 .nav__item a.active__link {
@@ -63,4 +64,58 @@
 .btn__register {
     white-space: nowrap;
     margin-left: -25px;
+}
+
+/* CSS cho submenu */
+.submenu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    z-index: 10;
+    top: 75%;
+    /* Đặt menu con ngay dưới menu chính */
+    margin-left: -75px;
+    min-width: 200px;
+    padding: 0px 0;
+}
+
+.nav__item {
+    position: relative;
+}
+
+/* Hiển thị submenu khi hover vào mục cha */
+.nav__item:hover .submenu {
+    display: flex;
+}
+
+.submenu li {
+    width: 100%;
+    padding: 5px 0;
+    border: 1px solid #ddd;
+    text-align: center;
+    line-height: 1.5rem;
+    margin: 0;
+}
+
+
+/* Bỏ đường ngăn cách ở mục cuối cùng */
+.submenu li:last-child {
+    border-bottom: none;
+}
+
+.submenu li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    margin-left: 1rem;
+}
+
+.submenu li a:hover {
+    color: #007bff;
 }
