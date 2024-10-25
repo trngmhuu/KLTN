@@ -232,6 +232,7 @@ function SearchTableTour({ changeComponent }) {
                                 placeholder="Tên Tour"
                                 value={searchParams.name}
                                 onChange={handleInputChange}
+                                style={{width: "100%"}}
                             />
                         </Form.Item>
                         <Form.Item>
@@ -240,6 +241,7 @@ function SearchTableTour({ changeComponent }) {
                                 placeholder="Mã Tour"
                                 value={searchParams.tourCode}
                                 onChange={handleInputChange}
+                                style={{width: "100%"}}
                             />
                         </Form.Item>
                         <Form.Item>

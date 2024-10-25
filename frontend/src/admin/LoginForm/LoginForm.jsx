@@ -74,7 +74,7 @@ function LoginForm() {
     };
 
     return (
-        <section>
+        <section className='sectionLoginForm'>
             <Container>
                 <Row>
                     <Col lg="12" className="m-autos">
