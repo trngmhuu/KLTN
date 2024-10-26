@@ -121,9 +121,9 @@ function SearchTableTourType() {
 
     const columns = [
         { title: 'ID', dataIndex: 'typeTourId', key: 'typeTourId' },
-        { title: 'Tên Loại Tour', dataIndex: 'name', key: 'name' },
+        { title: 'Tên phân loại', dataIndex: 'name', key: 'name' },
         {
-            title: 'Loại Tour',
+            title: 'Loại tour',
             dataIndex: 'typeId',
             key: 'typeId',
             render: (typeId) => (
@@ -133,7 +133,7 @@ function SearchTableTourType() {
             ),
         },
         {
-            title: 'Hành Động',
+            title: 'Hành động',
             key: 'action',
             render: (text, record) => (
                 <div className="action-buttons">
@@ -152,12 +152,12 @@ function SearchTableTourType() {
         <div>
             <ul className='searchtable-container'>
                 <li className='search-container'>
-                    <h6>Tìm kiếm loại tour</h6>
+                    <h6>Tìm kiếm phân loại</h6>
                     <Form className="custom-inline-form-typetour" layout="inline">
                         <Form.Item>
                             <Input
                                 name="name"
-                                placeholder="Tên loại tour"
+                                placeholder="Tên phân loại"
                                 value={searchParams.name}
                                 onChange={handleInputChange}
                             />
@@ -173,7 +173,7 @@ function SearchTableTourType() {
             </ul>
 
             <div className='table-header'>
-                <h6>Danh sách loại tour</h6>
+                <h6>Danh sách phân loại</h6>
                 <div className='table-header-actions'>
                     <Button type="primary" onClick={handleAdd}>
                         <PlusCircleOutlined />
@@ -202,13 +202,13 @@ function SearchTableTourType() {
                 onOk={handleSaveNewTypeTour}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Tên Loại Tour">
+                    <Form.Item label="Tên phân loại">
                         <Input
                             value={newTypeTour.name}
                             onChange={(e) => handleNewTypeTourChange('name', e.target.value)}
                         />
                     </Form.Item>
-                    <Form.Item label="Loại Tour">
+                    <Form.Item label="Loại tour">
                         <Select
                             value={newTypeTour.typeId}
                             onChange={(value) => handleNewTypeTourChange('typeId', value)}
@@ -231,7 +231,7 @@ function SearchTableTourType() {
                 {selectedTour && (
                     <div>
                         <p><strong>ID:</strong> {selectedTour.typeTourId}</p>
-                        <p><strong>Tên Loại Tour:</strong> {selectedTour.name}</p>
+                        <p><strong>Tên phân loại:</strong> {selectedTour.name}</p>
                         <p><strong>Loại Tour:</strong>
                             {selectedTour.typeId === '1' ? 'Tour trong nước' : 'Tour ngoài nước'}
                         </p>

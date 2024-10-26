@@ -8,7 +8,7 @@ function PageTitle({ page }) {
             <nav>
                 <ol className='breadcrumb'>
                     <li className='breadcrumb-item'>
-                        <a href='/home'>
+                        <a href='/admin/home'>
                             <i className="bi bi-house-door"></i>
                         </a>
                     </li>

@@ -76,7 +76,7 @@
 
 /* Tăng chiều rộng ô tìm kiếm */
 .custom-inline-form-typetour input {
-    width: 897px; /* Tăng chiều dài ô tìm kiếm */
+    max-width: 100%; /* Tăng chiều dài ô tìm kiếm */
     margin-top: 10px;
 }
 
