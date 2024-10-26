@@ -79,7 +79,7 @@
     z-index: 10;
     top: 75%;
     /* Đặt menu con ngay dưới menu chính */
-    margin-left: -75px;
+    margin-left: -83px;
     min-width: 200px;
     padding: 0px 0;
 }
