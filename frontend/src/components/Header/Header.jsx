@@ -35,24 +35,34 @@ const Header = () => {
       const data = await response.json();
       console.log("Dữ liệu API:", data); // Kiểm tra dữ liệu nhận được
 
-      // Lấy danh sách tour từ `result`
       const tours = data.result || [];
 
-      // Lọc các tour có typeId = "1" (trong nước)
+      // Lọc các tour trong nước (typeId = 1)
       const domesticTours = tours
         .filter((tour) => tour.typeId === "1")
         .map((tour) => ({
-          path: `/search?tour=${tour.typeTourId}`, // Thêm đường dẫn cho menu con
-          display: tour.name, // Chỉ cần name làm display
+          path: `/search?tour=${tour.typeTourId}`, // Đường dẫn đến trang tìm kiếm
+          display: tour.name,
         }));
 
-      // Cập nhật nav_links với các tour trong nước
+      // Lọc các tour nước ngoài (typeId = 2)
+      const internationalTours = tours
+        .filter((tour) => tour.typeId === "2")
+        .map((tour) => ({
+          path: `/search?tour=${tour.typeTourId}`, // Đường dẫn đến trang tìm kiếm
+          display: tour.name,
+        }));
+
+      // Cập nhật navLinks với các tour đã lọc
       setNavLinks((prevLinks) =>
-        prevLinks.map((link) =>
-          link.path === "/tours/domestic"
-            ? { ...link, children: domesticTours }
-            : link
-        )
+        prevLinks.map((link) => {
+          if (link.path === "/tours/domestic") {
+            return { ...link, children: domesticTours };
+          } else if (link.path === "/tours/international") {
+            return { ...link, children: internationalTours };
+          }
+          return link;
+        })
       );
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
@@ -110,7 +120,7 @@ const Header = () => {
                         {item.children.map((child, childIndex) => (
                           <li key={childIndex}>
                             <NavLink to={child.path}>
-                              <a>{child.display}</a>
+                              {child.display}
                             </NavLink>
                           </li>
                         ))}

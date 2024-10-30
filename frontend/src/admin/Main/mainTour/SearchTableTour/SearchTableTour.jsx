@@ -95,10 +95,10 @@ function SearchTableTour({ changeComponent }) {
         setIsEditMode(true); // Chế độ chỉnh sửa
     };
 
-    const handleDelete = async (tourId) => {
+    const handleDelete = async (tourCode) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/tours/${tourId}`, {
+            const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,16 +116,16 @@ function SearchTableTour({ changeComponent }) {
         }
     };
 
-    const showDeleteConfirm = (tourId) => {
+    const showDeleteConfirm = (tourCode) => {
         confirm({
             title: 'Bạn có chắc chắn muốn xóa Tour này?',
             icon: <ExclamationCircleOutlined />,
-            content: `Mã tour: ${tourId}`,
+            content: `Mã tour: ${tourCode}`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                handleDelete(tourId);
+                handleDelete(tourCode);
             },
             onCancel() {
                 console.log('Hủy hành động xóa');
@@ -214,7 +214,7 @@ function SearchTableTour({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.tourId)}><DeleteFilled /></Button>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record.tourCode)}><DeleteFilled /></Button>
                 </div>
             ),
         },
