@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './addTourForm.css';
@@ -21,7 +21,8 @@ function AddTourForm({ changeComponent }) {
     });
 
     const [typeTourOptions, setTypeTourOptions] = useState([]);
-    const token = localStorage.getItem('token'); // Lấy token từ localStorage
+    const token = localStorage.getItem('token');
+    const inputRefs = useRef({}); // Tạo một ref tổng quát
 
     // Xử lý thay đổi input
     const handleInputChange = (e) => {
@@ -58,10 +59,57 @@ function AddTourForm({ changeComponent }) {
         fetchTypeToursByTypeId(value);
     };
 
+    const focusInput = (name) => {
+        if (inputRefs.current[name]) {
+            inputRefs.current[name].focus();
+        }
+    };
+
     const addTour = async () => {
+        // Kiểm tra các trường hợp cụ thể
+        const tourCodePattern = /^[A-Z]{2}-\d{3}$/; // Biểu thức chính quy cho Mã Tour
+
+        if (!tour.tourCode.trim()) {
+            message.error('Mã tour không được để trống!');
+            focusInput('tourCode'); // Focus vào trường Mã Tour
+            return;
+        }
+
+        if (!tourCodePattern.test(tour.tourCode)) {
+            message.error('Mã tour không hợp lệ! Vui lòng nhập theo định dạng: 2 chữ cái in hoa + dấu gạch + 3 chữ số (VD: CT-001)', 20);
+            focusInput('tourCode'); // Focus vào trường Mã Tour
+            return;
+        }
+
+        if (!tour.name.trim()) {
+            message.error('Tên tour không được để trống!');
+            focusInput('name'); // Focus vào trường Tên Tour
+            return;
+        }
+
+        if (!tour.description.trim()) {
+            message.error('Mô tả không được để trống!');
+            focusInput('description'); // Focus vào trường Mô Tả
+            return;
+        }
+
+        if (!tour.price.trim()) {
+            message.error('Giá không được để trống!');
+            focusInput('price'); // Focus vào trường Giá
+            return;
+        }
+
+        // Kiểm tra xem Giá có phải là số hay không
+        if (isNaN(tour.price)) {
+            message.error('Giá phải là một số hợp lệ!', 5);
+            focusInput('price'); // Focus vào trường Giá
+            return;
+        }
+
+        // ... (tiếp tục với các trường khác)
+
         const formData = new FormData();
 
-        // Đính kèm JSON chuỗi của tour vào form-data với content-type application/json
         const tourJson = JSON.stringify({
             tourCode: tour.tourCode,
             name: tour.name,
@@ -74,10 +122,8 @@ function AddTourForm({ changeComponent }) {
             isActive: tour.isActive,
         });
 
-        // Append tour JSON dưới dạng Blob với content-type là application/json
         formData.append('tour', new Blob([tourJson], { type: 'application/json' }));
 
-        // Đính kèm file ảnh vào form-data (nếu có)
         if (tour.image) {
             formData.append('image', tour.image);
         }
@@ -86,9 +132,9 @@ function AddTourForm({ changeComponent }) {
             const response = await fetch('http://localhost:8080/tours', {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer ${token}`, // Thêm token nếu cần
+                    Authorization: `Bearer ${token}`,
                 },
-                body: formData, // Sử dụng FormData
+                body: formData,
             });
 
             if (!response.ok) {
@@ -98,23 +144,48 @@ function AddTourForm({ changeComponent }) {
             }
 
             message.success('Tour mới đã được thêm!');
-            changeComponent('list'); // Chuyển về danh sách tour sau khi thêm thành công
+            changeComponent('list');
         } catch (error) {
             message.error('Không thể thêm tour. Vui lòng thử lại!');
         }
     };
-
-
 
     return (
         <div className="add-tour-form-container">
             <div className="form-left">
                 <Form layout="vertical">
                     <Form.Item label="Mã Tour">
-                        <Input name="tourCode" value={tour.tourCode} onChange={handleInputChange} />
+                        <Input
+                            name="tourCode"
+                            value={tour.tourCode}
+                            onChange={handleInputChange}
+                            ref={(el) => (inputRefs.current.tourCode = el)} // Gán ref cho Mã Tour
+                        />
                     </Form.Item>
                     <Form.Item label="Tên Tour">
-                        <Input name="name" value={tour.name} onChange={handleInputChange} />
+                        <Input
+                            name="name"
+                            value={tour.name}
+                            onChange={handleInputChange}
+                            ref={(el) => (inputRefs.current.name = el)} // Gán ref cho Tên Tour
+                        />
+                    </Form.Item>
+                    <Form.Item label="Mô tả">
+                        <Input.TextArea
+                            name="description"
+                            value={tour.description}
+                            onChange={handleInputChange}
+                            ref={(el) => (inputRefs.current.description = el)} // Gán ref cho Mô Tả
+                        />
+                    </Form.Item>
+                    <Form.Item label="Giá">
+                        <Input
+                            type="text"
+                            name="price"
+                            value={tour.price}
+                            onChange={handleInputChange}
+                            ref={(el) => (inputRefs.current.price = el)} // Gán ref cho Giá
+                        />
                     </Form.Item>
                     <Form.Item label="Phân loại">
                         <Select name="typeId" value={tour.typeId} onChange={handleTypeIdChange}>
@@ -135,20 +206,6 @@ function AddTourForm({ changeComponent }) {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Mô tả">
-                        <Input.TextArea name="description" value={tour.description} onChange={handleInputChange} />
-                    </Form.Item>
-                    <Form.Item label="Hình ảnh">
-                        <Upload
-                            beforeUpload={(file) => {
-                                handleImageChange(file);
-                                return false;  // Ngăn không cho upload ngay lập tức
-                            }}
-                        >
-                            <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
-                        </Upload>
-                    </Form.Item>
-
                     <Form.Item label="Địa điểm xuất phát">
                         <Select
                             name="locationStart"
@@ -164,14 +221,11 @@ function AddTourForm({ changeComponent }) {
                     </Form.Item>
                     <Form.Item label="Ngày khởi hành">
                         <Input
-                            name="timeDate"
-                            value={tour.timeDate}
+                            name="startDay"
+                            value={tour.startDay}
                             onChange={handleInputChange}
                             placeholder="YYYY-MM-DD"
                         />
-                    </Form.Item>
-                    <Form.Item label="Giá">
-                        <Input type="number" name="price" value={tour.price} onChange={handleInputChange} />
                     </Form.Item>
                     <Form.Item label="Phương tiện">
                         <Select
@@ -195,6 +249,16 @@ function AddTourForm({ changeComponent }) {
                             <Option value="active">Hoạt động</Option>
                             <Option value="inactive">Không hoạt động</Option>
                         </Select>
+                    </Form.Item>
+                    <Form.Item label="Hình ảnh">
+                        <Upload
+                            beforeUpload={(file) => {
+                                handleImageChange(file);
+                                return false;
+                            }}
+                        >
+                            <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
+                        </Upload>
                     </Form.Item>
                     <Button type="primary" onClick={addTour}>
                         Lưu Tour

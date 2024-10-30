@@ -29,6 +29,14 @@ const Router = () => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute>
+            <AdminHomePage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };
