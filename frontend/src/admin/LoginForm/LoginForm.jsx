@@ -14,64 +14,72 @@ function LoginForm() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            // Gọi API login bằng fetch
             const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: email,  // Hoặc tùy theo tên trường trong AuthenticationRequest
-                    password: password,  // Tên trường trong AuthenticationRequest
-                }),
+                body: JSON.stringify({ email, password }),
             });
-
+    
             const data = await response.json();
-            const token = data.result.token; // Lấy token từ phản hồi API
-
-            // Tách phần payload từ token
-            const base64Url = token.split('.')[1]; // Phần thứ hai của token là payload
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Thay thế các ký tự Base64 URL-safe
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            // Chuyển đổi chuỗi JSON thành object
+    
+            if (!response.ok) {
+                alert(data.message || 'Đăng nhập thất bại! Vui lòng kiểm tra thông tin đăng nhập.');
+                return;
+            }
+    
+            const token = data.result.token;
+    
+            // Giải mã token để lấy thông tin payload
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join('')
+            );
+    
             const decodedPayload = JSON.parse(jsonPayload);
-            localStorage.setItem('scope', decodedPayload.scope);
-
-
-            if (response.ok && (decodedPayload.scope === 'ADMIN' || decodedPayload.scope === 'EMPLOYEE')) {
-                // Đăng nhập thành công, điều hướng về trang chủ
-                localStorage.setItem('token', token);
-                // Gọi API để lấy thông tin myinfo
+    
+            // Lưu email và token vào localStorage
+            const user = { email, scope: decodedPayload.scope };
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('token', token);
+    
+            if (decodedPayload.scope === 'ADMIN' || decodedPayload.scope === 'EMPLOYEE') {
+                // Gọi API để lấy roles và username của người dùng
                 const myinfoResponse = await fetch('http://localhost:8080/users/myinfo', {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
+                    headers: { 'Authorization': `Bearer ${token}` },
                 });
-
+    
                 const myinfoData = await myinfoResponse.json();
                 if (myinfoResponse.ok) {
-                    // Nếu API trả về trường result, lấy result
-                    const userInfo = myinfoData.result || myinfoData;  // Sử dụng trực tiếp myinfoData nếu không có result
+                    // Chỉ lưu roles và username vào localStorage
+                    const { roles, username } = myinfoData.result || myinfoData;
+                    const userInfo = { roles, username };
                     localStorage.setItem('userInfo', JSON.stringify(userInfo));
-                    // Điều hướng đến trang chủ
+    
+                    // Điều hướng đến trang chủ admin
                     navigate('/admin/home');
                 } else {
                     alert('Không lấy được thông tin người dùng.');
                 }
             } else {
-                alert('Đăng nhập thất bại! Bạn không có quyền truy cập.');
+                alert('Bạn không có quyền truy cập.');
             }
         } catch (error) {
             console.error('Đăng nhập thất bại:', error);
             alert('Đăng nhập thất bại! Vui lòng thử lại sau.');
         }
     };
+    
+
+
 
     return (
         <section className='sectionLoginForm'>
@@ -104,7 +112,7 @@ function LoginForm() {
                                             />
                                         </div>
                                     </FormGroup>
-                                    <div style={{height: "50px"}}></div>
+                                    <div style={{ height: "50px" }}></div>
                                     <FormGroup>
                                         <div className="icon_section">
                                             <FaLock className='icon' />

@@ -120,7 +120,6 @@ function SearchTableTourType() {
     };
 
     const columns = [
-        { title: 'ID', dataIndex: 'typeTourId', key: 'typeTourId' },
         { title: 'Tên phân loại', dataIndex: 'name', key: 'name' },
         {
             title: 'Loại tour',

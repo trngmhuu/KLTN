@@ -5,8 +5,8 @@ import './transition.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import moment from 'moment/moment';
+import { Container, Row, Col } from "reactstrap";
 const { confirm } = Modal;
-
 
 function SearchTableTour({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
@@ -135,11 +135,6 @@ function SearchTableTour({ changeComponent }) {
 
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'tourId',
-            key: 'tourId',
-        },
-        {
             title: 'Mã Tour',
             dataIndex: 'tourCode',
             key: 'tourCode',
@@ -232,7 +227,7 @@ function SearchTableTour({ changeComponent }) {
                                 placeholder="Tên Tour"
                                 value={searchParams.name}
                                 onChange={handleInputChange}
-                                style={{width: "100%"}}
+                                style={{ width: "100%" }}
                             />
                         </Form.Item>
                         <Form.Item>
@@ -241,7 +236,7 @@ function SearchTableTour({ changeComponent }) {
                                 placeholder="Mã Tour"
                                 value={searchParams.tourCode}
                                 onChange={handleInputChange}
-                                style={{width: "100%"}}
+                                style={{ width: "100%" }}
                             />
                         </Form.Item>
                         <Form.Item>
@@ -273,30 +268,35 @@ function SearchTableTour({ changeComponent }) {
                     </Button>
                 </div>
             </div>
+            <Container>
+                <Row>
+                    <Col>
+                        {/* Bảng dữ liệu với pagination */}
+                        <TransitionGroup>
+                            <CSSTransition
+                                key="searchTable"
+                                timeout={300}
+                                classNames="fade"
+                            >
 
-            {/* Bảng dữ liệu với pagination */}
-            <TransitionGroup>
-                <CSSTransition
-                    key="searchTable"
-                    timeout={300}
-                    classNames="fade"
-                >
-                    {/* Nội dung chính của bạn ở đây, ví dụ: bảng */}
-                    <div className='table-container'>
-                        <Table
-                            columns={columns}
-                            dataSource={data}
-                            rowKey="tourId"
-                            pagination={{
-                                pageSize: 3,
-                                showSizeChanger: true,
-                                pageSizeOptions: ['3', '5', '10'],
-                            }}
-                        />
-                    </div>
-                </CSSTransition>
-            </TransitionGroup>
-
+                                {/* Nội dung chính của bạn ở đây, ví dụ: bảng */}
+                                <div className='table-container'>
+                                    <Table
+                                        columns={columns}
+                                        dataSource={data}
+                                        rowKey="tourId"
+                                        pagination={{
+                                            pageSize: 3,
+                                            showSizeChanger: true,
+                                            pageSizeOptions: ['3', '5', '10'],
+                                        }}
+                                    />
+                                </div>
+                            </CSSTransition>
+                        </TransitionGroup>
+                    </Col>
+                </Row>
+            </Container>
 
         </div>
     );

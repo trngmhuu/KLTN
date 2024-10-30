@@ -14,12 +14,9 @@ function AddTourForm({ changeComponent }) {
         typeTourId: '',
         typeId: '',
         locationStart: '',
-        locationFinish: '',
-        timeDate: '',
+        startDay: '',
         price: '',
-        maxPeople: '',
         vehicle: '',
-        note: '',
         isActive: true,
     });
 
@@ -72,12 +69,8 @@ function AddTourForm({ changeComponent }) {
             typeTourId: tour.typeTourId,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
-            locationFinish: tour.locationFinish,
-            timeDate: tour.timeDate,
             price: tour.price,
-            maxPeople: tour.maxPeople,
             vehicle: tour.vehicle,
-            note: tour.note,
             isActive: tour.isActive,
         });
 
@@ -123,7 +116,7 @@ function AddTourForm({ changeComponent }) {
                     <Form.Item label="Tên Tour">
                         <Input name="name" value={tour.name} onChange={handleInputChange} />
                     </Form.Item>
-                    <Form.Item label="Thể loại">
+                    <Form.Item label="Phân loại">
                         <Select name="typeId" value={tour.typeId} onChange={handleTypeIdChange}>
                             <Option value="1">Tour trong nước</Option>
                             <Option value="2">Tour ngoài nước</Option>
@@ -155,22 +148,19 @@ function AddTourForm({ changeComponent }) {
                             <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
                         </Upload>
                     </Form.Item>
-                    <Form.Item label="Hình ảnh">
-                        <Upload
-                            beforeUpload={(file) => {
-                                handleImageChange(file);
-                                return false;  // Ngăn không cho upload ngay lập tức
-                            }}
-                        >
-                            <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
-                        </Upload>
-                    </Form.Item>
 
                     <Form.Item label="Địa điểm xuất phát">
-                        <Input name="locationStart" value={tour.locationStart} onChange={handleInputChange} />
-                    </Form.Item>
-                    <Form.Item label="Địa điểm kết thúc">
-                        <Input name="locationFinish" value={tour.locationFinish} onChange={handleInputChange} />
+                        <Select
+                            name="locationStart"
+                            value={tour.locationStart}
+                            onChange={(value) => setTour({ ...tour, locationStart: value })}
+                            placeholder="Chọn địa điểm xuất phát"
+                        >
+                            <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh</Option>
+                            <Option value="Hà Nội">Hà Nội</Option>
+                            <Option value="Đà Nẵng">Đà Nẵng</Option>
+                            <Option value="Khác">Khác</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item label="Ngày khởi hành">
                         <Input
@@ -183,15 +173,19 @@ function AddTourForm({ changeComponent }) {
                     <Form.Item label="Giá">
                         <Input type="number" name="price" value={tour.price} onChange={handleInputChange} />
                     </Form.Item>
-                    <Form.Item label="Số người tối đa">
-                        <Input type="number" name="maxPeople" value={tour.maxPeople} onChange={handleInputChange} />
-                    </Form.Item>
                     <Form.Item label="Phương tiện">
-                        <Input name="vehicle" value={tour.vehicle} onChange={handleInputChange} />
+                        <Select
+                            name="vehicle"
+                            value={tour.vehicle}
+                            onChange={(value) => setTour({ ...tour, vehicle: value })}
+                            placeholder="Chọn phương tiện"
+                        >
+                            <Option value="Ô tô">Ô tô</Option>
+                            <Option value="Xe khách ghế ngồi">Xe khách ghế ngồi</Option>
+                            <Option value="Xe khách giường nằm">Xe khách giường nằm</Option>
+                        </Select>
                     </Form.Item>
-                    <Form.Item label="Ghi chú">
-                        <Input.TextArea name="note" value={tour.note} onChange={handleInputChange} />
-                    </Form.Item>
+
                     <Form.Item label="Trạng thái">
                         <Select
                             name="isActive"

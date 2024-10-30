@@ -8,7 +8,7 @@ const Layout = () => {
   const location = useLocation(); // Lấy thông tin về route hiện tại
 
   // Danh sách các route không cần header/footer
-  const adminRoutes = ['/admin/login', '/admin/home'];
+  const adminRoutes = ['/admin/login', '/admin/home', "/admin"];
 
   // Kiểm tra nếu route hiện tại là admin thì không render Header/Footer
   const isAdminRoute = adminRoutes.includes(location.pathname);
