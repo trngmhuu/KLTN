@@ -14,7 +14,8 @@ function AddTourForm({ changeComponent }) {
         typeTourId: '',
         typeId: '',
         locationStart: '',
-        startDay: '',
+        startDay: [],
+        durationTour: '', // Thêm trường durationTour vào state
         price: '',
         vehicle: '',
         isActive: true,
@@ -22,20 +23,17 @@ function AddTourForm({ changeComponent }) {
 
     const [typeTourOptions, setTypeTourOptions] = useState([]);
     const token = localStorage.getItem('token');
-    const inputRefs = useRef({}); // Tạo một ref tổng quát
+    const inputRefs = useRef({});
 
-    // Xử lý thay đổi input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setTour({ ...tour, [name]: value });
     };
 
-    // Xử lý thay đổi hình ảnh
     const handleImageChange = (file) => {
         setTour({ ...tour, image: file });
     };
 
-    // Gọi API lấy danh sách TypeTour theo typeId
     const fetchTypeToursByTypeId = async (typeId) => {
         try {
             const response = await fetch(`http://localhost:8080/typetours/by-type/${typeId}`, {
@@ -59,6 +57,10 @@ function AddTourForm({ changeComponent }) {
         fetchTypeToursByTypeId(value);
     };
 
+    const handleStartDayChange = (value) => {
+        setTour({ ...tour, startDay: value });
+    };
+
     const focusInput = (name) => {
         if (inputRefs.current[name]) {
             inputRefs.current[name].focus();
@@ -66,47 +68,43 @@ function AddTourForm({ changeComponent }) {
     };
 
     const addTour = async () => {
-        // Kiểm tra các trường hợp cụ thể
-        const tourCodePattern = /^[A-Z]{2}-\d{3}$/; // Biểu thức chính quy cho Mã Tour
+        const tourCodePattern = /^[A-Z]{2}-\d{3}$/;
 
         if (!tour.tourCode.trim()) {
             message.error('Mã tour không được để trống!');
-            focusInput('tourCode'); // Focus vào trường Mã Tour
+            focusInput('tourCode');
             return;
         }
 
         if (!tourCodePattern.test(tour.tourCode)) {
             message.error('Mã tour không hợp lệ! Vui lòng nhập theo định dạng: 2 chữ cái in hoa + dấu gạch + 3 chữ số (VD: CT-001)', 20);
-            focusInput('tourCode'); // Focus vào trường Mã Tour
+            focusInput('tourCode');
             return;
         }
 
         if (!tour.name.trim()) {
             message.error('Tên tour không được để trống!');
-            focusInput('name'); // Focus vào trường Tên Tour
+            focusInput('name');
             return;
         }
 
         if (!tour.description.trim()) {
             message.error('Mô tả không được để trống!');
-            focusInput('description'); // Focus vào trường Mô Tả
+            focusInput('description');
             return;
         }
 
         if (!tour.price.trim()) {
             message.error('Giá không được để trống!');
-            focusInput('price'); // Focus vào trường Giá
+            focusInput('price');
             return;
         }
 
-        // Kiểm tra xem Giá có phải là số hay không
         if (isNaN(tour.price)) {
             message.error('Giá phải là một số hợp lệ!', 5);
-            focusInput('price'); // Focus vào trường Giá
+            focusInput('price');
             return;
         }
-
-        // ... (tiếp tục với các trường khác)
 
         const formData = new FormData();
 
@@ -117,6 +115,7 @@ function AddTourForm({ changeComponent }) {
             typeTourId: tour.typeTourId,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
+            durationTour: tour.durationTour, // Thêm durationTour vào dữ liệu gửi đi
             price: tour.price,
             vehicle: tour.vehicle,
             isActive: tour.isActive,
@@ -159,7 +158,7 @@ function AddTourForm({ changeComponent }) {
                             name="tourCode"
                             value={tour.tourCode}
                             onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.tourCode = el)} // Gán ref cho Mã Tour
+                            ref={(el) => (inputRefs.current.tourCode = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Tên Tour">
@@ -167,7 +166,7 @@ function AddTourForm({ changeComponent }) {
                             name="name"
                             value={tour.name}
                             onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.name = el)} // Gán ref cho Tên Tour
+                            ref={(el) => (inputRefs.current.name = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Mô tả">
@@ -175,7 +174,7 @@ function AddTourForm({ changeComponent }) {
                             name="description"
                             value={tour.description}
                             onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.description = el)} // Gán ref cho Mô Tả
+                            ref={(el) => (inputRefs.current.description = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Giá">
@@ -184,8 +183,21 @@ function AddTourForm({ changeComponent }) {
                             name="price"
                             value={tour.price}
                             onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.price = el)} // Gán ref cho Giá
+                            ref={(el) => (inputRefs.current.price = el)}
                         />
+                    </Form.Item>
+                    <Form.Item label="Thời gian tour">
+                        <Select
+                            name="durationTour"
+                            value={tour.durationTour}
+                            onChange={(value) => setTour({ ...tour, durationTour: value })}
+                            placeholder="Chọn thời gian tour"
+                        >
+                            <Option value="2 ngày 1 đêm">2 ngày 1 đêm</Option>
+                            <Option value="3 ngày 2 đêm">3 ngày 2 đêm</Option>
+                            <Option value="4 ngày 3 đêm">4 ngày 3 đêm</Option>
+                            <Option value="5 ngày 4 đêm">5 ngày 4 đêm</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item label="Phân loại">
                         <Select name="typeId" value={tour.typeId} onChange={handleTypeIdChange}>
@@ -220,12 +232,21 @@ function AddTourForm({ changeComponent }) {
                         </Select>
                     </Form.Item>
                     <Form.Item label="Ngày khởi hành">
-                        <Input
+                        <Select
+                            mode="multiple"
                             name="startDay"
                             value={tour.startDay}
-                            onChange={handleInputChange}
-                            placeholder="YYYY-MM-DD"
-                        />
+                            onChange={handleStartDayChange}
+                            placeholder="Chọn ngày khởi hành"
+                        >
+                            <Option value="Thứ 2">Thứ 2</Option>
+                            <Option value="Thứ 3">Thứ 3</Option>
+                            <Option value="Thứ 4">Thứ 4</Option>
+                            <Option value="Thứ 5">Thứ 5</Option>
+                            <Option value="Thứ 6">Thứ 6</Option>
+                            <Option value="Thứ 7">Thứ 7</Option>
+                            <Option value="Chủ Nhật">Chủ Nhật</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item label="Phương tiện">
                         <Select
@@ -236,18 +257,8 @@ function AddTourForm({ changeComponent }) {
                         >
                             <Option value="Ô tô">Ô tô</Option>
                             <Option value="Xe khách ghế ngồi">Xe khách ghế ngồi</Option>
-                            <Option value="Xe khách giường nằm">Xe khách giường nằm</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item label="Trạng thái">
-                        <Select
-                            name="isActive"
-                            value={tour.isActive ? 'active' : 'inactive'}
-                            onChange={(value) => setTour({ ...tour, isActive: value === 'active' })}
-                        >
-                            <Option value="active">Hoạt động</Option>
-                            <Option value="inactive">Không hoạt động</Option>
+                            <Option value="Xe giường nằm">Xe giường nằm</Option>
+                            <Option value="Máy bay">Máy bay</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label="Hình ảnh">

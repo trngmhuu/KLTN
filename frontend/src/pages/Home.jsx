@@ -92,7 +92,7 @@ const Home = () => {
           <Row>
             <Col lg="12" className="mb-5">
               <Subtitle subtitle={"Các loại tour"} />
-              <h2 className="featured__tour-title">Tour miền Tây</h2>
+              <h2 className="featured__tour-title">Tour trong nước</h2>
             </Col>
             <FeaturedTourList />
           </Row>
@@ -106,7 +106,7 @@ const Home = () => {
           <Row>
             <Col lg="12" className="mb-5">
               <Subtitle subtitle={"Các loại tour"} />
-              <h2 className="featured__tour-title">Tour miền Trung</h2>
+              <h2 className="featured__tour-title">Tour nước ngoài</h2>
             </Col>
             <FeaturedTourList />
           </Row>

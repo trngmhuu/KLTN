@@ -24,7 +24,7 @@ const TourCard = ({ tour }) => {
 
           <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
             <h5>
-              {formatPrice(price)} <span> VND /người</span>
+              {formatPrice(price)} <span> VNĐ/người</span>
             </h5>
             <button className="btn booking__btn">
               <Link to={`/tours/${id}`}>Đặt ngay</Link>

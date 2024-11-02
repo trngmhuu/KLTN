@@ -18,22 +18,18 @@ function SearchTableTour({ changeComponent }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false); // Thêm biến để kiểm soát chế độ chỉnh sửa
     const [newTour, setNewTour] = useState({
-        tourId: '',
         tourCode: '',
         name: '',
         description: '',
-        image: '',
+        image: null,
         typeTourId: '',
+        typeId: '',
         locationStart: '',
-        locationFinish: '',
-        availableDates: [], // Chứa nhiều ngày khởi hành
-        timeDate: '',
-        endDate: '',
+        startDay: [],
+        durationTour: '', // Thêm trường durationTour vào state
         price: '',
-        maxPeople: '',
         vehicle: '',
-        note: '',
-        isActive: true, // Đặt giá trị mặc định là hoạt động
+        isActive: true,
     });
 
     const fetchData = async () => {
@@ -145,37 +141,24 @@ function SearchTableTour({ changeComponent }) {
             key: 'name',
         },
         {
-            title: 'Địa điểm khởi hành',
-            dataIndex: 'locationStart',
-            key: 'locationStart',
+            title: "Phương tiện",
+            dataIndex: "vehicle",
+            key: "vehicle",
         },
         {
-            title: 'Ngày Hoạt Động',
-            key: 'availableDates',
-            render: (_, { availableDates }) => (
-                <Popover
-                    title="Lịch hoạt động"
-                    content={
-                        <Calendar
-                            fullscreen={false}
-                            dateCellRender={(date) => {
-                                const formattedDate = moment(date).format('YYYY-MM-DD');
-                                const isAvailable = availableDates.some((d) =>
-                                    moment(d).isSame(formattedDate, 'day')
-                                );
-                                return isAvailable ? (
-                                    <div style={{ backgroundColor: '#87d068', borderRadius: '50%', padding: 5 }}>
-                                        {date.date()}
-                                    </div>
-                                ) : null;
-                            }}
-                        />
-                    }
-                    trigger="click"
-                >
-                    <Button type="link">Xem lịch</Button>
-                </Popover>
-            ),
+            title: "Thời gian tour",
+            dataIndex: "durationTour",
+            key: "durationTour",
+        },
+        {
+            title: "Ngày khởi hành",
+            dataIndex: "startDay",
+            key: "startDay",
+        },
+        {
+            title: "Điểm khởi hành",
+            dataIndex: "locationStart",
+            key: "locationStart",
         },
         {
             title: 'Giá (VND)',
@@ -252,7 +235,6 @@ function SearchTableTour({ changeComponent }) {
                     </Form>
                 </li>
             </ul>
-
             {/* Header của bảng */}
             <div className='table-header'>
                 <h6>Bảng dữ liệu</h6>
@@ -268,35 +250,30 @@ function SearchTableTour({ changeComponent }) {
                     </Button>
                 </div>
             </div>
-            <Container>
-                <Row>
-                    <Col>
-                        {/* Bảng dữ liệu với pagination */}
-                        <TransitionGroup>
-                            <CSSTransition
-                                key="searchTable"
-                                timeout={300}
-                                classNames="fade"
-                            >
 
-                                {/* Nội dung chính của bạn ở đây, ví dụ: bảng */}
-                                <div className='table-container'>
-                                    <Table
-                                        columns={columns}
-                                        dataSource={data}
-                                        rowKey="tourId"
-                                        pagination={{
-                                            pageSize: 3,
-                                            showSizeChanger: true,
-                                            pageSizeOptions: ['3', '5', '10'],
-                                        }}
-                                    />
-                                </div>
-                            </CSSTransition>
-                        </TransitionGroup>
-                    </Col>
-                </Row>
-            </Container>
+            {/* Bảng dữ liệu với pagination */}
+            <TransitionGroup>
+                <CSSTransition
+                    key="searchTable"
+                    timeout={300}
+                    classNames="fade"
+                >
+                    {/* Nội dung chính của bạn ở đây, ví dụ: bảng */}
+                    <div className='table-container'>
+                        <Table
+                            columns={columns}
+                            dataSource={data}
+                            rowKey="tourId"
+                            pagination={{
+                                pageSize: 3,
+                                showSizeChanger: true,
+                                pageSizeOptions: ['3', '5', '10'],
+                            }}
+                        />
+                    </div>
+                </CSSTransition>
+            </TransitionGroup>
+
 
         </div>
     );
