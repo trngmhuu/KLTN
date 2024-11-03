@@ -33,7 +33,6 @@ const Header = () => {
       }
 
       const data = await response.json();
-      console.log("Dữ liệu API:", data); // Kiểm tra dữ liệu nhận được
 
       const tours = data.result || [];
 

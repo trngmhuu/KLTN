@@ -10,6 +10,11 @@ import {
 } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 
+// Hàm định dạng giá tiền với dấu chấm phân cách
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("vi-VN").format(price); // Định dạng theo kiểu Việt Nam
+};
+
 const Booking = ({ tour, avgRating }) => {
   const { price, reviews } = tour;
   const navigate = useNavigate()

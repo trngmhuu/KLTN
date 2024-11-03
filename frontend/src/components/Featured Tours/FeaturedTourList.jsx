@@ -17,7 +17,6 @@ const FeaturedTourList = () => {
       }
 
       const data = await response.json();
-      console.log("Dữ liệu tour từ API:", data); // Kiểm tra dữ liệu nhận được
 
       // Cập nhật state với chỉ các tour có isActive = true
       setTours(data.result?.filter(tour => tour.isActive) || []);

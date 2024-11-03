@@ -1,37 +1,52 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/tour-details.css";
-import { Container, Row, Col, Form, ListGroup } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
-import tourData from "../assets/data/tours";
-import calculateAvgRating from "../utils/avgRating";
-import avatar from "../assets/images/avatar.jpg";
 import Booking from "../components/Booking/Booking"
+
+// Hàm định dạng giá tiền với dấu chấm phân cách
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("vi-VN").format(price); // Định dạng theo kiểu Việt Nam
+};
 
 const TourDetails = () => {
   const { id } = useParams();
-  const reviewMsgRef = useRef("");
-  const [tourRating, setTourRating] = useState(null);
-  const tour = tourData.find((tour) => tour.id === id);
-  const {
-    photo,
-    title,
-    desc,
-    price,
-    address,
-    reviews,
-    city,
-    distance,
-    maxGroupSize,
-  } = tour;
+  const [tour, setTour] = useState(null); // State để lưu đối tượng tour
+  const [loading, setLoading] = useState(true); // State để kiểm soát trạng thái loading
 
-  //format date
-  const options = { day: "numeric", month: "long", year: "numeric" };
-  const submitHandler = (e) => {
-    e.preventDefault();
-    const reviewText = reviewMsgRef.current.value;
+  const fetchTour = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/tours/by-tourcode/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setTour(data.result);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching tour:', error);
+      setLoading(false);
+    }
   };
 
-  const { totalRating, avgRating } = calculateAvgRating(reviews);
+  useEffect(() => {
+    if (id) {// Chỉ gọi API khi có tourCode
+      fetchTour();
+    }
+  }, [id]); // Thêm fetchTour vào dependencies nếu cần
+
+  if (loading) {
+    return <p>Loading...</p>; // Hiển thị loading khi chờ dữ liệu
+  }
+
   return (
     <>
       <section>
@@ -39,115 +54,58 @@ const TourDetails = () => {
           <Row>
             <Col lg="8">
               <div className="tour__content">
-                <img src={photo} alt="" />
+                <img src={tour.image} alt="" />
                 <div className="tour__info">
-                  <h2>{title}</h2>
-                  <div className="d-flex align-items-center gap-5">
+                  <h2>{tour.name}</h2>
+                  {/* <div className="d-flex align-items-center gap-5">
                     <span className="tour__rating d-flex align-items-center gap-1">
                       <i
-                        class="ri-star-fill"
-                        style={{ color: "var(--secondary-color" }}
-                      ></i>{" "}
-                      {avgRating === 0 ? null : avgRating}
-                      {totalRating === 0 ? (
-                        "Chưa có đánh giá"
-                      ) : (
-                        <span>({reviews?.length})</span>
-                      )}
+                        className="ri-star-fill"
+                        style={{ color: "var(--secondary-color)" }}
+                      ></i>
                     </span>
                     <span>
-                      <i class="ri-map-pin-fill"></i> {address}
+                      <i className="ri-map-pin-fill"></i>
                     </span>
-                  </div>
+                  </div> */}
                   <div className="tour__extra-details">
-                    <span>
-                      <i class="ri-map-pin-5-line"></i>
-                      {city}
-                    </span>
-                    <span>
-                      <i class="ri-money-dollar-circle-line"></i>
-                      {price}/người
-                    </span>
-                    <span>
-                      <i class="ri-pin-distance-line"></i>
-                      {distance} km
-                    </span>
-                    <span>
-                      <i class="ri-group-line"></i>
-                      {maxGroupSize} người
-                    </span>
+                    <Row>
+                      <Col lg="6">
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i class="ri-calendar-line"></i>
+                          Thời gian đi: {tour.durationTour}
+                        </span>
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i class="ri-car-line"></i>
+                          Phương tiện: {tour.vehicle}
+                        </span>
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i class="ri-calendar-line"></i>
+                          Ngày khởi hành: {tour.startDay ? tour.startDay.join(', ') : 'Chưa có ngày khởi hành'}
+                        </span>
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i className="ri-money-dollar-circle-line"></i>
+                          Giá {formatPrice(tour.price)} VNĐ/người
+                        </span>
+                        
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i class="ri-restart-line"></i>
+                          Trạng thái: {tour.isActive ? "Đang nhận khách" : "Chưa thể đặt"}
+                        </span>
+                        <span style={{ whiteSpace: "nowrap" }}>
+                          <i class="ri-map-pin-line"></i>
+                          Khởi hành từ: {tour.locationStart}
+                        </span>
+                      </Col>
+                    </Row>
                   </div>
                   <h5>Lịch trình</h5>
-                  <p>{desc}</p>
+                  <p>{tour.description}</p>
                 </div>
-
-                {/*======= tour reviews section start =======*/}
-                <div className="tour__reviews mt-4">
-                  <h4>Đánh giá ({reviews?.length})</h4>
-                  <Form onSubmit={submitHandler}>
-                    <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-                      <span onClick={() => setTourRating(1)}>
-                        1 <i class="ri-star-fill"></i>
-                      </span>
-                      <span onClick={() => setTourRating(2)}>
-                        2 <i class="ri-star-fill"></i>
-                      </span>
-                      <span onClick={() => setTourRating(3)}>
-                        3 <i class="ri-star-fill"></i>
-                      </span>
-                      <span onClick={() => setTourRating(4)}>
-                        4 <i class="ri-star-fill"></i>
-                      </span>
-                      <span onClick={() => setTourRating(5)}>
-                        5 <i class="ri-star-fill"></i>
-                      </span>
-                    </div>
-                    <div className="review__input">
-                      <input
-                        type="text"
-                        ref={reviewMsgRef}
-                        placeholder="Bạn nghĩ gì về tour này?"
-                        required
-                      />
-                      <button
-                        className="btn primary__btn text-white"
-                        type="submit"
-                      >
-                        Đăng
-                      </button>
-                    </div>
-                  </Form>
-
-                  <ListGroup className="user__reviews">
-                    {reviews?.map((review) => (
-                      <div className="review__item">
-                        <img src={avatar} alt="" />
-                        <div className="w-100">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <h5>ahz</h5>
-                              <p>
-                                {new Date("01-18-2024").toLocaleDateString(
-                                  "en-US",
-                                  options
-                                )}
-                              </p>
-                            </div>
-                            <span className="d-flex align-items-center">
-                              5<i className="ri-star-s-fill"></i>
-                            </span>
-                          </div>
-                          <h6>Thú vị</h6>
-                        </div>
-                      </div>
-                    ))}
-                  </ListGroup>
-                </div>
-                {/*======= tour reviews section end =======*/}
               </div>
             </Col>
             <Col lg="4">
-              <Booking tour={tour} avgRating={avgRating}/>
+              <Booking tour={tour} />
             </Col>
           </Row>
         </Container>

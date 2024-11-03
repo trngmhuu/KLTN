@@ -11,7 +11,7 @@ function AddTourForm({ changeComponent }) {
         name: '',
         description: '',
         image: null,
-        typeTourId: '',
+        typeTourName: '',
         typeId: '',
         locationStart: '',
         startDay: [],
@@ -46,6 +46,7 @@ function AddTourForm({ changeComponent }) {
 
             if (!response.ok) throw new Error('Lỗi khi gọi API');
             const data = await response.json();
+            console.log('Type Tours:', data.result);
             setTypeTourOptions(data.result);
         } catch (error) {
             message.error('Không thể lấy danh sách loại tour.');
@@ -57,9 +58,16 @@ function AddTourForm({ changeComponent }) {
         fetchTypeToursByTypeId(value);
     };
 
-    const handleStartDayChange = (value) => {
-        setTour({ ...tour, startDay: value });
+    const handleStartDayChange = (selectedDays) => {
+        // Nếu tất cả các ngày trong tuần đều được chọn, lưu "Hàng ngày"
+        const allDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+        if (selectedDays.length === allDays.length && allDays.every(day => selectedDays.includes(day))) {
+            setTour({ ...tour, startDay: ["Hàng ngày"] });
+        } else {
+            setTour({ ...tour, startDay: selectedDays });
+        }
     };
+
 
     const focusInput = (name) => {
         if (inputRefs.current[name]) {
@@ -93,7 +101,6 @@ function AddTourForm({ changeComponent }) {
             focusInput('description');
             return;
         }
-
         if (!tour.price.trim()) {
             message.error('Giá không được để trống!');
             focusInput('price');
@@ -112,10 +119,11 @@ function AddTourForm({ changeComponent }) {
             tourCode: tour.tourCode,
             name: tour.name,
             description: tour.description,
-            typeTourId: tour.typeTourId,
+            typeTourName: tour.typeTourName,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
             durationTour: tour.durationTour, // Thêm durationTour vào dữ liệu gửi đi
+            startDay: tour.startDay,
             price: tour.price,
             vehicle: tour.vehicle,
             isActive: tour.isActive,
@@ -193,6 +201,7 @@ function AddTourForm({ changeComponent }) {
                             onChange={(value) => setTour({ ...tour, durationTour: value })}
                             placeholder="Chọn thời gian tour"
                         >
+                            <Option value="1 ngày">1 ngày</Option>
                             <Option value="2 ngày 1 đêm">2 ngày 1 đêm</Option>
                             <Option value="3 ngày 2 đêm">3 ngày 2 đêm</Option>
                             <Option value="4 ngày 3 đêm">4 ngày 3 đêm</Option>
@@ -207,12 +216,12 @@ function AddTourForm({ changeComponent }) {
                     </Form.Item>
                     <Form.Item label="Loại Tour">
                         <Select
-                            name="typeTourId"
-                            value={tour.typeTourId}
-                            onChange={(value) => setTour({ ...tour, typeTourId: value })}
+                            name="typeTourName"
+                            value={tour.typeTourName}
+                            onChange={(value) => setTour({ ...tour, typeTourName: value })}
                         >
                             {typeTourOptions.map((typeTour) => (
-                                <Option key={typeTour.typeTourId} value={typeTour.typeTourId}>
+                                <Option key={typeTour.name} value={typeTour.name}>
                                     {typeTour.name}
                                 </Option>
                             ))}
@@ -225,7 +234,7 @@ function AddTourForm({ changeComponent }) {
                             onChange={(value) => setTour({ ...tour, locationStart: value })}
                             placeholder="Chọn địa điểm xuất phát"
                         >
-                            <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh</Option>
+                            <Option value="TP.HCM">Thành phố Hồ Chí Minh</Option>
                             <Option value="Hà Nội">Hà Nội</Option>
                             <Option value="Đà Nẵng">Đà Nẵng</Option>
                             <Option value="Khác">Khác</Option>
@@ -246,6 +255,11 @@ function AddTourForm({ changeComponent }) {
                             <Option value="Thứ 6">Thứ 6</Option>
                             <Option value="Thứ 7">Thứ 7</Option>
                             <Option value="Chủ Nhật">Chủ Nhật</Option>
+                            {tour.startDay.length > 0 && (
+                                <div style={{ marginTop: '8px', color: '#888' }}>
+                                    Ngày khởi hành đã chọn: {tour.startDay.join(', ')}
+                                </div>
+                            )}
                         </Select>
                     </Form.Item>
                     <Form.Item label="Phương tiện">

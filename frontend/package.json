@@ -2,11 +2,13 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.21.5",
+    "axios": "^1.7.7",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.11.3",
     "moment": "^2.30.1",
