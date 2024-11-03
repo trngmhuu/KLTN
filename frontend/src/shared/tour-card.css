@@ -1,6 +1,6 @@
 .tour__img img {
     width: 100%;
-    border-radius: 5px 5px 0 0;   
+    border-radius: 5px 5px 0 0;
 }
 
 .card {
@@ -40,7 +40,8 @@
     font-size: 0.9rem;
 }
 
-.tour__rating i, .tour__location i {
+.tour__rating i,
+.tour__location i {
     font-size: 1rem;
 }
 
@@ -54,6 +55,13 @@
     text-decoration: none;
     color: var(--heading-color);
     transition: 0.3s;
+    height: 40px; /* Đặt chiều cao cố định */
+    overflow: hidden; /* Ẩn phần nội dung tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." cho phần bị cắt */
+     /* Không cho phép xuống dòng */
+    font-size: 1rem; /* Cân chỉnh kích thước font chữ */
+    display: block; /* Đảm bảo tiêu đề chiếm đủ chiều cao */
+    font-weight: bold;
 }
 
 .tour__title a:hover {

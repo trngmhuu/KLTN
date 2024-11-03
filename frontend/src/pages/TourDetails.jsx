@@ -56,7 +56,7 @@ const TourDetails = () => {
               <div className="tour__content">
                 <img src={tour.image} alt="" />
                 <div className="tour__info">
-                  <h2>{tour.name}</h2>
+                  <h1>{tour.name}</h1>
                   {/* <div className="d-flex align-items-center gap-5">
                     <span className="tour__rating d-flex align-items-center gap-1">
                       <i
@@ -85,7 +85,7 @@ const TourDetails = () => {
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i className="ri-money-dollar-circle-line"></i>
-                          Giá {formatPrice(tour.price)} VNĐ/người
+                          Giá <p style={{margin: "0", color: "orange", fontWeight: "bold"}}>{formatPrice(tour.price)}</p> VNĐ/người
                         </span>
                         
                         <span style={{ whiteSpace: "nowrap" }}>
@@ -99,7 +99,7 @@ const TourDetails = () => {
                       </Col>
                     </Row>
                   </div>
-                  <h5>Lịch trình</h5>
+                  <h2>Lịch trình</h2>
                   <p>{tour.description}</p>
                 </div>
               </div>
