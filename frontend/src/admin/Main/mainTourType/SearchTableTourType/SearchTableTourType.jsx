@@ -84,7 +84,7 @@ function SearchTableTourType() {
     };
 
     const handleDelete = async (name) => {
-try {
+        try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/typetours/${name}`, {
                 method: 'DELETE',
@@ -166,7 +166,7 @@ try {
                     <Button type="link" onClick={() => handleEdit(record)}>
                         <EyeOutlined />
                     </Button>
-<Button type="link" danger onClick={() => showDeleteConfirm(record.name)}>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record.name)}>
                         <DeleteFilled />
                     </Button>
                 </div>
@@ -239,7 +239,7 @@ try {
                             onChange={(value) => handleNewTypeTourChange('typeId', value)}
                         >
                             <Option value="1">Tour trong nước</Option>
-<Option value="2">Tour ngoài nước</Option>
+                            <Option value="2">Tour ngoài nước</Option>
                         </Select>
                     </Form.Item>
                 </Form>

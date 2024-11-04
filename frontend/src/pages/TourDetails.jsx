@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../styles/tour-details.css";
 import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
@@ -14,7 +14,7 @@ const TourDetails = () => {
   const [tour, setTour] = useState(null); // State để lưu đối tượng tour
   const [loading, setLoading] = useState(true); // State để kiểm soát trạng thái loading
 
-  const fetchTour = async () => {
+  const fetchTour = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/tours/by-tourcode/${id}`, {
         method: 'GET',
@@ -35,13 +35,14 @@ const TourDetails = () => {
       console.error('Error fetching tour:', error);
       setLoading(false);
     }
-  };
+  }, [id]); // thêm 'id' vào đây
 
   useEffect(() => {
-    if (id) {// Chỉ gọi API khi có tourCode
+    if (id) { // Chỉ gọi API khi có tourCode
       fetchTour();
     }
-  }, [id]); // Thêm fetchTour vào dependencies nếu cần
+  }, [id, fetchTour]); // id và fetchTour được đồng bộ
+
 
   if (loading) {
     return <p>Loading...</p>; // Hiển thị loading khi chờ dữ liệu
@@ -73,28 +74,34 @@ const TourDetails = () => {
                       <Col lg="6">
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-calendar-line"></i>
-                          Thời gian đi: {tour.durationTour}
+                          <span className="titles">Thời gian đi:</span>
+                          {tour.durationTour}
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-car-line"></i>
-                          Phương tiện: {tour.vehicle}
+                          <span className="titles">Phương tiện:</span>
+                          {tour.vehicle}
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-calendar-line"></i>
-                          Ngày khởi hành: {tour.startDay ? tour.startDay.join(', ') : 'Chưa có ngày khởi hành'}
+                          <span className="titles">Ngày khởi hành:</span>
+                          {tour.startDay ? tour.startDay.join(', ') : 'Chưa có ngày khởi hành'}
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i className="ri-money-dollar-circle-line"></i>
-                          Giá <p style={{margin: "0", color: "orange", fontWeight: "bold"}}>{formatPrice(tour.price)}</p> VNĐ/người
+                          <span className="titles">Giá:</span>
+                          <p style={{ margin: "0", color: "orange", fontWeight: "bold" }}>{formatPrice(tour.price)}</p> VNĐ/người
                         </span>
-                        
+
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-restart-line"></i>
-                          Trạng thái: {tour.isActive ? "Đang nhận khách" : "Chưa thể đặt"}
+                          <span className="titles">Trạng thái:</span>
+                          <span className="status">{tour.isActive ? "Đang nhận khách" : "Chưa thể đặt"}</span>
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-map-pin-line"></i>
-                          Khởi hành từ: {tour.locationStart}
+                          <span className="titles">Khởi hành từ:</span>
+                          {tour.locationStart}
                         </span>
                       </Col>
                     </Row>

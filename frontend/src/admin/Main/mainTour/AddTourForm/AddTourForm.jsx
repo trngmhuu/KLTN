@@ -59,15 +59,8 @@ function AddTourForm({ changeComponent }) {
     };
 
     const handleStartDayChange = (selectedDays) => {
-        // Nếu tất cả các ngày trong tuần đều được chọn, lưu "Hàng ngày"
-        const allDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
-        if (selectedDays.length === allDays.length && allDays.every(day => selectedDays.includes(day))) {
-            setTour({ ...tour, startDay: ["Hàng ngày"] });
-        } else {
-            setTour({ ...tour, startDay: selectedDays });
-        }
-    };
-
+        setTour({ ...tour, startDay: selectedDays });
+    }
 
     const focusInput = (name) => {
         if (inputRefs.current[name]) {
@@ -201,7 +194,7 @@ function AddTourForm({ changeComponent }) {
                             onChange={(value) => setTour({ ...tour, durationTour: value })}
                             placeholder="Chọn thời gian tour"
                         >
-                            <Option value="1 ngày">1 ngày</Option>
+                            <Option value="1 ngày">1 ngày</Option> // Thêm option 1 ngày
                             <Option value="2 ngày 1 đêm">2 ngày 1 đêm</Option>
                             <Option value="3 ngày 2 đêm">3 ngày 2 đêm</Option>
                             <Option value="4 ngày 3 đêm">4 ngày 3 đêm</Option>
@@ -259,7 +252,7 @@ function AddTourForm({ changeComponent }) {
                                 <div style={{ marginTop: '8px', color: '#888' }}>
                                     Ngày khởi hành đã chọn: {tour.startDay.join(', ')}
                                 </div>
-                            )}
+                            )} // thêm chỗ này
                         </Select>
                     </Form.Item>
                     <Form.Item label="Phương tiện">
