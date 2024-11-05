@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/home.css";
 import { Container, Row, Col } from "reactstrap";
 
@@ -18,6 +18,23 @@ import Testimonials from "../components/Testimonial/Testimonials";
 import Newsletter from "../shared/Newsletter";
 
 const Home = () => {
+
+  const [domesticTours, setDomesticTours] = useState([]);
+
+  useEffect(() => {
+    const fetchDomesticTours = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/tours/by-type/1');
+        const data = await response.json();
+        setDomesticTours(data.result);
+      } catch (error) {
+        console.error('Error fetching domestic tours:', error);
+      }
+    };
+
+    fetchDomesticTours();
+  }, []);
+
   return (
     <>
       {/*======= hero section start =======*/}
@@ -73,7 +90,7 @@ const Home = () => {
       </section> */}
 
       {/*======= featured tour section start =======*/}
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12" className="mb-5">
@@ -83,7 +100,7 @@ const Home = () => {
             <FeaturedTourList />
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/*======= featured tour section end =======*/}
 
       {/*======= featured tour section start =======*/}
@@ -94,7 +111,7 @@ const Home = () => {
               <Subtitle subtitle={"Các loại tour"} />
               <h2 className="featured__tour-title">Tour trong nước</h2>
             </Col>
-            <FeaturedTourList />
+            <FeaturedTourList tours={domesticTours} />
           </Row>
         </Container>
       </section>

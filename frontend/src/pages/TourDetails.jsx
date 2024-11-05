@@ -13,7 +13,11 @@ const TourDetails = () => {
   const { id } = useParams();
   const [tour, setTour] = useState(null); // State để lưu đối tượng tour
   const [loading, setLoading] = useState(true); // State để kiểm soát trạng thái loading
-
+  // Hàm kiểm tra xem startDay có phải là đầy đủ từ thứ 2 -> chủ nhật không
+  const isFullWeekSchedule = () => {
+    const weekdays = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
+    return weekdays.every(day => tour.startDay.includes(day));
+  };
   const fetchTour = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/tours/by-tourcode/${id}`, {
@@ -85,7 +89,7 @@ const TourDetails = () => {
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-calendar-line"></i>
                           <span className="titles">Ngày khởi hành:</span>
-                          {tour.startDay ? tour.startDay.join(', ') : 'Chưa có ngày khởi hành'}
+                          {isFullWeekSchedule() ? 'Hàng ngày' : tour.startDay.join(', ')}
                         </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i className="ri-money-dollar-circle-line"></i>

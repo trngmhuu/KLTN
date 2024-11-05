@@ -15,7 +15,7 @@ const ThankYou = () => {
               </span>
               <h1 className="mb-3 fw-semibold">Thank You</h1>
               <h3 className="mb-4">Đặt tour thành công</h3>
-              <Button className="btnToHome btn primary__btn w-25"><Link to="/home">Quay lại trang chủ</Link></Button>
+              <Button className="btnToHome btn primary__btn"><Link className="textInBtn" to="/home">Quay lại trang chủ</Link></Button>
             </div>
           </Col>
         </Row>
