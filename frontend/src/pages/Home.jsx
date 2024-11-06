@@ -20,6 +20,7 @@ import Newsletter from "../shared/Newsletter";
 const Home = () => {
 
   const [domesticTours, setDomesticTours] = useState([]);
+  const [internationalTours, setInternationalTours] = useState([]);
 
   useEffect(() => {
     const fetchDomesticTours = async () => {
@@ -34,6 +35,20 @@ const Home = () => {
 
     fetchDomesticTours();
   }, []);
+
+  useEffect(() => {
+    const fetchInternationalTours = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/tours/by-type/2');
+        const data = await response.json();
+        setInternationalTours(data.result);
+      } catch (error) {
+        console.error('Error fetching international tours:', error);
+      }
+    };
+
+    fetchInternationalTours();
+  }, [])
 
   return (
     <>
@@ -125,7 +140,7 @@ const Home = () => {
               <Subtitle subtitle={"Các loại tour"} />
               <h2 className="featured__tour-title">Tour nước ngoài</h2>
             </Col>
-            <FeaturedTourList />
+            <FeaturedTourList tours={internationalTours} />
           </Row>
         </Container>
       </section>

@@ -9,7 +9,7 @@ const formatPrice = (price) => {
 };
 
 const TourCard = ({ tour }) => {
-  const { tourCode, name, image, price, isActive } = tour;
+  const { tourCode, name, image, price, durationTour } = tour;
 
   return (
     <div className="tour__card">
@@ -21,10 +21,11 @@ const TourCard = ({ tour }) => {
           <h5 className="tour__title">
             <Link to={`/tours/${tourCode}`}>{name}</Link>
           </h5>
-
+          Thời gian đi: <span style={{fontWeight: 500}}>{durationTour}</span>
+          {/* <div className="unfixedPrice">{formatPrice(price + price * 25/100)} VNĐ/người</div> */}
           <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
             <h5>
-              {formatPrice(price)} <span> VNĐ/người</span>
+              {formatPrice(price)} <span style={{fontSize: "1rem"}}> VNĐ/người</span>
             </h5>
             <button className="btn booking__btn">
               <Link to={`/tours/${tourCode}`}>Đặt ngay</Link>
