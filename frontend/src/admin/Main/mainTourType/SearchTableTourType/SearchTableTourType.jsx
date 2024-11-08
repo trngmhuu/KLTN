@@ -11,29 +11,15 @@ function SearchTableTourType() {
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [newTypeTour, setNewTypeTour] = useState({ name: '', typeId: '' });
+
+    // State để lưu loại tour đang được xem chi tiết
     const [selectedTour, setSelectedTour] = useState(null);
     const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
 
-    // Hàm lấy dữ liệu tất cả loại tour
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8080/typetours', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const result = await response.json();
-            setData(result.result);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-
-    // Hàm lấy dữ liệu loại tour theo tên tìm kiếm
-    const fetchDataByName = async () => {
-        try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/typetours/by-typename/${searchParams.name}`, {
+            const response = await fetch('http://localhost:8080/typetours', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,8 +30,7 @@ function SearchTableTourType() {
             const result = await response.json();
             setData(result.result);
         } catch (error) {
-            console.error('Error fetching data by name:', error);
-            message.error('Không tìm thấy phân loại nào phù hợp!');
+            console.error('Error fetching data:', error);
         }
     };
 
@@ -58,23 +43,14 @@ function SearchTableTourType() {
         setSearchParams({ ...searchParams, [name]: value });
     };
 
-    const handleReset = () => {
-        setSearchParams({ name: '' });
-        fetchData();
-    };
-
-    const handleSearch = () => {
-        if (searchParams.name) {
-            fetchDataByName();
-        } else {
-            fetchData();
-        }
-    };
-
+    const handleReset = () => setSearchParams({ name: '' });
+    const handleReload = () => fetchData();
     const handleAdd = () => setIsModalVisible(true);
 
     const handleEdit = (record) => {
         setSelectedTour(record);
+        console.log("Selected Tour:", record);
+        console.log("Selected Tour ID:", record.idAsString);
         setIsDetailModalVisible(true);
     };
 
@@ -82,6 +58,28 @@ function SearchTableTourType() {
         setIsDetailModalVisible(false);
         setSelectedTour(null);
     };
+
+    const handleSearch = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/typetours/search?name=${searchParams.name}&limit=10`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const result = await response.json();
+            setData(result.result);
+        } catch (error) {
+            console.error('Error searching data:', error);
+            message.error('Có lỗi xảy ra khi tìm kiếm!');
+        }
+    };
+
 
     const handleDelete = async (name) => {
         try {
@@ -108,7 +106,6 @@ function SearchTableTourType() {
         confirm({
             title: 'Bạn có chắc chắn muốn xóa danh mục này?',
             icon: <ExclamationCircleOutlined />,
-            content: `tên phân loại: ${name}`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
@@ -143,6 +140,32 @@ function SearchTableTourType() {
         } catch (error) {
             console.error('Error adding type tour:', error);
             message.error('Kiểm tra dữ liệu thêm mới đã bị trùng!');
+        }
+    };
+
+    const handleUpdateTypeTour = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/typetours/${selectedTour.idAsString}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name: selectedTour.name,
+                    typeId: selectedTour.typeId
+                }),
+            });
+
+            if (response.ok) {
+                message.success('Loại tour đã được cập nhật thành công!');
+                fetchData(); // Tải lại dữ liệu sau khi cập nhật
+                handleDetailModalClose(); // Đóng modal
+            } else throw new Error('Failed to update type tour');
+        } catch (error) {
+            console.error('Error updating type tour:', error);
+            message.error('Có lỗi xảy ra khi cập nhật!');
         }
     };
 
@@ -194,6 +217,7 @@ function SearchTableTourType() {
                         <Form.Item>
                             <Button type="primary" onClick={handleSearch}>Tìm kiếm</Button>
                         </Form.Item>
+
                     </Form>
                 </li>
             </ul>
@@ -204,7 +228,7 @@ function SearchTableTourType() {
                     <Button type="primary" onClick={handleAdd}>
                         <PlusCircleOutlined />
                     </Button>
-                    <Button onClick={fetchData}>
+                    <Button onClick={handleReload}>
                         <ReloadOutlined />
                     </Button>
                 </div>
@@ -245,18 +269,36 @@ function SearchTableTourType() {
                 </Form>
             </Modal>
 
+            {/* Detail Modal */}
             <Modal
                 title="Chi Tiết Loại Tour"
                 visible={isDetailModalVisible}
                 onCancel={handleDetailModalClose}
-                footer={[<Button key="close" onClick={handleDetailModalClose}>Đóng</Button>]}
+                footer={[
+                    <Button key="update" type="primary" onClick={handleUpdateTypeTour}>Cập nhật</Button>,
+                    <Button key="close" onClick={handleDetailModalClose}>Đóng</Button>,
+                ]}
             >
                 {selectedTour && (
                     <div>
-                        <p><strong>Tên phân loại:</strong> {selectedTour.name}</p>
-                        <p><strong>Loại Tour:</strong>
-                            {selectedTour.typeId === '1' ? 'Tour trong nước' : 'Tour ngoài nước'}
-                        </p>
+                        <p><strong>ID:</strong> {selectedTour.idAsString}</p> {/* Hiển thị idAsString */}
+                        <Form layout="vertical">
+                            <Form.Item label="Tên phân loại">
+                                <Input
+                                    value={selectedTour.name}
+                                    onChange={(e) => setSelectedTour({ ...selectedTour, name: e.target.value })}
+                                />
+                            </Form.Item>
+                            <Form.Item label="Loại tour">
+                                <Select
+                                    value={selectedTour.typeId}
+                                    onChange={(value) => setSelectedTour({ ...selectedTour, typeId: value })}
+                                >
+                                    <Option value="1">Tour trong nước</Option>
+                                    <Option value="2">Tour ngoài nước</Option>
+                                </Select>
+                            </Form.Item>
+                        </Form>
                     </div>
                 )}
             </Modal>

@@ -8,8 +8,6 @@ function SideBar({ changeComponent }) {
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (userInfo) setUserRole(userInfo.roles);  // Lưu mảng roles vào state
-        console.log(userInfo); // Debug thông tin user
-        console.log(userInfo.roles); // Kiểm tra giá trị roles
     }, []);
 
     return (
@@ -80,6 +78,62 @@ function SideBar({ changeComponent }) {
                     <a className="nav-link collapsed" onClick={() => changeComponent('tour')}>
                         <i className="bi bi-airplane-fill"></i>
                         <span>Quản lý Tour</span>
+                    </a>
+                </li>
+
+                {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" onClick={() => changeComponent('customer')}>
+                        <i class="bi bi-person-vcard-fill"></i>
+                        <span>Quản lý Khách Hàng</span>
+                    </a>
+                </li>
+
+                <li className="nav-item">
+                    <a
+                        className="nav-link collapsed"
+                        data-bs-target="#components-nav-booking"
+                        data-bs-toggle="collapse"
+                        href="#"
+                    >
+                        <i className="bi bi-clipboard2-data-fill"></i>
+                        <span>Quản lý Booking</span>
+                        <i className="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul
+                        id="components-nav-booking"
+                        className="nav-content collapse"
+                        data-bs-parent="#sidebar-nav"
+                    >
+                        <li>
+                            <a href="#" onClick={() => changeComponent('booking')}>
+                                <i className="bi bi-circle"></i>
+                                <span>Danh sách Booking</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onClick={() => changeComponent('bookingcancel')}>
+                                <i className="bi bi-circle"></i>
+                                <span>Yêu cầu hủy Booking</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" onClick={() => changeComponent('coupon')}>
+                        <i class="bi bi-gift-fill"></i>
+                        <span>Quản lý Coupon</span>
+                    </a>
+                </li>
+
+                {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" onClick={() => changeComponent('new')}>
+                        <i class="bi bi-newspaper"></i>
+                        <span>Quản lý Tin Tức</span>
                     </a>
                 </li>
             </ul>

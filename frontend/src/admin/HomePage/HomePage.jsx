@@ -14,6 +14,9 @@ import MainUser from '../Main/mainUser/MainUser';
 import MainTour from '../Main/mainTour/MainTour';
 import MainTourType from '../Main/mainTourType/MainTourType';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import MainBooking from '../Main/mainBooking/MainBooking';
+import MainCustomer from '../Main/mainCustomer/MainCustomer';
+import MainCoupon from '../Main/mainCoupon/MainCoupon';
 
 
 function HomePage() {
@@ -32,8 +35,12 @@ function HomePage() {
         dashboard: <MainDashboard />,
         user: <MainUser />,
         tour: <MainTour />,
-        tourtype: <MainTourType />
-        // Thêm các component khác vào đây
+        tourtype: <MainTourType />,
+        booking: <MainBooking />,
+        customer: <MainCustomer />,
+        // bookingcancel: <MainBookingCancel />,
+        coupon: <MainCoupon />,
+        // new: <MainNew />
     };
 
     // Hàm để thay đổi component đang hiển thị

@@ -49,8 +49,13 @@ const TourDetails = () => {
 
 
   if (loading) {
-    return <p>Loading...</p>; // Hiển thị loading khi chờ dữ liệu
+    return (
+      <div className="loading-spinner">
+        <i className="ri-refresh-line"></i>
+      </div>
+    );
   }
+  
 
   return (
     <>

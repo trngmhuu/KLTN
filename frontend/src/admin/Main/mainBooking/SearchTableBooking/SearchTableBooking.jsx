@@ -1,47 +1,29 @@
-import { Tag, Button, Form, Input, Table, Modal, message, Popover, Calendar } from 'antd';
+import { Tag, Button, Form, Input, Table, Modal, message } from 'antd';
 import React, { useState, useEffect } from 'react';
-import './searchTableTour.css';
+import './searchTableBooking.css';
 import './transition.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import moment from 'moment/moment';
-import { Container, Row, Col } from "reactstrap";
+
 const { confirm } = Modal;
 
-const formatPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN").format(price);
-  };
-
-function SearchTableTour({ changeComponent }) {
+function SearchTableBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
-        name: '',
-        tourCode: '',
+        customerName: '',
+        bookingCode: '',
     });
 
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false); // Thêm biến để kiểm soát chế độ chỉnh sửa
-    const [newTour, setNewTour] = useState({
-        tourCode: '',
-        name: '',
-        description: '',
-        image: null,
-        typeTourId: '',
-        typeId: '',
-        locationStart: '',
-        startDay: [],
-        durationTour: '', // Thêm trường durationTour vào state
-        price: '',
-        vehicle: '',
-        isActive: true,
-    });
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8080/tours', {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/bookings', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -50,9 +32,10 @@ function SearchTableTour({ changeComponent }) {
             }
 
             const result = await response.json();
+            console.log('Data:', result);
 
             if (Array.isArray(result.result)) {
-                setData(result.result); // Cập nhật với danh sách tours từ `result`
+                setData(result.result); // Cập nhật với danh sách bookings từ `result`
             } else {
                 throw new Error('Expected result to be an array');
             }
@@ -61,8 +44,6 @@ function SearchTableTour({ changeComponent }) {
             message.error('Không thể tải dữ liệu từ API.');
         }
     };
-
-
 
     useEffect(() => {
         fetchData();
@@ -78,8 +59,8 @@ function SearchTableTour({ changeComponent }) {
 
     const handleReset = () => {
         setSearchParams({
-            name: '',
-            tourCode: '',
+            customerName: '',
+            bookingCode: '',
         });
     };
 
@@ -87,42 +68,50 @@ function SearchTableTour({ changeComponent }) {
         fetchData();
     };
 
-
     const handleEdit = (record) => {
-        changeComponent('update', record.tourCode); // Truyền toàn bộ `record` để sử dụng trong UpdateTourForm
-    };    
+        // Kiểm tra nếu booking đã thanh toán
+        if (record.payBooking) {
+            // Nếu đã thanh toán, hiển thị thông báo lỗi và không cho phép cập nhật
+            message.error('Đặt chỗ này đã thanh toán, không thể cập nhật!');
+            return; // Không làm gì thêm, không mở form cập nhật
+        }
 
-    const handleDelete = async (tourCode) => {
+        // Nếu chưa thanh toán, tiến hành mở form cập nhật
+        changeComponent('update', record.bookingCode); // Gọi hàm changeComponent với mã booking
+    };
+
+
+    const handleDelete = async (bookingCode) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
+            const response = await fetch(`http://localhost:8080/bookings/${bookingCode}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             if (response.ok) {
                 fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
-                message.success('Tour đã được xóa thành công'); // Thông báo thành công
+                message.success('Đặt chỗ đã được xóa thành công'); // Thông báo thành công
             } else {
-                throw new Error('Failed to delete tour');
+                throw new Error('Failed to delete booking');
             }
         } catch (error) {
-            console.error('Error deleting tour:', error);
+            console.error('Error deleting booking:', error);
         }
     };
 
-    const showDeleteConfirm = (tourCode) => {
+    const showDeleteConfirm = (bookingCode) => {
         confirm({
-            title: 'Bạn có chắc chắn muốn xóa Tour này?',
+            title: 'Bạn có chắc chắn muốn xóa Đặt Chỗ này?',
             icon: <ExclamationCircleOutlined />,
-            content: `Mã tour: ${tourCode}`,
+            content: `Mã đặt chỗ: ${bookingCode}`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                handleDelete(tourCode);
+                handleDelete(bookingCode);
             },
             onCancel() {
                 console.log('Hủy hành động xóa');
@@ -132,62 +121,56 @@ function SearchTableTour({ changeComponent }) {
 
     const columns = [
         {
-            title: 'Mã Tour',
-            dataIndex: 'tourCode',
-            key: 'tourCode',
+            title: 'Mã Đặt Chỗ',
+            dataIndex: 'bookingCode',
+            key: 'bookingCode',
         },
         {
-            title: 'Tên Tour',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Tên Khách Hàng',
+            dataIndex: 'customerName',
+            key: 'customerName',
         },
         {
-            title: "Phương tiện",
-            dataIndex: "vehicle",
-            key: "vehicle",
+            title: 'Email Khách Hàng',
+            dataIndex: 'customerEmail',
+            key: 'customerEmail',
         },
         {
-            title: "Thời gian tour",
-            dataIndex: "durationTour",
-            key: "durationTour",
+            title: 'Số Điện Thoại',
+            dataIndex: 'customerPhoneNumber',
+            key: 'customerPhoneNumber',
         },
         {
-            title: "Ngày khởi hành",
-            dataIndex: "startDay",
-            key: "startDay",
+            title: 'Ngày Đặt',
+            dataIndex: 'bookingDate',
+            key: 'bookingDate',
         },
         {
-            title: "Điểm khởi hành",
-            dataIndex: "locationStart",
-            key: "locationStart",
+            title: 'Ngày Dự Kiến',
+            dataIndex: 'expectedDate',
+            key: 'expectedDate',
         },
         {
-            title: 'Giá (VNĐ)',
-            dataIndex: "price",
-            key: 'price',
-            render: (price) => (
-                formatPrice(price)
-            )
+            title: 'Tổng Tiền (VND)',
+            dataIndex: 'totalMoney',
+            key: 'totalMoney',
         },
         {
-            title: 'Trạng thái',
-            key: 'isActive',
-            render: (_, { isActive }) => (
-                <Tag color={isActive ? 'green' : 'volcano'}>
-                    {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
+            title: 'Thanh Toán',
+            key: 'payBooking',
+            render: (_, { payBooking }) => (
+                <Tag color={payBooking ? 'green' : 'volcano'}>
+                    {payBooking ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}
                 </Tag>
             ),
         },
         {
-            title: 'Hình ảnh',
-            dataIndex: 'image',
-            key: 'image',
-            render: (text) => (
-                <img
-                    src={text}
-                    alt="Tour"
-                    style={{ width: 100, height: 60, objectFit: 'cover', borderRadius: 8 }}
-                />
+            title: 'Trạng Thái',
+            key: 'activeBooking',
+            render: (_, { activeBooking }) => (
+                <Tag color={activeBooking ? 'green' : 'volcano'}>
+                    {activeBooking ? 'Xác nhận' : 'Hủy booking'}
+                </Tag>
             ),
         },
         {
@@ -196,7 +179,7 @@ function SearchTableTour({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.tourCode)}><DeleteFilled /></Button>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode)}><DeleteFilled /></Button>
                 </div>
             ),
         }
@@ -206,22 +189,22 @@ function SearchTableTour({ changeComponent }) {
         <div>
             <ul className='searchtable-container'>
                 <li className='search-container'>
-                    <h6>Tìm kiếm Tour</h6>
-                    <Form className="custom-inline-form-tour" layout="inline">
+                    <h6>Tìm kiếm Đặt Chỗ</h6>
+                    <Form className="custom-inline-form-booking" layout="inline">
                         <Form.Item>
                             <Input
-                                name="name"
-                                placeholder="Tên Tour"
-                                value={searchParams.name}
+                                name="customerName"
+                                placeholder="Tên Khách Hàng"
+                                value={searchParams.customerName}
                                 onChange={handleInputChange}
                                 style={{ width: "100%" }}
                             />
                         </Form.Item>
                         <Form.Item>
                             <Input
-                                name="tourCode"
-                                placeholder="Mã Tour"
-                                value={searchParams.tourCode}
+                                name="bookingCode"
+                                placeholder="Mã Đặt Chỗ"
+                                value={searchParams.bookingCode}
                                 onChange={handleInputChange}
                                 style={{ width: "100%" }}
                             />
@@ -239,13 +222,12 @@ function SearchTableTour({ changeComponent }) {
                     </Form>
                 </li>
             </ul>
-            {/* Header của bảng */}
             <div className='table-header'>
-                <h6>Bảng dữ liệu</h6>
+                <h6>Bảng Dữ Liệu Đặt Chỗ</h6>
                 <div className='table-header-actions'>
                     <Button
                         type="primary"
-                        onClick={() => changeComponent('add')} // Chuyển sang form thêm Tour
+                        onClick={() => changeComponent('add')} // Chuyển sang form thêm Đặt Chỗ
                     >
                         <PlusCircleOutlined />
                     </Button>
@@ -255,19 +237,17 @@ function SearchTableTour({ changeComponent }) {
                 </div>
             </div>
 
-            {/* Bảng dữ liệu với pagination */}
             <TransitionGroup>
                 <CSSTransition
                     key="searchTable"
                     timeout={300}
                     classNames="fade"
                 >
-                    {/* Nội dung chính của bạn ở đây, ví dụ: bảng */}
                     <div className='table-container'>
                         <Table
                             columns={columns}
                             dataSource={data}
-                            rowKey="tourId"
+                            rowKey="bookingCode"
                             pagination={{
                                 pageSize: 3,
                                 showSizeChanger: true,
@@ -277,10 +257,8 @@ function SearchTableTour({ changeComponent }) {
                     </div>
                 </CSSTransition>
             </TransitionGroup>
-
-
         </div>
     );
 }
 
-export default SearchTableTour;
+export default SearchTableBooking;

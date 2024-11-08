@@ -1,43 +1,34 @@
 .sectionLoginForm {
     background-image: url("https://img6.thuthuatphanmem.vn/uploads/2022/07/19/hinh-nen-ruong-bac-thang-4k-cho-may-tinh_025251384.jpg");
-    object-fit: contain;
     background-size: cover;
     background-position: center;
     display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
     min-height: 100vh;
-}
 
-.login__img {
-    width: 60%;
-    text-align: center;
-    background-color: white;
-}
-
-.login__img img {
-    width: 70%;
-    margin-top: 35px;
 }
 
 .login__form {
-    padding: 50px;
-    background: var(--secondary-color);
-    position: relative;
+    width: 75%;
 }
 
-
-
 .login__container {
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-    margin-top: 100px;
+    position: relative;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 3px solid white;
 }
 
 .login__form .user {
     width: 80px;
     height: 80px;
     position: absolute;
-    top: -9%;
+    top: -25%;
     left: 50%;
     transform: translate(-50%, -9%);
+
 }
 
 .login__form .user img {
@@ -48,25 +39,9 @@
 .login__form h2 {
     color: #fff;
     text-align: center;
-    align-items: center;
-    white-space: nowrap;
     font-size: 2rem;
-}
-
-@media (max-width: 768px) {
-    .login__form h2 {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .login__form h2 {
-        font-size: 1rem;
-    }
-}
-
-.login__form {
-    width: 50%;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 .login__form input {
@@ -82,38 +57,26 @@
     outline: none;
 }
 
-.auth__btn {
-    background: var(--heading-color) !important;
-    width: 100%;
-    color: #fff !important;
-}
-
-.login__form p {
-    font-size: 0.9rem;
-    color: #fff;
-    margin-top: 1.5rem;
-    text-align: center;
-}
-
-.login__form p a {
-    color: var(--heading-color);
-    text-decoration: none;
-    margin-left: 5px;
-    font-weight: 500;
-}
 
 .icon_section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 10%;
     float: left;
-    margin-top: 5px;
-    margin-left: -35px;
+    margin-top: 10px;
+    color: white;
 }
 
 .input_section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 90%;
     float: left;
 }
 
 .auth__btn {
     margin-top: 10px;
+    width: 100%;
 }

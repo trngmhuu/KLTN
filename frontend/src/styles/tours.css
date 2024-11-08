@@ -17,3 +17,18 @@
     background: var(--secondary-color);
     color: #fff !important;
 }
+
+.commonSec {
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url("../assets/images/du-lich-cover.png") no-repeat center center;
+    background-size: cover;
+}
+
+.commonSecDomestic {
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url("../assets/images/du-lich-vn.jpg") no-repeat center center;
+    background-size: cover;
+}
+
+.commonSecInternational {
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url("../assets/images/du-lich-nuoc-ngoai.jpg") no-repeat center center;
+    background-size: cover;
+}

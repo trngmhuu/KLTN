@@ -5,17 +5,18 @@ import { Container, Row, Col } from "reactstrap";
 import heroImg01 from "../assets/images/hero-img01.jpg";
 import heroImg02 from "../assets/images/hero-img02.jpg";
 import worldImg from "../assets/images/world.png";
-import experienceImg from "../assets/images/experience.png";
+// import experienceImg from "../assets/images/experience.png";
 
 import heroImg03 from "../assets/images/hero-img03.jpg";
 
 import Subtitle from "./../shared/Subtitle";
 import SearchBar from "../shared/SearchBar";
-import ServiceList from "../services/ServiceList";
+// import ServiceList from "../services/ServiceList";
 import FeaturedTourList from "../components/Featured Tours/FeaturedTourList";
-import MasonryImagesGallery from "../components/Image gallery/MasonryImagesGallery";
-import Testimonials from "../components/Testimonial/Testimonials";
+//import MasonryImagesGallery from "../components/Image gallery/MasonryImagesGallery";
+//import Testimonials from "../components/Testimonial/Testimonials";
 import Newsletter from "../shared/Newsletter";
+import FeaturedTourListOnSale from "../components/Featured Tours/FeaturedTourListOnSale";
 
 const Home = () => {
 
@@ -105,26 +106,28 @@ const Home = () => {
       </section> */}
 
       {/*======= featured tour section start =======*/}
-      {/* <section>
-        <Container>
+      <Container>
           <Row>
-            <Col lg="12" className="mb-5">
-              <Subtitle subtitle={"Các loại tour"} />
-              <h2 className="featured__tour-title">Tour nổi bật</h2>
+            <Col lg="12" className="mb-5 mt-3">
+              <Subtitle subtitle={"Ưu đãi đặc biệt"} />
+              <div className="featured__tour-title">
+                <a href="/tours/domestic">Các tour ưu đãi</a>
+              </div>
             </Col>
             <FeaturedTourList />
           </Row>
         </Container>
-      </section> */}
       {/*======= featured tour section end =======*/}
 
       {/*======= featured tour section start =======*/}
       <section>
         <Container>
           <Row>
-            <Col lg="12" className="mb-5">
-              <Subtitle subtitle={"Các loại tour"} />
-              <h2 className="featured__tour-title">Tour trong nước</h2>
+            <Col lg="12" className="mb-3">
+              <Subtitle subtitle={"Du Lịch Việt Nam"} />
+              <div className="featured__tour-title">
+                <a href="/tours/domestic">Tour trong nước</a>
+              </div>
             </Col>
             <FeaturedTourList tours={domesticTours} />
           </Row>
@@ -136,9 +139,11 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg="12" className="mb-5">
-              <Subtitle subtitle={"Các loại tour"} />
-              <h2 className="featured__tour-title">Tour nước ngoài</h2>
+            <Col lg="12" className="mb-3">
+              <Subtitle subtitle={"Du Lịch Nước Ngoài"} />
+              <div className="featured__tour-title">
+                <a href="/tours/international">Tour nước ngoài</a>
+              </div>
             </Col>
             <FeaturedTourList tours={internationalTours} />
           </Row>

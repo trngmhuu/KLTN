@@ -21,7 +21,6 @@ const Booking = ({ tour }) => {
   const { price, isActive, tourCode } = tour;
   const navigate = useNavigate();
 
-  // Add refs for form fields
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
   const emailRef = useRef(null);
@@ -37,7 +36,7 @@ const Booking = ({ tour }) => {
     customerAddress: "",
     numberOfCustomer: 1,
     bookingDate: "",
-    expectedDepartureDate: "",
+    expectedDate: "",
     note: "",
     totalMoney: "",
     typePay: "",
@@ -85,7 +84,7 @@ const Booking = ({ tour }) => {
   const totalAmount = Number(price) * Number(credentials.numberOfCustomer);
 
   const validateFields = () => {
-    const { customerName, customerEmail, customerPhoneNumber, expectedDepartureDate, numberOfCustomer } = credentials;
+    const { customerName, customerEmail, customerPhoneNumber, expectedDate, numberOfCustomer } = credentials;
 
     // Kiểm tra họ tên
     const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
@@ -113,8 +112,8 @@ const Booking = ({ tour }) => {
 
     // Kiểm tra ngày đi dự kiến
     const currentDate = new Date();
-    const selectedDate = new Date(expectedDepartureDate);
-    if (!expectedDepartureDate || selectedDate <= currentDate) {
+    const selectedDate = new Date(expectedDate);
+    if (!expectedDate || selectedDate <= currentDate) {
       toast.error("Ngày đi dự kiến phải chọn ngày cụ thể và sau ngày hiện tại.");
       dateRef.current?.focus();
       return false;
@@ -136,9 +135,9 @@ const Booking = ({ tour }) => {
 
     try {
       const today = formatDate(new Date());  // Định dạng ngày hiện tại
-      const expectedDeparture = formatDate(credentials.expectedDepartureDate); // Định dạng ngày đi dự kiến
+      const expectedDeparture = formatDate(credentials.expectedDate); // Định dạng ngày đi dự kiến
 
-      const response = await fetch("http://localhost:8080/bookings", {
+      const responseBooking = await fetch("http://localhost:8080/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -146,7 +145,7 @@ const Booking = ({ tour }) => {
         body: JSON.stringify({
           ...credentials,
           bookingDate: today,
-          expectedDepartureDate: expectedDeparture,
+          expectedDate: expectedDeparture,
           customerCity: selectedCity,
           customerDistrict: selectedDistrict,
           totalMoney: totalAmount,
@@ -155,11 +154,10 @@ const Booking = ({ tour }) => {
         }),
       });
 
-      if (response.ok) {
-        toast.success("Đặt tour thành công!");
+      if (responseBooking.ok) {
         navigate("/thank-you");
       } else {
-        toast.error("Có lỗi xảy ra. Vui lòng thử lại!");
+        toast.error("Có lỗi xảy ra. Vui lòng thử lại sau!");
       }
     } catch (error) {
       toast.error("Lỗi kết nối. Vui lòng thử lại sau!");
@@ -257,7 +255,7 @@ const Booking = ({ tour }) => {
             <input
               type="date"
               placeholder="Ngày đi"
-              id="expectedDepartureDate"
+              id="expectedDate"
               required
               onChange={handleChange}
               ref={dateRef}
@@ -273,7 +271,7 @@ const Booking = ({ tour }) => {
               placeholder="Số người đi"
               id="numberOfCustomer"
               required
-              value={credentials.numberOfCustomer}  // Thêm value để controlled input
+              value={credentials.numberOfCustomer} 
               onChange={handleChange}
               style={{ textAlign: "center" }}
               min="1"  // Đặt giá trị tối thiểu là 1
@@ -282,8 +280,7 @@ const Booking = ({ tour }) => {
             <span style={{ color: "red", marginTop: "5px" }}>(*)</span>
           </FormGroup>
 
-          {/* Rest of the component remains the same */}
-          {/* Payment method section */}
+          {/* Hình thức thanh toán */}
           <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Chọn hình thức thanh toán:</span>
           <FormGroup className="d-flex align-items-center gap-3 mt-2">
             <input

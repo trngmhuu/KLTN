@@ -15,7 +15,7 @@ const TourCard = ({ tour }) => {
     <div className="tour__card">
       <Card>
         <div className="tour__img">
-          <img src={image} alt="tour-img" />
+          <Link to={`/tours/${tourCode}`}><img src={image} alt="tour-img" /></Link>
         </div>
         <CardBody>
           <h5 className="tour__title">

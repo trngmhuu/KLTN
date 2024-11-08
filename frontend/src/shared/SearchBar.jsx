@@ -28,17 +28,23 @@ const SearchBar = () => {
                     </div>
                 </FormGroup>
                 <FormGroup className="d-flex gap-3 form__group form__group-fast">
-                    <span><i class="ri-map-pin-2-line"></i></span>
+                    <span><i class="ri-calendar-line"></i></span>
                     <div>
-                        <h6>Ngày đi</h6>
-                        <input type='date'/>
+                        <h6>Thời gian đi</h6>
+                        <select id='durationTour'>
+                            <option value="1 ngày" selected>1 ngày</option>
+                            <option value="2 ngày 1 đêm">2 ngày 1 đêm</option>
+                            <option value="3 ngày 2 đêm">3 ngày 2 đêm</option>
+                            <option value="4 ngày 3 đêm">4 ngày 3 đêm</option>
+                            <option value="5 ngày 4 đêm">5 ngày 4 đêm</option>
+                        </select>
                     </div>
                 </FormGroup>
                 <FormGroup className="d-flex gap-3 form__group form__group-last">
                     <span><i class="ri-group-line"></i></span>
                     <div>
                         <h6>Mức giá</h6>
-                        <input type="text" placeholder='0'/>
+                        <input type="text" placeholder='0' />
                     </div>
                 </FormGroup>
                 <span className="search__icon" type="submit" onClick={searchHandler}>

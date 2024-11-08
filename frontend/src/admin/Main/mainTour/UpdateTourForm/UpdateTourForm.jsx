@@ -1,30 +1,57 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import './addTourForm.css';
+import './updateTourForm.css';
 import cities from "../../../../assets/data/cities.json"
 
 const { Option } = Select;
 
-function AddTourForm({ changeComponent }) {
+function UpdateTourForm({ changeComponent, tourCode }) {
+
+    const [uploadedImage, setUploadedImage] = useState(null);
+    const [existingImageUrl, setExistingImageUrl] = useState(null);
     const [tour, setTour] = useState({
         tourCode: '',
         name: '',
         description: '',
-        image: null,
         typeTourName: '',
         typeId: '',
         locationStart: '',
         startDay: [],
-        durationTour: '', // Thêm trường durationTour vào state
+        durationTour: '',
         price: '',
         vehicle: '',
         isActive: true,
+        image: ''
     });
 
     const [typeTourOptions, setTypeTourOptions] = useState([]);
     const token = localStorage.getItem('token');
     const inputRefs = useRef({});
+
+    // Lấy thông tin tour theo tourCode
+    useEffect(() => {
+        const fetchTourByCode = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/tours/by-tourcode/${tourCode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) throw new Error('Lỗi khi gọi API');
+                const data = await response.json();
+                setTour(data.result);
+                setExistingImageUrl(data.result.image); // Lưu URL ảnh hiện tại
+            } catch (error) {
+                message.error('Không thể lấy thông tin tour.');
+            }
+        };
+
+        fetchTourByCode();
+    }, [tourCode]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -32,8 +59,9 @@ function AddTourForm({ changeComponent }) {
     };
 
     const handleImageChange = (file) => {
-        setTour({ ...tour, image: file });
+        setUploadedImage(file); // Chỉ cập nhật uploadedImage, không thay đổi trực tiếp tour.image
     };
+
 
     const fetchTypeToursByTypeId = async (typeId) => {
         try {
@@ -54,9 +82,20 @@ function AddTourForm({ changeComponent }) {
     };
 
     const handleTypeIdChange = (value) => {
-        setTour({ ...tour, typeId: value, typeTourId: '' });
-        fetchTypeToursByTypeId(value);
+        setTour({
+            ...tour,
+            typeId: value,
+            typeTourName: '' // Đặt lại phân loại thành rỗng khi đổi loại tour
+        });
+        fetchTypeToursByTypeId(value); // Tải danh sách phân loại mới
     };
+
+    useEffect(() => {
+        if (typeTourOptions.length === 0) {
+            setTour((prevTour) => ({ ...prevTour, typeTourName: '' }));
+        }
+    }, [typeTourOptions]);
+
 
     const handleStartDayChange = (value) => {
         setTour({ ...tour, startDay: value });
@@ -68,10 +107,10 @@ function AddTourForm({ changeComponent }) {
         }
     };
 
-    const addTour = async () => {
+    const updateTour = async () => {
         const tourCodePattern = /^[A-Z]{2}-\d{3}$/;
 
-        if (!tour.tourCode.trim()) {
+        if (!tour.tourCode?.trim()) {
             message.error('Mã tour không được để trống!');
             focusInput('tourCode');
             return;
@@ -83,25 +122,27 @@ function AddTourForm({ changeComponent }) {
             return;
         }
 
-        if (!tour.name.trim()) {
+        if (!tour.name?.trim()) {
             message.error('Tên tour không được để trống!');
             focusInput('name');
             return;
         }
 
-        if (!tour.description.trim()) {
+        if (!tour.description?.trim()) {
             message.error('Mô tả không được để trống!');
             focusInput('description');
             return;
         }
 
-        if (!tour.price.trim()) {
+        const price = String(tour.price || '');
+
+        if (!price.trim()) {
             message.error('Giá không được để trống!');
             focusInput('price');
             return;
         }
 
-        if (isNaN(tour.price)) {
+        if (isNaN(price)) {
             message.error('Giá phải là một số hợp lệ!', 5);
             focusInput('price');
             return;
@@ -142,15 +183,10 @@ function AddTourForm({ changeComponent }) {
             focusInput("vehicle");
             return;
         }
-
-        if (tour.image) {
-            message.error("Hãy chọn hình đại diện cho tour");
-            return;
-        }
-
         const formData = new FormData();
 
-        const tourJson = JSON.stringify({
+        // Đối tượng chứa thông tin tour cần cập nhật
+        const tourUpdateRequest = {
             tourCode: tour.tourCode,
             name: tour.name,
             description: tour.description,
@@ -162,17 +198,20 @@ function AddTourForm({ changeComponent }) {
             price: tour.price,
             vehicle: tour.vehicle,
             isActive: tour.isActive,
-        });
+            image: existingImageUrl  // Luôn gửi URL ảnh hiện tại nếu không có ảnh mới
+        };
 
-        formData.append('tour', new Blob([tourJson], { type: 'application/json' }));
+        // Thêm thông tin tour vào formData dưới dạng JSON
+        formData.append('tour', new Blob([JSON.stringify(tourUpdateRequest)], { type: 'application/json' }));
 
-        if (tour.image) {
-            formData.append('image', tour.image);
+        // Chỉ thêm ảnh mới vào formData nếu `uploadedImage` tồn tại
+        if (uploadedImage) {
+            formData.append('image', uploadedImage);
         }
 
         try {
-            const response = await fetch('http://localhost:8080/tours', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8080/tours/by-tourcode/${tour.tourCode}`, {
+                method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -182,15 +221,16 @@ function AddTourForm({ changeComponent }) {
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('Response Error:', errorData);
-                throw new Error('Lỗi khi thêm tour');
+                throw new Error('Lỗi khi cập nhật tour');
             }
 
-            message.success('Tour mới đã được thêm!');
+            message.success('Tour đã được cập nhật!');
             changeComponent('list');
         } catch (error) {
-            message.error('Không thể thêm tour. Vui lòng thử lại!');
+            message.error('Không thể cập nhật tour. Vui lòng thử lại!');
         }
     };
+
 
     return (
         <div className="add-tour-form-container">
@@ -284,7 +324,6 @@ function AddTourForm({ changeComponent }) {
                             ))}
                         </Select>
                     </Form.Item>
-
                     <Form.Item label="Ngày khởi hành">
                         <Select
                             mode="multiple"
@@ -328,7 +367,6 @@ function AddTourForm({ changeComponent }) {
                             <Option value={false}>Chưa thể đặt</Option>
                         </Select>
                     </Form.Item>
-
                     <Form.Item label="Hình ảnh">
                         <Upload
                             beforeUpload={(file) => {
@@ -339,8 +377,8 @@ function AddTourForm({ changeComponent }) {
                             <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
                         </Upload>
                     </Form.Item>
-                    <Button type="primary" onClick={addTour}>
-                        Lưu Tour
+                    <Button type="primary" onClick={updateTour}>
+                        Cập nhật Tour
                     </Button>
                     <Button onClick={() => changeComponent('list')} style={{ marginLeft: '10px' }}>
                         Hủy
@@ -348,9 +386,15 @@ function AddTourForm({ changeComponent }) {
                 </Form>
             </div>
             <div className="form-right">
-                {tour.image && (
+                {uploadedImage ? (
                     <img
-                        src={URL.createObjectURL(tour.image)}
+                        src={URL.createObjectURL(uploadedImage)}
+                        alt="Tour Preview"
+                        style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                    />
+                ) : existingImageUrl && (
+                    <img
+                        src={existingImageUrl}
                         alt="Tour Preview"
                         style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
                     />
@@ -360,4 +404,4 @@ function AddTourForm({ changeComponent }) {
     );
 }
 
-export default AddTourForm;
+export default UpdateTourForm;

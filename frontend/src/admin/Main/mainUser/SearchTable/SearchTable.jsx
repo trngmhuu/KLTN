@@ -1,7 +1,8 @@
-import { Tag, Button, Form, Input, Table, Modal, message, Select } from 'antd';
 import React, { useState, useEffect } from 'react';
-import './searchTable.css';
-import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Form, Modal, Select, Tag, message, Popconfirm } from 'antd';
+import { PlusCircleOutlined, ReloadOutlined, DeleteFilled, EyeOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+
 const { confirm } = Modal;
 
 function SearchTable() {
@@ -23,28 +24,33 @@ function SearchTable() {
     });
     const [selectedUser, setSelectedUser] = useState(null); // New state for selected user
 
-    const fetchData = async () => {
+    const fetchData = async (params = {}) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/users', {
+            const queryParams = new URLSearchParams(params).toString();
+            const response = await fetch(`http://localhost:8080/users/search?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result); // Kiểm tra cấu trúc dữ liệu trả về
+                setData(result.result); // Gán dữ liệu trả về vào state
+            } else {
+                throw new Error('Không thể lấy dữ liệu người dùng');
             }
-            const result = await response.json();
-            setData(result.result);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Lỗi khi lấy dữ liệu:', error);
         }
     };
 
+
     useEffect(() => {
-        fetchData();
+        fetchData(); // Fetch data initially
     }, []);
 
     const handleInputChange = (e) => {
@@ -55,16 +61,21 @@ function SearchTable() {
         });
     };
 
+    const handleSearch = () => {
+        fetchData(searchParams); // Pass searchParams to fetchData
+    };
+
     const handleReset = () => {
         setSearchParams({
             username: '',
             email: '',
             phoneNumber: '',
         });
+        fetchData(); // Reset data to show all users
     };
 
     const handleReload = () => {
-        fetchData();
+        fetchData(); // Reload all data
     };
 
     const handleAdd = () => {
@@ -89,7 +100,7 @@ function SearchTable() {
             if (response.ok) {
                 const result = await response.json();
                 console.log('User deleted:', result);
-                fetchData();
+                fetchData(); // Reload data after delete
             } else {
                 throw new Error('Failed to delete user');
             }
@@ -139,7 +150,7 @@ function SearchTable() {
                 const result = await response.json();
                 console.log('User added:', result);
                 setIsModalVisible(false);
-                fetchData();
+                fetchData(); // Reload data after adding user
                 setNewUser({
                     username: '',
                     email: '',
@@ -255,7 +266,7 @@ function SearchTable() {
                             </Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">
+                            <Button type="primary" onClick={handleSearch}>
                                 Tìm kiếm
                             </Button>
                         </Form.Item>
@@ -348,13 +359,13 @@ function SearchTable() {
                 </Form>
             </Modal>
 
-            {/* Modal to view user details */}
+            {/* Modal để xem thông tin người dùng */}
             <Modal
                 title="Thông tin người dùng"
-                visible={!!selectedUser}
-                onCancel={() => setSelectedUser(null)}
+                visible={isModalVisibleEye}
+                onCancel={() => setIsModalVisibleEye(false)}
                 footer={[
-                    <Button key="close" onClick={() => setSelectedUser(null)}>
+                    <Button key="close" onClick={() => setIsModalVisibleEye(false)}>
                         Đóng
                     </Button>
                 ]}

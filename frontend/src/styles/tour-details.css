@@ -197,3 +197,23 @@
     -o-animation: my 700ms infinite;
     animation: my 700ms infinite;
 }
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #007bff; /* Màu xanh hoặc chọn màu khác */
+    animation: spin 1s linear infinite;
+    margin-top: 20px;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  

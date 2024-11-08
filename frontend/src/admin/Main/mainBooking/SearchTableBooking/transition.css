@@ -1,0 +1,21 @@
+.fade-enter {
+    opacity: 0;
+    transform: scale(0.9); /* Có thể thu nhỏ */
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transform: scale(1); /* Kích thước bình thường */
+    transition: opacity 300ms, transform 300ms;
+}
+
+.fade-exit {
+    opacity: 1;
+    transform: scale(1); /* Kích thước bình thường */
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transform: scale(0.9); /* Có thể thu nhỏ */
+    transition: opacity 300ms, transform 300ms;
+}

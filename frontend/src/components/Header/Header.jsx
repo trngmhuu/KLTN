@@ -3,6 +3,7 @@ import { Container, Row } from "reactstrap";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
+//import Tours from "../../pages/Tours"
 
 const Header = () => {
   const headerRef = useRef(null);
@@ -19,7 +20,8 @@ const Header = () => {
     },
     {
       path: "/about",
-      display: "Giới thiệu",
+      display: "Khác",
+      children: []
     },
   ]);
 
@@ -40,7 +42,7 @@ const Header = () => {
       const domesticTours = tours
         .filter((tour) => tour.typeId === "1")
         .map((tour) => ({
-          path: `/search?tour=${tour.typeTourId}`, // Đường dẫn đến trang tìm kiếm
+          path: `/tours/by-tourtypename/${tour.name}`, 
           display: tour.name,
         }));
 
@@ -48,7 +50,7 @@ const Header = () => {
       const internationalTours = tours
         .filter((tour) => tour.typeId === "2")
         .map((tour) => ({
-          path: `/search?tour=${tour.typeTourId}`, // Đường dẫn đến trang tìm kiếm
+          path: `/tours/by-tourtypename/${tour.name}`, 
           display: tour.name,
         }));
 

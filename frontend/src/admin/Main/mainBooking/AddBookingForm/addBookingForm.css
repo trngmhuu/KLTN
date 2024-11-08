@@ -1,0 +1,72 @@
+.add-tour-form-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.form-left {
+    width: 60%;
+}
+
+.form-right {
+    width: 35%;
+    display: flex;
+    height: 400px;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #d9d9d9;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.form-right img {
+    max-width: 60%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.add-booking-form-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tour-info {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Đảm bảo các phần tử bên trong đều được phân bố đều */
+  height: 100%; /* Đảm bảo chiều cao của phần thông tin tour là đủ để chiếm hết không gian */
+}
+
+.tour-info h3 {
+  text-align: center;
+}
+
+.tour-info p {
+  margin: 10px 0;
+}
+
+.add-booking-form-container .ant-row {
+  display: flex;
+  justify-content: space-between; /* Đảm bảo phần bên trái và bên phải cách đều nhau */
+}
+
+.ant-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .add-booking-form-container .ant-row {
+    flex-direction: column; /* Trên màn hình nhỏ, các phần tử sẽ xếp theo chiều dọc */
+  }
+
+  .tour-info {
+    margin-top: 20px;
+  }
+}
+
