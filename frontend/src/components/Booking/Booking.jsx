@@ -137,6 +137,22 @@ const Booking = ({ tour }) => {
       const today = formatDate(new Date());  // Định dạng ngày hiện tại
       const expectedDeparture = formatDate(credentials.expectedDate); // Định dạng ngày đi dự kiến
 
+      // Đầu tiên, gửi yêu cầu POST đến API /customers để lưu thông tin khách hàng
+      const customerResponse = await fetch("http://localhost:8080/customers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerName: credentials.customerName,
+          customerEmail: credentials.customerEmail,
+          customerPhoneNumber: credentials.customerPhoneNumber,
+          customerCity: selectedCity,
+          customerDistrict: selectedDistrict,
+          customerAddress: credentials.customerAddress,
+        }),
+      });
+
       const responseBooking = await fetch("http://localhost:8080/bookings", {
         method: "POST",
         headers: {
@@ -271,7 +287,7 @@ const Booking = ({ tour }) => {
               placeholder="Số người đi"
               id="numberOfCustomer"
               required
-              value={credentials.numberOfCustomer} 
+              value={credentials.numberOfCustomer}
               onChange={handleChange}
               style={{ textAlign: "center" }}
               min="1"  // Đặt giá trị tối thiểu là 1

@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, DatePicker, Select, Row, Col } from 'antd';
 import './updateBookingForm.css';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';  // Nếu bạn sử dụng React Router
 
 const { Option } = Select;
 
@@ -69,7 +68,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                         customerAddress: bookingData.customerAddress,
                         numberOfCustomer: bookingData.numberOfCustomer,
                         bookingDate: bookingData.bookingDate,
-                        expectedDate: bookingData.expectedDate,
+                        expectedDate: bookingData.expectedDate
+                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('YYYY-MM-DD') // Chuyển đổi ngày dự kiến
+                            : null,
                         note: bookingData.note,
                         tourCode: bookingData.tourCode,
                         typePay: bookingData.typePay,
@@ -190,6 +191,47 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             return;
         }
 
+        // if (!booking.customerCity.trim()) {
+        //     message.error('Vui lòng chọn Tỉnh/Thành phố!');
+        //     focusInput("customerCity");
+        //     return;
+        // }
+
+        // if (!booking.customerDistrict.trim()) {
+        //     message.error('Vui lòng chọn Quận/Huyện!');
+        //     focusInput("customerDistrict");
+        //     return;
+        // }
+
+        if (booking.numberOfCustomer <= 0) {
+            message.error('Số lượng khách hàng phải lớn hơn 0!');
+            focusInput('numberOfCustomer');
+            return;
+        }
+
+        if (!booking.tourCode.trim()) {
+            message.error("Chưa chọn tour");
+            focusInput("tourCode");
+            return;
+        }
+
+        if (!booking.expectedDate || moment(booking.expectedDate).isSameOrBefore(moment(), 'day')) {
+            message.error('Ngày dự kiến phải được chọn và sau ngày hiện tại!');
+            focusInput("expectedDate");
+            return;
+        }
+
+        if (!booking.typePay.trim()) {
+            message.error("Chưa chọn hình thức thanh toán");
+            focusInput("typePay");
+            return;
+        }
+
+        if (booking.payBooking === null || booking.payBooking === undefined) {
+            message.error('Vui lòng chọn trạng thái thanh toán!');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/bookings/bookingCode/${booking.bookingCode}`, {
@@ -247,7 +289,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                                 ref={(el) => (inputRefs.current.customerPhoneNumber = el)}
                             />
                         </Form.Item>
-                        <Form.Item label="Địa chỉ khách hàng">
+
+                        <Form.Item label="Địa chỉ cụ thể">
                             <Input
                                 name="customerAddress"
                                 value={booking.customerAddress}
@@ -299,18 +342,14 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                             </div>
                         )}
                         {/* Các trường nhập liệu bên phải */}
-                        <Form.Item label="Ngày đặt tour">
-                            <DatePicker
-                                value={booking.bookingDate ? moment(booking.bookingDate) : null}
-                                onChange={(date) => handleDateChange('bookingDate', date)}
-                            />
-                        </Form.Item>
                         <Form.Item label="Ngày dự kiến">
                             <DatePicker
-                                value={booking.expectedDate ? moment(booking.expectedDate) : null}
+                                value={booking.expectedDate ? moment(booking.expectedDate, 'YYYY-MM-DD') : null}
                                 onChange={(date) => handleDateChange('expectedDate', date)}
                             />
                         </Form.Item>
+
+
                         <Form.Item label="Ghi chú">
                             <Input.TextArea
                                 name="note"
@@ -359,5 +398,4 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
         </div>
     );
 }
-
 export default UpdateBookingForm;

@@ -7,6 +7,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const { confirm } = Modal;
 
+const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
 function SearchTableBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
         customerName: '',
@@ -14,7 +18,7 @@ function SearchTableBooking({ changeComponent }) {
     });
 
     const [data, setData] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    // const [isModalVisible, setIsModalVisible] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -146,14 +150,22 @@ function SearchTableBooking({ changeComponent }) {
             key: 'bookingDate',
         },
         {
+            title: "Số người đi",
+            dataIndex: "numberOfCustomer",
+            key: "numberOfCustomer"
+        },
+        {
             title: 'Ngày Dự Kiến',
             dataIndex: 'expectedDate',
             key: 'expectedDate',
         },
         {
-            title: 'Tổng Tiền (VND)',
+            title: 'Tổng Tiền (VNĐ)',
             dataIndex: 'totalMoney',
             key: 'totalMoney',
+            render: (totalMoney) => (
+                formatPrice(totalMoney)
+            )
         },
         {
             title: 'Thanh Toán',
@@ -164,15 +176,15 @@ function SearchTableBooking({ changeComponent }) {
                 </Tag>
             ),
         },
-        {
-            title: 'Trạng Thái',
-            key: 'activeBooking',
-            render: (_, { activeBooking }) => (
-                <Tag color={activeBooking ? 'green' : 'volcano'}>
-                    {activeBooking ? 'Xác nhận' : 'Hủy booking'}
-                </Tag>
-            ),
-        },
+        // {
+        //     title: 'Trạng Thái',
+        //     key: 'activeBooking',
+        //     render: (_, { activeBooking }) => (
+        //         <Tag color={activeBooking ? 'green' : 'volcano'}>
+        //             {activeBooking ? 'Xác nhận' : 'Hủy booking'}
+        //         </Tag>
+        //     ),
+        // },
         {
             title: 'Thao tác',
             key: 'action',
