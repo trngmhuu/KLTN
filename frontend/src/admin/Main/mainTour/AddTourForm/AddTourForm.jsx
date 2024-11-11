@@ -16,10 +16,12 @@ function AddTourForm({ changeComponent }) {
         typeId: '',
         locationStart: '',
         startDay: [],
-        durationTour: '', // Thêm trường durationTour vào state
+        durationTour: '',
         price: '',
         vehicle: '',
-        isActive: true,
+        isActive: false,
+        saleTour: false,
+        percentSale: 0
     });
 
     const [typeTourOptions, setTypeTourOptions] = useState([]);
@@ -143,7 +145,13 @@ function AddTourForm({ changeComponent }) {
             return;
         }
 
-        if (tour.image) {
+        if (tour.saleTour && (isNaN(tour.percentSale) || tour.percentSale <= 0 || tour.percentSale > 100)) {
+            message.error("Phần trăm giảm giá phải là một số nguyên trong khoảng từ 1 đến 100.");
+            focusInput("percentSale");
+            return;
+        }        
+
+        if (!tour.image) {
             message.error("Hãy chọn hình đại diện cho tour");
             return;
         }
@@ -162,6 +170,8 @@ function AddTourForm({ changeComponent }) {
             price: tour.price,
             vehicle: tour.vehicle,
             isActive: tour.isActive,
+            saleTour: tour.saleTour,
+            percentSale: tour.saleTour ? tour.percentSale : 0
         });
 
         formData.append('tour', new Blob([tourJson], { type: 'application/json' }));
@@ -317,7 +327,7 @@ function AddTourForm({ changeComponent }) {
                             <Option value="Máy bay">Máy bay</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Trạng thái tour">
+                    {/* <Form.Item label="Trạng thái tour">
                         <Select
                             name="isActive"
                             value={tour.isActive}
@@ -327,7 +337,30 @@ function AddTourForm({ changeComponent }) {
                             <Option value={true}>Đang nhận khách</Option>
                             <Option value={false}>Chưa thể đặt</Option>
                         </Select>
+                    </Form.Item> */}
+                    <Form.Item label="Giảm giá">
+                        <Select
+                            name="saleTour"
+                            value={tour.saleTour}
+                            onChange={(value) => setTour({ ...tour, saleTour: value })}
+                            ref={(el) => (inputRefs.current.saleTour = el)}
+                        >
+                            <Option value={true}>Đang giảm giá</Option>
+                            <Option value={false}>Không giảm giá</Option>
+                        </Select>
                     </Form.Item>
+
+                    {tour.saleTour && (
+                        <Form.Item label="Phần trăm giảm giá">
+                            <Input
+                                type="number"
+                                name="percentSale"
+                                value={tour.percentSale}
+                                onChange={(e) => setTour({ ...tour, percentSale: e.target.value })}
+                                ref={(el) => (inputRefs.current.percentSale = el)}
+                            />
+                        </Form.Item>
+                    )}
 
                     <Form.Item label="Hình ảnh">
                         <Upload

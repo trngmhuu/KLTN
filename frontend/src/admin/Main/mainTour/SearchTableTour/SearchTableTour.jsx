@@ -276,9 +276,7 @@ function SearchTableTour({ changeComponent }) {
                         />
                     </div>
                 </CSSTransition>
-            </TransitionGroup>
-
-
+            </TransitionGroup>        
         </div>
     );
 }

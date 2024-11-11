@@ -124,7 +124,7 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12" className="mb-3">
-              <Subtitle subtitle={"Du Lịch Việt Nam"} />
+              <Subtitle subtitle={"Du lịch trong nước"} />
               <div className="featured__tour-title">
                 <a href="/tours/domestic">Tour trong nước</a>
               </div>

@@ -120,6 +120,12 @@ function SearchTableTourType() {
     };
 
     const handleSaveNewTypeTour = async () => {
+
+        if (!newTypeTour.name || !newTypeTour.typeId) {
+            message.error('Vui lòng điền đầy đủ thông tin trước khi lưu!');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8080/typetours', {
@@ -132,7 +138,7 @@ function SearchTableTourType() {
             });
 
             if (response.ok) {
-                message.success('Loại tour đã được thêm thành công!');
+                message.success('Đã thêm phân loại tour mới!');
                 setIsModalVisible(false);
                 fetchData();
                 setNewTypeTour({ name: '', typeId: '' });
@@ -144,6 +150,12 @@ function SearchTableTourType() {
     };
 
     const handleUpdateTypeTour = async () => {
+
+        if (!selectedTour.name || !selectedTour.typeId) {
+            message.error('Vui lòng điền đầy đủ thông tin trước khi cập nhật!');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/typetours/${selectedTour.idAsString}`, {
@@ -251,13 +263,21 @@ function SearchTableTourType() {
                 onOk={handleSaveNewTypeTour}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Tên phân loại">
+                    <Form.Item
+                        label="Tên phân loại"
+                        validateStatus={!newTypeTour.name ? 'error' : ''}
+                        help={!newTypeTour.name ? 'Tên phân loại không được để trống' : ''}
+                    >
                         <Input
                             value={newTypeTour.name}
                             onChange={(e) => handleNewTypeTourChange('name', e.target.value)}
                         />
                     </Form.Item>
-                    <Form.Item label="Loại tour">
+                    <Form.Item
+                        label="Loại tour"
+                        validateStatus={!newTypeTour.typeId ? 'error' : ''}
+                        help={!newTypeTour.typeId ? 'Vui lòng chọn loại tour' : ''}
+                    >
                         <Select
                             value={newTypeTour.typeId}
                             onChange={(value) => handleNewTypeTourChange('typeId', value)}
@@ -268,6 +288,7 @@ function SearchTableTourType() {
                     </Form.Item>
                 </Form>
             </Modal>
+
 
             {/* Detail Modal */}
             <Modal

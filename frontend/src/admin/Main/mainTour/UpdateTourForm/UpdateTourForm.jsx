@@ -183,6 +183,13 @@ function UpdateTourForm({ changeComponent, tourCode }) {
             focusInput("vehicle");
             return;
         }
+
+        if (tour.saleTour && (isNaN(tour.percentSale) || tour.percentSale <= 0 || tour.percentSale > 100)) {
+            message.error("Phần trăm giảm giá phải là một số trong khoảng từ 1 đến 100.");
+            focusInput("percentSale");
+            return;
+        }
+
         const formData = new FormData();
 
         // Đối tượng chứa thông tin tour cần cập nhật
@@ -198,7 +205,9 @@ function UpdateTourForm({ changeComponent, tourCode }) {
             price: tour.price,
             vehicle: tour.vehicle,
             isActive: tour.isActive,
-            image: existingImageUrl  // Luôn gửi URL ảnh hiện tại nếu không có ảnh mới
+            image: existingImageUrl,  // Luôn gửi URL ảnh hiện tại nếu không có ảnh mới
+            saleTour: tour.saleTour,
+            percentSale: tour.saleTour ? tour.percentSale : 0,  // Chỉ truyền percentSale nếu saleTour là true
         };
 
         // Thêm thông tin tour vào formData dưới dạng JSON
@@ -367,6 +376,30 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             <Option value={false}>Chưa thể đặt</Option>
                         </Select>
                     </Form.Item>
+                    <Form.Item label="Giảm giá">
+                        <Select
+                            name="saleTour"
+                            value={tour.saleTour}
+                            onChange={(value) => setTour({ ...tour, saleTour: value })}
+                            ref={(el) => (inputRefs.current.saleTour = el)}
+                        >
+                            <Option value={true}>Đang giảm giá</Option>
+                            <Option value={false}>Không giảm giá</Option>
+                        </Select>
+                    </Form.Item>
+
+                    {tour.saleTour && (
+                        <Form.Item label="Phần trăm giảm giá">
+                            <Input
+                                type="number"
+                                name="percentSale"
+                                value={tour.percentSale}
+                                onChange={(e) => setTour({ ...tour, percentSale: e.target.value })}
+                                ref={(el) => (inputRefs.current.percentSale = el)}
+                            />
+                        </Form.Item>
+                    )}
+
                     <Form.Item label="Hình ảnh">
                         <Upload
                             beforeUpload={(file) => {
