@@ -1,6 +1,6 @@
 import { Tag, Button, Form, Input, Table, Modal, message, Popover, Calendar } from 'antd';
 import React, { useState, useEffect } from 'react';
-import './searchTableTour.css';
+import './approveTour.css';
 import './transition.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -12,7 +12,7 @@ const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
 
-function SearchTableTour({ changeComponent }) {
+function ApproveTour({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
         name: '',
         tourCode: '',
@@ -134,25 +134,22 @@ function SearchTableTour({ changeComponent }) {
 
     const columns = [
         {
-            title: 'Mã',
+            title: 'Mã Tour',
             dataIndex: 'tourCode',
             key: 'tourCode',
-            width: 85
         },
         {
             title: 'Tên Tour',
             dataIndex: 'name',
             key: 'name',
-            width: 125
         },
+        // {
+        //     title: "Phương tiện",
+        //     dataIndex: "vehicle",
+        //     key: "vehicle",
+        // },
         {
-            title: "Phương tiện",
-            dataIndex: "vehicle",
-            key: "vehicle",
-            width: 111
-        },
-        {
-            title: "Thời gian đi",
+            title: "Thời gian tour",
             dataIndex: "durationTour",
             key: "durationTour",
         },
@@ -172,18 +169,23 @@ function SearchTableTour({ changeComponent }) {
             key: 'price',
             render: (price) => (
                 formatPrice(price)
-            ),
-            width: 100
+            )
         },
         {
             title: 'Giảm giá',
             key: 'saleTour',
-            render: (_, { saleTour, percentSale }) => (
-                saleTour ? (
-                    <Tag color='green'>{`Giảm ${percentSale}%`}</Tag>
-                ) : (
-                    <Tag color='volcano'>Không giảm giá</Tag>
-                )
+            render: (_, { saleTour }) => (
+                <Tag color={saleTour ? 'green' : 'volcano'}>
+                    {saleTour ? 'Đang giảm giá' : 'Không giảm giá'}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Phần trăm giảm (%)',
+            dataIndex: 'percentSale',
+            key: 'percentSale',
+            render: (percentSale, record) => (
+                record.saleTour && percentSale ? `${percentSale}%` : ''
             ),
         },
         {
@@ -192,31 +194,29 @@ function SearchTableTour({ changeComponent }) {
             render: (_, { price, percentSale, saleTour }) => {
                 const discountedPrice = saleTour && percentSale ? price * (1 - percentSale / 100) : price;
                 return <span>{formatPrice(discountedPrice)}</span>;
-            },
-            width: 100
+            }
         },
-        // {
-        //     title: 'Trạng thái',
-        //     key: 'isActive',
-        //     render: (_, { isActive }) => (
-        //         <Tag color={isActive ? 'green' : 'volcano'}>
-        //             {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
-        //         </Tag>
-        //     ),
-        //     width: 90
-        // },
         {
-            title: 'Hình đại diện',
-            dataIndex: 'image',
-            key: 'image',
-            render: (text) => (
-                <img
-                    src={text}
-                    alt="Tour"
-                    style={{ width: 100, height: 60, objectFit: 'cover', borderRadius: 8 }}
-                />
+            title: 'Trạng thái',
+            key: 'isActive',
+            render: (_, { isActive }) => (
+                <Tag color={isActive ? 'green' : 'volcano'}>
+                    {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
+                </Tag>
             ),
         },
+        // {
+        //     title: 'Hình ảnh',
+        //     dataIndex: 'image',
+        //     key: 'image',
+        //     render: (text) => (
+        //         <img
+        //             src={text}
+        //             alt="Tour"
+        //             style={{ width: 100, height: 60, objectFit: 'cover', borderRadius: 8 }}
+        //         />
+        //     ),
+        // },
         {
             title: 'Thao tác',
             key: 'action',
@@ -296,9 +296,9 @@ function SearchTableTour({ changeComponent }) {
                             dataSource={data}
                             rowKey="tourId"
                             pagination={{
-                                pageSize: 5,
-                                // showSizeChanger: true,
-                                // pageSizeOptions: ['3', '5', '10'],
+                                pageSize: 3,
+                                showSizeChanger: true,
+                                pageSizeOptions: ['3', '5', '10'],
                             }}
                         />
                     </div>
@@ -308,4 +308,4 @@ function SearchTableTour({ changeComponent }) {
     );
 }
 
-export default SearchTableTour;
+export default ApproveTour;

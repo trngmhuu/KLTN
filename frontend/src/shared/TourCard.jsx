@@ -22,7 +22,7 @@ const TourCard = ({ tour }) => {
             <Link to={`/tours/${tourCode}`}>{name}</Link>
           </h5>
           Thời gian đi: <span style={{fontWeight: 500}}>{durationTour}</span>
-          {/* <div className="unfixedPrice">{formatPrice(price + price * 25/100)} VNĐ/người</div> */}
+          <div className="fixSameHeight"></div>
           <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
             <h5>
               {formatPrice(price)} <span style={{fontSize: "1rem"}}> VNĐ/người</span>

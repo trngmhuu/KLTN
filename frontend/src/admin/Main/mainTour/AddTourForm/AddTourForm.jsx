@@ -198,7 +198,7 @@ function AddTourForm({ changeComponent }) {
             message.success('Tour mới đã được thêm!');
             changeComponent('list');
         } catch (error) {
-            message.error('Không thể thêm tour. Vui lòng thử lại!');
+            message.error('Mã tour đã tồn tại');
         }
     };
 

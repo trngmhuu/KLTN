@@ -1,5 +1,6 @@
 import React from "react";
 import TourCard from "../../shared/TourCard";
+import TourCardOnSale from "../../shared/TourCardOnSale"
 import { Col } from "reactstrap";
 
 const FeaturedTourList = ({ tours }) => {
@@ -19,11 +20,16 @@ const FeaturedTourList = ({ tours }) => {
     <>
       {featuredTours.map((tour) => (
         <Col lg="3" className="mb-4" key={tour.idAsString}>
-          <TourCard tour={tour} />
+          {tour.saleTour ? (
+            <TourCardOnSale tour={tour} />
+          ) : (
+            <TourCard tour={tour} />
+          )}
         </Col>
       ))}
     </>
   );
+  
 };
 
 export default FeaturedTourList;

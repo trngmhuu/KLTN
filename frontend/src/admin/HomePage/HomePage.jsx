@@ -17,6 +17,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import MainBooking from '../Main/mainBooking/MainBooking';
 import MainCustomer from '../Main/mainCustomer/MainCustomer';
 import MainCoupon from '../Main/mainCoupon/MainCoupon';
+import ApproveTour from '../Main/mainTour/ApproveTour/ApproveTour';
 
 
 function HomePage() {
@@ -38,6 +39,7 @@ function HomePage() {
         tourtype: <MainTourType />,
         booking: <MainBooking />,
         customer: <MainCustomer />,
+        approveTour: <ApproveTour />,
         // bookingcancel: <MainBookingCancel />,
         coupon: <MainCoupon />,
         // new: <MainNew />

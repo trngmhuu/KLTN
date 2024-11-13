@@ -55,7 +55,8 @@ const TourDetails = () => {
       </div>
     );
   }
-  
+
+  const displayedPrice = tour && tour.saleTour ? tour.price - (tour.price * tour.percentSale / 100) : tour.price;
 
   return (
     <>
@@ -99,8 +100,22 @@ const TourDetails = () => {
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i className="ri-money-dollar-circle-line"></i>
                           <span className="titles">Giá:</span>
-                          <p style={{ margin: "0", color: "orange", fontWeight: "bold" }}>{formatPrice(tour.price)}</p> VNĐ/người
+                          {tour.saleTour ? (
+                            <>
+                              <p style={{ margin: "0", textDecoration: "line-through", color: "gray" }}>
+                                {formatPrice(tour.price)} VNĐ/người
+                              </p>
+                              <p style={{ margin: "0", color: "orange", fontWeight: "bold" }}>
+                                {formatPrice(displayedPrice)} VNĐ/người
+                              </p>
+                            </>
+                          ) : (
+                            <p style={{ margin: "0", color: "orange", fontWeight: "bold" }}>
+                              {formatPrice(displayedPrice)} VNĐ/người
+                            </p>
+                          )}
                         </span>
+
 
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-restart-line"></i>

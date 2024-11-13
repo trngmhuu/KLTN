@@ -18,7 +18,10 @@ const formatPrice = (price) => {
 };
 
 const Booking = ({ tour }) => {
-  const { price, isActive, tourCode } = tour;
+  const { price, isActive, tourCode, saleTour, percentSale } = tour;
+
+  const displayedPrice = saleTour ? price - (price * percentSale / 100) : price;
+
   const navigate = useNavigate();
 
   const nameRef = useRef(null);
@@ -81,7 +84,7 @@ const Booking = ({ tour }) => {
     }
   };
 
-  const totalAmount = Number(price) * Number(credentials.numberOfCustomer);
+  const totalAmount = displayedPrice * Number(credentials.numberOfCustomer);
 
   const validateFields = () => {
     const { customerName, customerEmail, customerPhoneNumber, expectedDate, numberOfCustomer } = credentials;
@@ -192,8 +195,9 @@ const Booking = ({ tour }) => {
       />
       <div className="booking__top d-flex align-items-center justify-content-between">
         <h3>
-          {formatPrice(price)} <span>VNĐ/người</span>
+          {formatPrice(displayedPrice)} <span>VNĐ/người</span>
         </h3>
+
       </div>
 
       <div className="booking__form">
@@ -320,7 +324,7 @@ const Booking = ({ tour }) => {
             <span style={{ whiteSpace: "nowrap" }}>Chuyển khoản</span>
           </FormGroup>
 
-          {/* Payment method content */}
+          {/* Nội dung của các hình thức thanh toán */}
           {paymentMethod === "Tiền mặt" && (
             <p style={{ textAlign: "justify" }}>
               Quý khách vui lòng đến trực tiếp tại bất kỳ văn phòng HTravel trên toàn quốc để thực hiện việc thanh toán. <a href="">Xem chi tiết</a>
@@ -356,10 +360,10 @@ const Booking = ({ tour }) => {
         <ListGroup>
           <ListGroupItem className="border-0 px-0">
             <h5 className="d-flex align-items-center gap-1">
-              {formatPrice(price)}
+              {formatPrice(displayedPrice)}
               <i className="ri-close-line"></i> {credentials.numberOfCustomer} người
             </h5>
-            <span>{formatPrice(price * credentials.numberOfCustomer)}</span>
+            <span>{formatPrice(displayedPrice * credentials.numberOfCustomer)}</span>
           </ListGroupItem>
           <ListGroupItem className="border-0 px-0 total">
             <h5>Tổng cộng</h5>

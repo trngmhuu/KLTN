@@ -10,17 +10,17 @@ const servicesData = [
   {
     imgUrl: mapImg,
     title: "Lịch trình hấp dẫn",
-    desc: "Gói tour chất lượng với lịch trình hấp dẫn, đa dạng các điểm tham quan",
+    desc: "Gói tour chất lượng với lịch trình hấp dẫn, đa dạng các điểm tham quan.",
   },
   {
     imgUrl: userImg,
     title: "Hướng dẫn viên kinh nghiệm",
-    desc: "Đội ngũ hướng dẫn viên được đào tạo bài bản, có nhiều kinh nghiệm",
+    desc: "Đội ngũ hướng dẫn viên được đào tạo bài bản, có nhiều kinh nghiệm.",
   },
   {
     imgUrl: serviceImg,
     title: "Dịch vụ chất lượng",
-    desc: "Dịch vụ ăn uống ngủ nghỉ đầy đủ, chất lượng đã bao gồm trong gói tour",
+    desc: "Dịch vụ ăn uống - ngủ nghỉ đầy đủ, chất lượng đã bao gồm trong gói tour.",
   },
 ];
 

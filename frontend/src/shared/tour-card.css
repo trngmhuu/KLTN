@@ -97,10 +97,6 @@
     color: #fff;
 }
 
-.unfixedPrice {
-    color: #ccc;
-    margin-top: 7px;
-    margin-bottom: -5px;
-    text-decoration: line-through;
-    font-weight: 600;
+.fixSameHeight {
+    height: 25px;
 }
