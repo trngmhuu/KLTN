@@ -62,7 +62,7 @@
 }
 
 .services__title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 500;
 }
 
@@ -78,6 +78,7 @@
     margin-top: 1rem;
     font-weight: 500;
 }
+
 
 .experience__content p {
     font-size: 1.1rem;
@@ -110,7 +111,8 @@
 }
 
 .experience__img img {
-    width: 90%;
+    width: 100%;
+    border-radius: 10%;
 }
 
 .gallery__title {

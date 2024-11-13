@@ -5,7 +5,7 @@ import { Container, Row, Col } from "reactstrap";
 import heroImg01 from "../assets/images/hero-img01.jpg";
 import heroImg02 from "../assets/images/hero-img02.jpg";
 import worldImg from "../assets/images/world.png";
-import experienceImg from "../assets/images/experience.png";
+import experienceImg from "../assets/images/du-lich-viet-nam-experience.jpg";
 
 import heroImg03 from "../assets/images/hero-img03.jpg";
 
@@ -14,15 +14,29 @@ import SearchBar from "../shared/SearchBar";
 import ServiceList from "../services/ServiceList";
 import FeaturedTourList from "../components/Featured Tours/FeaturedTourList";
 import MasonryImagesGallery from "../components/Image gallery/MasonryImagesGallery";
-//import Testimonials from "../components/Testimonial/Testimonials";
+// import Testimonials from "../components/Testimonial/Testimonials";
 import Newsletter from "../shared/Newsletter";
 import FeaturedTourListOnSale from "../components/Featured Tours/FeaturedTourListOnSale";
 
 const Home = () => {
 
-  const [domesticTours, setDomesticTours] = useState([]);
-  const [internationalTours, setInternationalTours] = useState([]);
+  const [toursOnSale, setToursOnSale] = useState([]);
+  useEffect(() => {
+    const fetchAllTours = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/tours');
+        const data = await response.json();
+        const saleTours = data.result.filter(tour => tour.saleTour === true);
+        setToursOnSale(saleTours);
+      } catch (error) {
+        console.error('Error fetching all tours:', error);
+      }
+    };
 
+    fetchAllTours();
+  }, []);
+
+  const [domesticTours, setDomesticTours] = useState([]);
   useEffect(() => {
     const fetchDomesticTours = async () => {
       try {
@@ -37,6 +51,7 @@ const Home = () => {
     fetchDomesticTours();
   }, []);
 
+  const [internationalTours, setInternationalTours] = useState([]);
   useEffect(() => {
     const fetchInternationalTours = async () => {
       try {
@@ -93,30 +108,32 @@ const Home = () => {
       </section>
       {/*======= hero section end =======*/}
 
+      {/*======= service section start =======*/}
       <section>
         <Container>
           <Row>
             <Col lg="3">
               <h5 className="services__subtitle">Đặt tour ngay hôm nay</h5>
-              <h2 className="services__title">Các loại tour</h2>
+              <h2 className="services__title">Chúng tôi cung cấp gói tour với</h2>
             </Col>
             <ServiceList />
           </Row>
         </Container>
       </section>
+      {/*======= service section end =======*/}
 
       {/*======= featured tour section start =======*/}
       <Container>
-          <Row>
-            <Col lg="12" className="mb-5 mt-3">
-              <Subtitle subtitle={"Ưu đãi đặc biệt"} />
-              <div className="featured__tour-title">
-                <a href="/tours/domestic"><h1 className="section__title">TOUR NỔI BẬT</h1></a>
-              </div>
-            </Col>
-            <FeaturedTourList />
-          </Row>
-        </Container>
+        <Row>
+          <Col lg="12" className="mb-3">
+            <Subtitle subtitle={"Ưu đãi đặc biệt"} />
+            <div className="featured__tour-title">
+              <a href="/tours/on-sale"><h1 className="section__title">TOUR NỔI BẬT</h1></a>
+            </div>
+          </Col>
+          <FeaturedTourListOnSale tours={toursOnSale} />
+        </Row>
+      </Container>
       {/*======= featured tour section end =======*/}
 
       {/*======= featured tour section start =======*/}
@@ -124,7 +141,7 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12" className="mb-3">
-              <Subtitle subtitle={"Du lịch trong nước"} />
+              <Subtitle subtitle={"Du Lịch Trong Nước"} />
               <div className="featured__tour-title">
                 <a href="/tours/domestic"><h1 className="section__title">Tour trong nước</h1></a>
               </div>
@@ -157,14 +174,12 @@ const Home = () => {
           <Row>
             <Col lg="6">
               <div className="experience__content">
-                <Subtitle subtitle={"Experience"} />
+                <Subtitle subtitle={"Kinh nghiệm"} />
                 <h2>
-                  Với <br /> we will serve you
+                  Trên khắp tất cả nền tảng,
                 </h2>
-                <p>
-                  fdsggggggggggasdfsdlkgkgfdkgfdkjgfkgfkgjkfjgdfjgfl.
-                  <br />
-                  fdklhgokdfghfodihgfdohgfd.
+                <p style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  Chúng tôi tự hào khi đạt được
                 </p>
               </div>
               <div className="counter__wrapper d-flex align-items-center gap-5">
@@ -184,7 +199,7 @@ const Home = () => {
             </Col>
             <Col lg="6">
               <div className="experience__img">
-                <img src={experienceImg} alt="" />
+                <img src={experienceImg} alt="" style={{ border: "2px solid var(--secondary-color)" }} />
               </div>
             </Col>
           </Row>

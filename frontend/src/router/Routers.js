@@ -24,7 +24,7 @@ const Router = () => {
       <Route path="/tours/by-tourtypename/:tourtypename" element={<Tours />} />
       <Route path="/tours/domestic" element={<DomesticTours />} />
       <Route path="/tours/international" element={<InternationalTours />} />
-      
+      <Route path="/tours/on-sale" element={<Tours />} />
 
       {/* Bọc AdminHomePage bằng PrivateRoute */}
       <Route

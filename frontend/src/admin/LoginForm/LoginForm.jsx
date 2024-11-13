@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import loginImg from "../../assets/images/loginImg.jpg";
 import userIcon from "../../assets/images/user.png";
 
 function LoginForm() {

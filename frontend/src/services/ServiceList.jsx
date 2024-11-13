@@ -2,25 +2,25 @@ import React from "react";
 import ServiceCard from "./ServiceCard";
 import { Col } from "reactstrap";
 
-import weatherImg from "../assets/images/weather.png";
-import guideImg from "../assets/images/guide.png";
-import customizationImg from "../assets/images/customization.png";
+import mapImg from "../assets/images/map-2-line.png";
+import userImg from "../assets/images/user-line.png";
+import serviceImg from "../assets/images/service-line.png";
 
 const servicesData = [
   {
-    imgUrl: weatherImg,
-    title: "Calculate Weather",
-    desc: "skdjfisdgujghoikrejgedjgoengoi",
+    imgUrl: mapImg,
+    title: "Lịch trình hấp dẫn",
+    desc: "Gói tour chất lượng với lịch trình hấp dẫn, đa dạng các điểm tham quan",
   },
   {
-    imgUrl: guideImg,
-    title: "Best Tour Guide",
-    desc: "isdhgiodfhgoigiodfhogihdfoigho",
+    imgUrl: userImg,
+    title: "Hướng dẫn viên kinh nghiệm",
+    desc: "Đội ngũ hướng dẫn viên được đào tạo bài bản, có nhiều kinh nghiệm",
   },
   {
-    imgUrl: customizationImg,
-    title: "Customization",
-    desc: "dkfjsdiokfjdskghndjgnbjoggnfjg",
+    imgUrl: serviceImg,
+    title: "Dịch vụ chất lượng",
+    desc: "Dịch vụ ăn uống ngủ nghỉ đầy đủ, chất lượng đã bao gồm trong gói tour",
   },
 ];
 
