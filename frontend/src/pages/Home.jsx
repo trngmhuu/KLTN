@@ -5,15 +5,15 @@ import { Container, Row, Col } from "reactstrap";
 import heroImg01 from "../assets/images/hero-img01.jpg";
 import heroImg02 from "../assets/images/hero-img02.jpg";
 import worldImg from "../assets/images/world.png";
-// import experienceImg from "../assets/images/experience.png";
+import experienceImg from "../assets/images/experience.png";
 
 import heroImg03 from "../assets/images/hero-img03.jpg";
 
 import Subtitle from "./../shared/Subtitle";
 import SearchBar from "../shared/SearchBar";
-// import ServiceList from "../services/ServiceList";
+import ServiceList from "../services/ServiceList";
 import FeaturedTourList from "../components/Featured Tours/FeaturedTourList";
-//import MasonryImagesGallery from "../components/Image gallery/MasonryImagesGallery";
+import MasonryImagesGallery from "../components/Image gallery/MasonryImagesGallery";
 //import Testimonials from "../components/Testimonial/Testimonials";
 import Newsletter from "../shared/Newsletter";
 import FeaturedTourListOnSale from "../components/Featured Tours/FeaturedTourListOnSale";
@@ -93,7 +93,7 @@ const Home = () => {
       </section>
       {/*======= hero section end =======*/}
 
-      {/* <section>
+      <section>
         <Container>
           <Row>
             <Col lg="3">
@@ -103,7 +103,7 @@ const Home = () => {
             <ServiceList />
           </Row>
         </Container>
-      </section> */}
+      </section>
 
       {/*======= featured tour section start =======*/}
       <Container>
@@ -111,7 +111,7 @@ const Home = () => {
             <Col lg="12" className="mb-5 mt-3">
               <Subtitle subtitle={"Ưu đãi đặc biệt"} />
               <div className="featured__tour-title">
-                <a href="/tours/domestic">Các tour ưu đãi</a>
+                <a href="/tours/domestic"><h1 className="section__title">TOUR NỔI BẬT</h1></a>
               </div>
             </Col>
             <FeaturedTourList />
@@ -126,7 +126,7 @@ const Home = () => {
             <Col lg="12" className="mb-3">
               <Subtitle subtitle={"Du lịch trong nước"} />
               <div className="featured__tour-title">
-                <a href="/tours/domestic">Tour trong nước</a>
+                <a href="/tours/domestic"><h1 className="section__title">Tour trong nước</h1></a>
               </div>
             </Col>
             <FeaturedTourList tours={domesticTours} />
@@ -142,7 +142,7 @@ const Home = () => {
             <Col lg="12" className="mb-3">
               <Subtitle subtitle={"Du Lịch Nước Ngoài"} />
               <div className="featured__tour-title">
-                <a href="/tours/international">Tour nước ngoài</a>
+                <a href="/tours/international"><h1 className="section__title">Tour nước ngoài</h1></a>
               </div>
             </Col>
             <FeaturedTourList tours={internationalTours} />
@@ -152,7 +152,7 @@ const Home = () => {
       {/*======= featured tour section end =======*/}
 
       {/*======= experience section start =======*/}
-      {/* <section>
+      <section>
         <Container>
           <Row>
             <Col lg="6">
@@ -189,17 +189,17 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section> */}
+      </section>
       {/*======= experience section end =======*/}
 
       {/*======= gallery section start =======*/}
-      {/* <section>
+      <section>
         <Container>
           <Row>
             <Col lg="12">
-              <Subtitle subtitle={"Gallery"} />
+              <Subtitle subtitle={"Khoảnh khắc lữ hành"} />
               <h2 className="gallery__title">
-                Visit our customers tour gallery
+                Đem về những bức ảnh, để lại những dấu chân
               </h2>
             </Col>
             <Col lg="12">
@@ -207,7 +207,7 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section> */}
+      </section>
       {/*======= gallery section end =======*/}
 
       {/*======= testimonial section start =======*/}

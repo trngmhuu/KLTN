@@ -40,3 +40,74 @@
     color: var(--text-color);
     font-size: 1rem;
 }
+
+@-webkit-keyframes my {
+    0% {
+        color: black;
+    }
+
+    50% {
+        color: #fff;
+    }
+
+    100% {
+        color: black;
+    }
+}
+
+@-moz-keyframes my {
+    0% {
+        color: black;
+    }
+
+    50% {
+        color: #fff;
+    }
+
+    100% {
+        color: black;
+    }
+}
+
+@-o-keyframes my {
+    0% {
+        color: black;
+    }
+
+    50% {
+        color: #fff;
+    }
+
+    100% {
+        color: black;
+    }
+}
+
+@keyframes my {
+    0% {
+        color: black;
+    }
+
+    50% {
+        color: #fff;
+    }
+
+    100% {
+        color: black;
+    }
+}
+
+.phoneNumberGlitch {
+    white-space: nowrap;
+    color: white;
+    border: solid 1px #ccc;
+    border-radius: 25px;
+    padding: 0px 7px 0px 7px;
+    background-color: blue;
+    font-size: 16px;
+    font-weight: bold;
+    -webkit-animation: my 700ms infinite;
+    -moz-animation: my 700ms infinite;
+    -o-animation: my 700ms infinite;
+    animation: my 700ms infinite;
+}

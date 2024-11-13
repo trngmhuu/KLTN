@@ -3,7 +3,6 @@ import { Container, Row } from "reactstrap";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
-//import Tours from "../../pages/Tours"
 
 const Header = () => {
   const headerRef = useRef(null);
