@@ -128,7 +128,9 @@ const Home = () => {
           <Col lg="12" className="mb-3">
             <Subtitle subtitle={"Ưu đãi đặc biệt"} />
             <div className="featured__tour-title">
-              <a href="/tours/on-sale"><h1 className="section__title">TOUR NỔI BẬT</h1></a>
+              <a href="/tours/on-sale">
+                <h1 className="section__title">TOUR NỔI BẬT</h1>
+              </a>
             </div>
           </Col>
           <FeaturedTourListOnSale tours={toursOnSale} />

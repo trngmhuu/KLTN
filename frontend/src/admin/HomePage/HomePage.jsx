@@ -17,7 +17,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import MainBooking from '../Main/mainBooking/MainBooking';
 import MainCustomer from '../Main/mainCustomer/MainCustomer';
 import MainCoupon from '../Main/mainCoupon/MainCoupon';
-import ApproveTour from '../Main/mainTour/ApproveTour/ApproveTour';
+import ApproveTour from '../Main/mainTour/ApproveTourForm/ApproveTour'
 
 
 function HomePage() {

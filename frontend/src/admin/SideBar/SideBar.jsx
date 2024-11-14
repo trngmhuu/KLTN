@@ -73,7 +73,7 @@ function SideBar({ changeComponent }) {
                     </li>
                 )}
 
-                {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
+                {/* Quản lý Tour với các menu con */}
                 <li className="nav-item">
                     <a
                         className="nav-link collapsed"
@@ -90,12 +90,15 @@ function SideBar({ changeComponent }) {
                         className="nav-content collapse"
                         data-bs-parent="#sidebar-nav"
                     >
+                        {/* Danh sách Tour (Hiển thị cho cả ADMIN và EMPLOYEE) */}
                         <li>
                             <a href="#" onClick={() => changeComponent('tour')}>
                                 <i className="bi bi-circle"></i>
                                 <span>Danh sách Tour</span>
                             </a>
                         </li>
+
+                        {/* Duyệt Tour (Chỉ hiển thị cho ADMIN) */}
                         {userRole.includes('ADMIN') && (
                             <li>
                                 <a href="#" onClick={() => changeComponent('approveTour')}>
@@ -107,6 +110,7 @@ function SideBar({ changeComponent }) {
                     </ul>
                 </li>
 
+
                 {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
                 <li className="nav-item">
                     <a className="nav-link collapsed" onClick={() => changeComponent('customer')}>
@@ -115,6 +119,7 @@ function SideBar({ changeComponent }) {
                     </a>
                 </li>
 
+                {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
                 <li className="nav-item">
                     <a
                         className="nav-link collapsed"

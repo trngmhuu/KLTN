@@ -54,7 +54,7 @@ function SearchTableTour({ changeComponent }) {
             const result = await response.json();
 
             if (Array.isArray(result.result)) {
-                setData(result.result); // Cập nhật với danh sách tours từ `result`
+                setData(result.result); // Cập nhật với danh sách tours từ result
             } else {
                 throw new Error('Expected result to be an array');
             }
@@ -91,7 +91,7 @@ function SearchTableTour({ changeComponent }) {
 
 
     const handleEdit = (record) => {
-        changeComponent('update', record.tourCode); // Truyền toàn bộ `record` để sử dụng trong UpdateTourForm
+        changeComponent('update', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
     };    
 
     const handleDelete = async (tourCode) => {

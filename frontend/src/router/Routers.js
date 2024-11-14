@@ -10,6 +10,7 @@ import AdminHomePage from "../admin/HomePage/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import DomesticTours from "../pages/DomesticTours";
 import InternationalTours from "../pages/InternationalTours";
+import ToursOnSale from "../pages/ToursOnSale";
 
 const Router = () => {
   return (
@@ -24,7 +25,7 @@ const Router = () => {
       <Route path="/tours/by-tourtypename/:tourtypename" element={<Tours />} />
       <Route path="/tours/domestic" element={<DomesticTours />} />
       <Route path="/tours/international" element={<InternationalTours />} />
-      <Route path="/tours/on-sale" element={<Tours />} />
+      <Route path="/tours/on-sale" element={<ToursOnSale />} />
 
       {/* Bọc AdminHomePage bằng PrivateRoute */}
       <Route

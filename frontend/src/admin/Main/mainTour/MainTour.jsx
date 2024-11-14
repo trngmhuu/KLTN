@@ -4,6 +4,7 @@ import './mainTour.css';
 import SearchTableTour from './SearchTableTour/SearchTableTour';
 import AddTourForm from './AddTourForm/AddTourForm';
 import UpdateTourForm from './UpdateTourForm/UpdateTourForm';
+import ApproveTour from './ApproveTourForm/ApproveTour';
 
 function MainTour() {
     const [currentComponent, setCurrentComponent] = useState('list'); // State điều khiển component
@@ -26,6 +27,8 @@ function MainTour() {
                 <SearchTableTour changeComponent={handleComponentChange} onEditTour={handleComponentChange} />
             ) : currentComponent === 'update' ? (
                 <UpdateTourForm changeComponent={handleComponentChange} tourCode={selectedTourCode} />
+            ) : currentComponent === "approveTour" ? (
+                <ApproveTour changeComponent={handleComponentChange} onEditTour={handleComponentChange}/>
             ) : (
                 <AddTourForm changeComponent={handleComponentChange} />
             )}

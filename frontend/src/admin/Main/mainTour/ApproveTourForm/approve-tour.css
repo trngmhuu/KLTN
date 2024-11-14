@@ -45,10 +45,21 @@
 
 /* Khung chứa bảng */
 .table-container {
-    position: absolute;
+    width: 100%;
+    position: relative;
     padding: 0 20px 20px 20px;
     background: white;
     border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.inactive-table-header {
+    margin-top: 0px; /* Khoảng cách phía trên header của bảng chưa kích hoạt */
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid #f0f0f0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
