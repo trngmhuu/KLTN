@@ -25,7 +25,6 @@ function NavAvatar() {
                     {userInfo ? userInfo.username : 'Admin'}
                 </span>
             </a>
-
             <ul className='dropdown-menu dropdown-menu-end dropdown-menu-arrow profile'>
                 <li className='dropdown-header'>
                     {/* Hiển thị tên từ userInfo */}

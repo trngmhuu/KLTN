@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Input, Form, Modal, Select, Tag, message, Popconfirm } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Table, Button, Input, Form, Modal, Select, Tag, message } from 'antd';
 import { PlusCircleOutlined, ReloadOutlined, DeleteFilled, EyeOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
@@ -20,6 +20,9 @@ function SearchTable() {
         email: '',
         phoneNumber: '',
         password: '',
+        address: '',
+        gender: true,
+        isActive: true,
         roles: [],
     });
     const [selectedUser, setSelectedUser] = useState(null); // New state for selected user
@@ -134,7 +137,44 @@ function SearchTable() {
         });
     };
 
+    const usernameRef = useRef(null);
+    const emailRef = useRef(null);
+    const phoneNumberRef = useRef(null);
+    const passwordRef = useRef(null);
+    const rolesRef = useRef(null);
+
     const handleSaveNewUser = async () => {
+
+        // Biểu thức Regex cho email và số điện thoại
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneNumberRegex = /^[0-9]{10,11}$/;
+
+        if (!newUser.username) {
+            usernameRef.current.focus();
+            return message.error('Tên không được để trống và không chứa ký tự đặc biệt');
+        }
+
+        if (!newUser.email || !emailRegex.test(newUser.email)) {
+            emailRef.current.focus();
+            return message.error('Email không hợp lệ hoặc để trống');
+        }
+
+        if (!newUser.phoneNumber || !phoneNumberRegex.test(newUser.phoneNumber)) {
+            phoneNumberRef.current.focus();
+            return message.error('Số điện thoại không hợp lệ (10-11 chữ số)');
+        }
+
+        if (!newUser.password) {
+            passwordRef.current.focus();
+            return message.error('Mật khẩu không được để trống');
+        }
+
+        if (!newUser.roles || newUser.roles.length === 0) {
+            rolesRef.current.focus();
+            return message.error('Vai trò không được để trống');
+        }
+
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8080/users/adminCreate', {
@@ -156,6 +196,9 @@ function SearchTable() {
                     email: '',
                     phoneNumber: '',
                     password: '',
+                    address: '',
+                    gender: true, 
+                    isActive: true,      
                     roles: '',
                 });
                 message.success('Người dùng đã được thêm thành công');
@@ -202,24 +245,19 @@ function SearchTable() {
         },
         {
             title: 'Trạng thái',
-            key: 'isOnline',
-            render: (_, { isOnline }) => (
-                <Tag color={isOnline ? 'green' : 'volcano'}>
-                    {isOnline ? 'Hoạt động' : 'Không hoạt động'}
+            key: 'isActive',
+            render: (_, { isActive }) => (
+                <Tag color={isActive ? 'green' : 'volcano'}>
+                    {isActive ? 'Hoạt động' : 'Không hoạt động'}
                 </Tag>
             ),
-        },
-        {
-            title: 'Ngày sinh',
-            dataIndex: 'dateOfBirth',
-            key: 'dateOfBirth',
         },
         {
             title: 'Vai trò',
             dataIndex: 'roles',
         },
         {
-            title: 'Hiện thực',
+            title: 'Thao tác',
             key: 'action',
             render: (text, record) => (
                 <div className="action-buttons">
@@ -305,46 +343,84 @@ function SearchTable() {
                 visible={isModalVisible}
                 onCancel={() => {
                     setIsModalVisible(false);
-                    setNewUser({
-                        username: '',
-                        email: '',
-                        phoneNumber: '',
-                        password: '',
-                        roles: '', // Đặt lại giá trị mặc định
-                    });
+                    // setNewUser({
+                    //     username: '',
+                    //     email: '',
+                    //     phoneNumber: '',
+                    //     password: '',
+                    //     roles: '', // Đặt lại giá trị mặc định
+                    // });
                 }}
                 onOk={handleSaveNewUser}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Email">
-                        <Input
-                            name="email"
-                            value={newUser.email}
-                            onChange={handleNewUserChange}
-                        />
-                    </Form.Item>
                     <Form.Item label="Tên">
                         <Input
+                            ref={usernameRef}
                             name="username"
                             value={newUser.username}
                             onChange={handleNewUserChange}
                         />
                     </Form.Item>
+                    <Form.Item label="Email">
+                        <Input
+                            ref={emailRef}
+                            name="email"
+                            value={newUser.email}
+                            onChange={handleNewUserChange}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Giới tính">
+                        <Select
+                            name="gender"
+                            value={newUser.gender}
+                            onChange={(value) => setNewUser({ ...newUser, gender: value })}
+                            style={{ width: '100%' }}
+                        >
+                            <Select.Option value={true}>Nam</Select.Option>
+                            <Select.Option value={false}>Nữ</Select.Option>
+                        </Select>
+                    </Form.Item>
+
                     <Form.Item label="Số điện thoại">
                         <Input
+                            ref={phoneNumberRef}
                             name="phoneNumber"
                             value={newUser.phoneNumber}
                             onChange={handleNewUserChange}
                         />
                     </Form.Item>
+
+                    <Form.Item label="Địa chỉ">
+                        <Input
+                            name="address"
+                            value={newUser.address}
+                            onChange={handleNewUserChange}
+                        />
+                    </Form.Item>
+
                     <Form.Item label="Mật khẩu">
                         <Input
+                            ref={passwordRef}
                             name="password"
-                            type="password" // Ẩn mật khẩu
+                            type="password"
                             value={newUser.password}
                             onChange={handleNewUserChange}
                         />
                     </Form.Item>
+
+                    <Form.Item label="Trạng thái tài khoản">
+                        <Select
+                            name="isActive"
+                            value={newUser.isActive}
+                            onChange={(value) => setNewUser({ ...newUser, isActive: value })}
+                            style={{ width: '100%' }}
+                        >
+                            <Select.Option value={true}>Đang hoạt động</Select.Option>
+                            <Select.Option value={false}>Không hoạt động</Select.Option>
+                        </Select>
+                    </Form.Item>
+
                     <Form.Item label="Vai trò">
                         <Select
                             name="roles"
@@ -377,8 +453,7 @@ function SearchTable() {
                         <p><strong>Số điện thoại:</strong> {selectedUser.phoneNumber}</p>
                         <p><strong>Địa chỉ:</strong> {selectedUser.address}</p>
                         <p><strong>Giới tính:</strong> {selectedUser.gender ? 'Nam' : 'Nữ'}</p>
-                        <p><strong>Trạng thái:</strong> {selectedUser.isOnline ? 'Hoạt động' : 'Không hoạt động'}</p>
-                        <p><strong>Ngày sinh:</strong> {selectedUser.dateOfBirth}</p>
+                        <p><strong>Trạng thái:</strong> {selectedUser.isActive ? 'Hoạt động' : 'Không hoạt động'}</p>
                         <p><strong>Vai trò:</strong> {selectedUser.roles.join(', ')}</p>
                     </div>
                 )}
