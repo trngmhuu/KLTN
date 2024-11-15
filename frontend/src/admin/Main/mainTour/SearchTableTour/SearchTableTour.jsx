@@ -10,7 +10,7 @@ const { confirm } = Modal;
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
-  };
+};
 
 function SearchTableTour({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
@@ -92,7 +92,7 @@ function SearchTableTour({ changeComponent }) {
 
     const handleEdit = (record) => {
         changeComponent('update', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
-    };    
+    };
 
     const handleDelete = async (tourCode) => {
         try {
@@ -195,16 +195,16 @@ function SearchTableTour({ changeComponent }) {
             },
             width: 100
         },
-        // {
-        //     title: 'Trạng thái',
-        //     key: 'isActive',
-        //     render: (_, { isActive }) => (
-        //         <Tag color={isActive ? 'green' : 'volcano'}>
-        //             {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
-        //         </Tag>
-        //     ),
-        //     width: 90
-        // },
+        {
+            title: 'Trạng thái',
+            key: 'isActive',
+            render: (_, { isActive }) => (
+                <Tag color={isActive ? 'green' : 'volcano'}>
+                    {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
+                </Tag>
+            ),
+            width: 90
+        },
         {
             title: 'Hình đại diện',
             dataIndex: 'image',
@@ -303,7 +303,7 @@ function SearchTableTour({ changeComponent }) {
                         />
                     </div>
                 </CSSTransition>
-            </TransitionGroup>        
+            </TransitionGroup>
         </div>
     );
 }

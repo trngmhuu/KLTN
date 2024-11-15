@@ -10,7 +10,7 @@ const { confirm } = Modal;
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
-  };
+};
 
 function ApproveTour({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
@@ -54,7 +54,9 @@ function ApproveTour({ changeComponent }) {
             const result = await response.json();
 
             if (Array.isArray(result.result)) {
-                setData(result.result); // Cập nhật với danh sách tours từ result
+                // Lọc các tour có isActive = false
+                const filteredTours = result.result.filter(tour => !tour.isActive);
+                setData(filteredTours); // Cập nhật danh sách với các tour có isActive = false
             } else {
                 throw new Error('Expected result to be an array');
             }
@@ -63,8 +65,6 @@ function ApproveTour({ changeComponent }) {
             message.error('Không thể tải dữ liệu từ API.');
         }
     };
-
-
 
     useEffect(() => {
         fetchData();
@@ -92,7 +92,7 @@ function ApproveTour({ changeComponent }) {
 
     const handleEdit = (record) => {
         changeComponent('update', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
-    };    
+    };
 
     const handleDelete = async (tourCode) => {
         try {
@@ -108,7 +108,7 @@ function ApproveTour({ changeComponent }) {
                 fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
                 message.success('Tour đã được xóa thành công'); // Thông báo thành công
             } else {
-                throw new Error('Failed to delete tour');
+                throw new Error('Bạn không có quyền thực hiện điều này');
             }
         } catch (error) {
             console.error('Error deleting tour:', error);
@@ -195,16 +195,16 @@ function ApproveTour({ changeComponent }) {
             },
             width: 100
         },
-        // {
-        //     title: 'Trạng thái',
-        //     key: 'isActive',
-        //     render: (_, { isActive }) => (
-        //         <Tag color={isActive ? 'green' : 'volcano'}>
-        //             {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
-        //         </Tag>
-        //     ),
-        //     width: 90
-        // },
+        {
+            title: 'Trạng thái',
+            key: 'isActive',
+            render: (_, { isActive }) => (
+                <Tag color={isActive ? 'green' : 'volcano'}>
+                    {isActive ? 'Đang nhận khách' : 'Chưa cho phép đặt'}
+                </Tag>
+            ),
+            width: 90
+        },
         {
             title: 'Hình đại diện',
             dataIndex: 'image',
@@ -223,7 +223,7 @@ function ApproveTour({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.tourCode)}><DeleteFilled /></Button>
+                    {/* <Button type="link" danger onClick={() => showDeleteConfirm(record.tourCode)}><DeleteFilled /></Button> */}
                 </div>
             ),
         }
@@ -268,14 +268,8 @@ function ApproveTour({ changeComponent }) {
             </ul>
             {/* Header của bảng */}
             <div className='table-header'>
-                <h6>Bảng dữ liệu</h6>
+                <h6>Danh sách các tour chưa xét duyệt</h6>
                 <div className='table-header-actions'>
-                    <Button
-                        type="primary"
-                        onClick={() => changeComponent('add')} // Chuyển sang form thêm Tour
-                    >
-                        <PlusCircleOutlined />
-                    </Button>
                     <Button onClick={handleReload}>
                         <ReloadOutlined />
                     </Button>
@@ -303,7 +297,7 @@ function ApproveTour({ changeComponent }) {
                         />
                     </div>
                 </CSSTransition>
-            </TransitionGroup>        
+            </TransitionGroup>
         </div>
     );
 }

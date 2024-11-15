@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import PageTitle from '../pageTitle/PageTitle';
-import './mainTour.css';
-import SearchTableTour from './SearchTableTour/SearchTableTour';
-import AddTourForm from './AddTourForm/AddTourForm';
-import UpdateTourForm from './UpdateTourForm/UpdateTourForm';
+import './mainApproveTour.css';
+import SearchTableApproveTour from './SearchTableApproveTour/SearchTableApproveTour';
+import UpdateApproveTourForm from './UpdateApproveTourForm/UpdateApproveTourForm';
 
-function MainTour() {
+function MainApproveTour() {
     const [currentComponent, setCurrentComponent] = useState('list'); // State điều khiển component
     const [animation, setAnimation] = useState('slide-in'); // State cho hiệu ứng chuyển động
     const [selectedTourCode, setSelectedTourCode] = useState(null); // State để lưu mã tour được chọn
@@ -21,16 +20,16 @@ function MainTour() {
 
     return (
         <main id="main" className={`main ${animation}`}>
-            <PageTitle page={currentComponent === 'list' ? 'Quản lý Tour' : currentComponent === 'update' ? 'Cập nhật Tour' : 'Thêm Tour'} />
-            {currentComponent === 'list' ? (
-                <SearchTableTour changeComponent={handleComponentChange} onEditTour={handleComponentChange} />
-            ) : currentComponent === 'update' ? (
-                <UpdateTourForm changeComponent={handleComponentChange} tourCode={selectedTourCode} />
-            ) : (
-                <AddTourForm changeComponent={handleComponentChange} />
-            )}
+            <PageTitle page={currentComponent === 'list' ? 'Duyệt tour' : currentComponent === 'update' ? 'Cập nhật Tour' : 'Thêm Tour'} />
+            {
+                currentComponent === 'list' ? (
+                    <SearchTableApproveTour changeComponent={handleComponentChange} onEditTour={handleComponentChange} />
+                ) : currentComponent === 'update' ? (
+                    <UpdateApproveTourForm changeComponent={handleComponentChange} tourCode={selectedTourCode} />
+                ) : null
+            }
         </main>
     );
 }
 
-export default MainTour;
+export default MainApproveTour;

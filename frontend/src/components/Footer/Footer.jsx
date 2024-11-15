@@ -108,7 +108,7 @@ const Footer = () => {
           </Col>
           <Col lg="12" className="text-center pt-5">
             <p className="copyright">
-              Copyright {year}, designed and developed by Truong Minh Huu. All rights reserved
+              Copyright {year}, designed and developed by Truong Minh Huu, Nguyen Viet Ngoc Thinh. All rights reserved
             </p>
           </Col>
         </Row>

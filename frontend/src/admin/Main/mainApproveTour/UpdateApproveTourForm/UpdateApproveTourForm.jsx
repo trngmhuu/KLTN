@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import './updateTourForm.css';
+import './updateApproveTourForm.css';
 import cities from "../../../../assets/data/cities.json"
 
 const { Option } = Select;
 
-function UpdateTourForm({ changeComponent, tourCode }) {
+function UpdateApproveTourForm({ changeComponent, tourCode }) {
 
     const [uploadedImage, setUploadedImage] = useState(null);
     const [existingImageUrl, setExistingImageUrl] = useState(null);
@@ -204,7 +204,7 @@ function UpdateTourForm({ changeComponent, tourCode }) {
             startDay: tour.startDay,
             price: tour.price,
             vehicle: tour.vehicle,
-            isActive: false,
+            isActive: tour.isActive,
             image: existingImageUrl,  // Luôn gửi URL ảnh hiện tại nếu không có ảnh mới
             saleTour: tour.saleTour,
             percentSale: tour.saleTour ? tour.percentSale : 0,  // Chỉ truyền percentSale nếu saleTour là true
@@ -365,7 +365,7 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             <Option value="Máy bay">Máy bay</Option>
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item label="Trạng thái tour">
+                    <Form.Item label="Trạng thái tour">
                         <Select
                             name="isActive"
                             value={tour.isActive}
@@ -375,7 +375,7 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             <Option value={true}>Đang nhận khách</Option>
                             <Option value={false}>Chưa thể đặt</Option>
                         </Select>
-                    </Form.Item> */}
+                    </Form.Item>
                     <Form.Item label="Giảm giá">
                         <Select
                             name="saleTour"
@@ -437,4 +437,4 @@ function UpdateTourForm({ changeComponent, tourCode }) {
     );
 }
 
-export default UpdateTourForm;
+export default UpdateApproveTourForm;
