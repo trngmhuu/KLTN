@@ -6,13 +6,16 @@ import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutline
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import moment from 'moment/moment';
 import { Container, Row, Col } from "reactstrap";
+import { useNotifications } from '../../../../context/NotificationContext';
 const { confirm } = Modal;
+
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
 };
 
 function SearchTableTour({ changeComponent }) {
+    const { addNotification } = useNotifications();
     const [searchParams, setSearchParams] = useState({
         name: '',
         tourCode: '',
@@ -110,27 +113,43 @@ function SearchTableTour({ changeComponent }) {
             } else {
                 throw new Error('Failed to delete tour');
             }
-        } catch (error) {
+
+            // Lấy tên người dùng từ localStorage
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const username = userInfo?.username || 'Người dùng';
+
+            // Thêm thông báo
+            addNotification(`${username} vừa xóa tour có mã ${tourCode}`);
+        }
+        catch (error) {
             console.error('Error deleting tour:', error);
         }
     };
 
-    const showDeleteConfirm = (tourCode) => {
+    const showDeleteConfirm = (record) => {
+        if (record.isActive) {
+            // Nếu tour đang ở trạng thái "Đang nhận khách"
+            message.error("Không thể xóa tour đang cho phép đặt");
+            return;
+        }
+
+        // Hiển thị xác nhận nếu không bị chặn
         confirm({
             title: 'Bạn có chắc chắn muốn xóa Tour này?',
             icon: <ExclamationCircleOutlined />,
-            content: `Mã tour: ${tourCode}`,
+            content: `Mã tour: ${record.tourCode}`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                handleDelete(tourCode);
+                handleDelete(record.tourCode);
             },
             onCancel() {
                 console.log('Hủy hành động xóa');
             },
         });
     };
+
 
     const columns = [
         {
@@ -223,7 +242,7 @@ function SearchTableTour({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.tourCode)}><DeleteFilled /></Button>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
                 </div>
             ),
         }

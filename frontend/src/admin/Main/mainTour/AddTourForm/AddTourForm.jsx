@@ -3,10 +3,12 @@ import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './addTourForm.css';
 import cities from "../../../../assets/data/cities.json"
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { Option } = Select;
 
 function AddTourForm({ changeComponent }) {
+    const { addNotification } = useNotifications();
     const [tour, setTour] = useState({
         tourCode: '',
         name: '',
@@ -149,7 +151,7 @@ function AddTourForm({ changeComponent }) {
             message.error("Phần trăm giảm giá phải là một số nguyên trong khoảng từ 1 đến 100.");
             focusInput("percentSale");
             return;
-        }        
+        }
 
         if (!tour.image) {
             message.error("Hãy chọn hình đại diện cho tour");
@@ -194,6 +196,13 @@ function AddTourForm({ changeComponent }) {
                 console.error('Response Error:', errorData);
                 throw new Error('Lỗi khi thêm tour');
             }
+
+            // Lấy tên người dùng từ localStorage
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const username = userInfo?.username || 'Người dùng';
+
+            // Thêm thông báo
+            addNotification(`${username} vừa tạo tour mới với mã ${tour.tourCode}`);
 
             message.success('Tour mới đã được thêm!');
             changeComponent('list');

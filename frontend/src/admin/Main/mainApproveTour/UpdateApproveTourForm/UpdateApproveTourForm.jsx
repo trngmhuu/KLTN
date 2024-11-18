@@ -3,11 +3,12 @@ import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './updateApproveTourForm.css';
 import cities from "../../../../assets/data/cities.json"
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { Option } = Select;
 
 function UpdateApproveTourForm({ changeComponent, tourCode }) {
-
+    const { addNotification } = useNotifications();
     const [uploadedImage, setUploadedImage] = useState(null);
     const [existingImageUrl, setExistingImageUrl] = useState(null);
     const [tour, setTour] = useState({
@@ -51,7 +52,7 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
         };
 
         fetchTourByCode();
-    }, [tourCode]);
+    }, [tourCode, token]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -231,6 +232,18 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
                 const errorData = await response.json();
                 console.error('Response Error:', errorData);
                 throw new Error('Lỗi khi cập nhật tour');
+            }
+
+            // Lấy thông tin người dùng từ localStorage
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const username = userInfo?.username || 'Người dùng';
+
+            if (tour.isActive) {
+                // Nếu tour được duyệt
+                addNotification(`${username} đã duyệt tour với mã ${tour.tourCode}`);
+            } else {
+                // Nếu chỉ cập nhật các phần khác
+                addNotification(`${username} đã cập nhật tour với mã ${tour.tourCode}`);
             }
 
             message.success('Tour đã được cập nhật!');

@@ -3,11 +3,12 @@ import { Form, Input, Button, message, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './updateTourForm.css';
 import cities from "../../../../assets/data/cities.json"
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { Option } = Select;
 
 function UpdateTourForm({ changeComponent, tourCode }) {
-
+    const { addNotification } = useNotifications();
     const [uploadedImage, setUploadedImage] = useState(null);
     const [existingImageUrl, setExistingImageUrl] = useState(null);
     const [tour, setTour] = useState({
@@ -232,6 +233,13 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                 console.error('Response Error:', errorData);
                 throw new Error('Lỗi khi cập nhật tour');
             }
+
+            // Lấy tên người dùng từ localStorage
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const username = userInfo?.username || 'Người dùng';
+
+            // Thêm thông báo
+            addNotification(`${username} vừa cập nhật tour với mã ${tour.tourCode}`);
 
             message.success('Tour đã được cập nhật!');
             changeComponent('list');
