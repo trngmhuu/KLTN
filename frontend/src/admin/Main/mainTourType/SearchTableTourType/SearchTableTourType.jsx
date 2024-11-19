@@ -88,7 +88,30 @@ function SearchTableTourType() {
     const handleDelete = async (name) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/typetours/${name}`, {
+
+            // Kiểm tra danh sách tour liên quan đến phân loại
+            const response = await fetch(`http://localhost:8080/tours`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch tours');
+
+            const tours = await response.json();
+
+            // Kiểm tra nếu có tour liên quan đến phân loại cần xóa
+            const relatedTours = tours.result.filter((tour) => tour.typeTourName === name);
+
+            if (relatedTours.length > 0) {
+                message.error(`Bạn phải chuyển hết các tour thuộc ${name} sang phân loại khác mới có thể tiến hành xóa`);
+                return;
+            }
+
+            // Thực hiện xóa phân loại tour
+            const deleteResponse = await fetch(`http://localhost:8080/typetours/${name}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,15 +119,18 @@ function SearchTableTourType() {
                 },
             });
 
-            if (response.ok) {
+            if (deleteResponse.ok) {
                 message.success('Đã xóa thành công!');
                 fetchData();
-            } else throw new Error('Failed to delete type tour');
+            } else {
+                throw new Error('Failed to delete type tour');
+            }
         } catch (error) {
             console.error('Error deleting type tour:', error);
             message.error('Có lỗi xảy ra khi xóa!');
         }
     };
+
 
     const showDeleteConfirm = (name) => {
         confirm({
@@ -161,7 +187,30 @@ function SearchTableTourType() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/typetours/${selectedTour.idAsString}`, {
+
+            // Kiểm tra danh sách tour liên quan đến phân loại ban đầu
+            const response = await fetch(`http://localhost:8080/tours`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch tours');
+
+            const tours = await response.json();
+
+            // Kiểm tra nếu có tour liên quan đến initialTour.name
+            const relatedTours = tours.result.filter((tour) => tour.typeTourName === initialTour.name);
+
+            if (relatedTours.length > 0) {
+                message.error(`Bạn phải chuyển hết các tour thuộc ${initialTour.name} sang phân loại khác mới có thể thực hiện chỉnh sửa`);
+                return;
+            }
+
+            // Thực hiện cập nhật thông tin phân loại tour
+            const updateResponse = await fetch(`http://localhost:8080/typetours/${selectedTour.idAsString}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -173,7 +222,7 @@ function SearchTableTourType() {
                 }),
             });
 
-            if (response.ok) {
+            if (updateResponse.ok) {
                 message.success('Loại tour đã được cập nhật thành công!');
                 fetchData();
                 handleDetailModalClose();
@@ -199,7 +248,6 @@ function SearchTableTourType() {
             message.error('Có lỗi xảy ra khi cập nhật!');
         }
     };
-
 
     const columns = [
         { title: 'Tên phân loại', dataIndex: 'name', key: 'name' },
