@@ -8,7 +8,7 @@ function Logo() {
 
     return (
         <div className='d-flex align-items-center justify-content-between'>
-            <a href='/home' className='logo d-flex align-items-center'>
+            <a href='/admin' className='logo d-flex align-items-center'>
                 {/* <img src='' alt='' /> */}
                 <span className='d-none d-lg-block'>AdminPage</span>
             </a>

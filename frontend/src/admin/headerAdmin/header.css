@@ -51,10 +51,23 @@
     height: 50px;
 }
 
+.notification-actions {
+    display: flex;
+    flex-direction: column;
+    line-height: normal
+}
+
 .clear-btn {
     background: transparent;
     border: none;
     color: #007bff;
+    cursor: pointer;
+}
+
+.mark-read-btn {
+    background: transparent;
+    color: #007bff;
+    border: none;
     cursor: pointer;
 }
 
@@ -91,6 +104,7 @@
     padding: 10px;
     border-bottom: 1px solid #ddd;
     text-align: justify;
+    line-height: normal;
 }
 
 .notification-item:last-child {

@@ -2,11 +2,13 @@ import { Tag, Button, Form, Input, Select, Table, Modal, message } from 'antd';
 import React, { useState, useEffect } from 'react';
 import './searchTableTourType.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { confirm } = Modal;
 const { Option } = Select;
 
 function SearchTableTourType() {
+    const { addNotification } = useNotifications();
     const [searchParams, setSearchParams] = useState({ name: '' });
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -47,12 +49,14 @@ function SearchTableTourType() {
     const handleReload = () => fetchData();
     const handleAdd = () => setIsModalVisible(true);
 
+    const [initialTour, setInitialTour] = useState(null); // State để lưu thông tin ban đầu
+
     const handleEdit = (record) => {
         setSelectedTour(record);
-        console.log("Selected Tour:", record);
-        console.log("Selected Tour ID:", record.idAsString);
+        setInitialTour({ ...record });
         setIsDetailModalVisible(true);
     };
+
 
     const handleDetailModalClose = () => {
         setIsDetailModalVisible(false);
@@ -150,7 +154,6 @@ function SearchTableTourType() {
     };
 
     const handleUpdateTypeTour = async () => {
-
         if (!selectedTour.name || !selectedTour.typeId) {
             message.error('Vui lòng điền đầy đủ thông tin trước khi cập nhật!');
             return;
@@ -172,14 +175,31 @@ function SearchTableTourType() {
 
             if (response.ok) {
                 message.success('Loại tour đã được cập nhật thành công!');
-                fetchData(); // Tải lại dữ liệu sau khi cập nhật
-                handleDetailModalClose(); // Đóng modal
-            } else throw new Error('Failed to update type tour');
+                fetchData();
+                handleDetailModalClose();
+
+                // Lấy thông tin người dùng
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                const username = userInfo?.username || 'Người dùng';
+
+                // Tạo thông báo dựa trên sự thay đổi
+                if (selectedTour.name !== initialTour.name) {
+                    addNotification(`${username} đã cập nhật tên phân loại từ ${initialTour.name} thành ${selectedTour.name}`);
+                }
+
+                if (selectedTour.typeId !== initialTour.typeId) {
+                    const typeName = selectedTour.typeId === '1' ? 'Tour trong nước' : 'Tour ngoài nước';
+                    addNotification(`${username} đã cập nhật phân loại tour ${selectedTour.name} thành ${typeName}`);
+                }
+            } else {
+                throw new Error('Failed to update type tour');
+            }
         } catch (error) {
             console.error('Error updating type tour:', error);
             message.error('Có lỗi xảy ra khi cập nhật!');
         }
     };
+
 
     const columns = [
         { title: 'Tên phân loại', dataIndex: 'name', key: 'name' },
