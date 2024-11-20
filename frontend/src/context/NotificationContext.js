@@ -1,54 +1,96 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { database } from '../firebase/FirebaseConfig'; // Import cấu hình Firebase
-import { ref, push, onValue, remove, update, set } from 'firebase/database'; // Firebase functions
+import { database } from '../firebase/FirebaseConfig';
+import { ref, push, onValue, update, remove } from 'firebase/database';
 
 const NotificationContext = createContext();
+
+const sanitizeEmail = (email) => email.replace(/\./g, ',');
 
 export const useNotifications = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
+    const [notificationStatus, setNotificationStatus] = useState({});
+    const userEmail = JSON.parse(localStorage.getItem('userInfo'))?.email;
+    const sanitizedEmail = userEmail ? sanitizeEmail(userEmail) : null;
 
-    // Lắng nghe thông báo từ Firebase
     useEffect(() => {
-        const notificationsRef = ref(database, 'notifications');
-        const unsubscribe = onValue(notificationsRef, (snapshot) => {
+        // Lấy thông báo chung
+        const globalNotificationsRef = ref(database, 'notifications/global');
+        const globalListener = onValue(globalNotificationsRef, (snapshot) => {
             const data = snapshot.val();
-            const formattedNotifications = data ? Object.values(data) : [];
+            const formattedNotifications = data ? Object.entries(data).map(([id, notification]) => ({
+                id,
+                ...notification
+            })) : [];
             setNotifications(formattedNotifications);
         });
 
-        return () => unsubscribe(); // Dọn dẹp lắng nghe khi component unmount
-    }, []);
+        // Lấy trạng thái thông báo của người dùng
+        if (sanitizedEmail) {
+            const userStatusRef = ref(database, `notificationsStatus/${sanitizedEmail}`);
+            const statusListener = onValue(userStatusRef, (snapshot) => {
+                const data = snapshot.val();
+                setNotificationStatus(data || {});
+            });
 
-    // Thêm thông báo vào Firebase
+            return () => {
+                globalListener();
+                statusListener();
+            };
+        }
+
+        return () => globalListener();
+    }, [sanitizedEmail]);
+
+    // Thêm thông báo mới (toàn bộ người dùng)
     const addNotification = (message) => {
-        const notificationsRef = ref(database, 'notifications');
-        push(notificationsRef, { message, isRead: false }); // Mặc định thông báo là chưa đọc
+        const globalNotificationsRef = ref(database, 'notifications/global');
+        push(globalNotificationsRef, { message, timestamp: Date.now() });
     };
 
-    // Xóa toàn bộ thông báo trong Firebase
-    const clearNotifications = () => {
-        const notificationsRef = ref(database, 'notifications');
-        remove(notificationsRef);
-    };
-
-    // Đánh dấu tất cả thông báo là đã đọc
+    // Đánh dấu tất cả thông báo là đã đọc cho người dùng hiện tại
     const markAllRead = () => {
-        const notificationsRef = ref(database, 'notifications');
-        
-        // Create a new array of notifications with isRead set to true
-        const updatedNotifications = notifications.map(notification => ({
-            ...notification,
-            isRead: true
-        }));
-    
-        // Replace the entire notifications array
-        set(notificationsRef, updatedNotifications);
+        if (!sanitizedEmail) return;
+
+        const updates = {};
+        notifications.forEach((notification) => {
+            updates[notification.id] = true; // Đánh dấu đã đọc
+        });
+
+        const userStatusRef = ref(database, `notificationsStatus/${sanitizedEmail}`);
+        update(userStatusRef, updates);
+    };
+
+    // Kiểm tra trạng thái đã đọc của từng thông báo
+    const isRead = (notificationId) => notificationStatus[notificationId] || false;
+
+    // Tính số lượng thông báo chưa đọc
+    const unreadCount = notifications.filter(notification => !isRead(notification.id)).length;
+
+    // Clear all notifications for admin
+    const clearNotifications = () => {
+        const globalNotificationsRef = ref(database, 'notifications/global');
+        remove(globalNotificationsRef)
+            .then(() => {
+                console.log('All notifications have been cleared by the Admin.');
+            })
+            .catch((error) => {
+                console.error('Failed to clear notifications:', error);
+            });
     };
 
     return (
-        <NotificationContext.Provider value={{ notifications, addNotification, clearNotifications, markAllRead }}>
+        <NotificationContext.Provider
+            value={{
+                notifications,
+                addNotification,
+                markAllRead,
+                isRead,
+                unreadCount,
+                clearNotifications
+            }}
+        >
             {children}
         </NotificationContext.Provider>
     );

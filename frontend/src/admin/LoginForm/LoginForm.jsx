@@ -81,8 +81,8 @@ function LoginForm() {
                 const myinfoData = await myinfoResponse.json();
                 if (myinfoResponse.ok) {
                     // Chỉ lưu roles và username vào localStorage
-                    const { roles, username } = myinfoData.result || myinfoData;
-                    const userInfo = { roles, username };
+                    const { roles, username, email } = myinfoData.result || myinfoData;
+                    const userInfo = { roles, username, email };
                     localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
                     // Điều hướng đến trang chủ admin

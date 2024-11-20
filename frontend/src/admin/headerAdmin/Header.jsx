@@ -5,9 +5,8 @@ import Nav from './nav/Nav';
 import { useNotifications } from '../../context/NotificationContext';
 
 function Header() {
-    const { notifications, clearNotifications, markAllRead } = useNotifications(); // Sử dụng clearNotifications
+    const { notifications, clearNotifications, markAllRead, unreadCount, isRead } = useNotifications(); // Thêm isRead vào đây
     const [isDropdownVisible, setDropdownVisible] = useState(false);
-    const [unreadCount, setUnreadCount] = useState(0); // Bộ đếm thông báo chưa đọc
 
     // Lấy quyền người dùng từ localStorage
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -21,12 +20,16 @@ function Header() {
         markAllRead(); // Đánh dấu tất cả thông báo là đã đọc
     };
 
-    // Đồng bộ lại bộ đếm thông báo chưa đọc khi có thay đổi trong notifications
-    useEffect(() => {
-        // Cập nhật lại bộ đếm chưa đọc
-        const unread = notifications.filter(notification => !notification.isRead).length;
-        setUnreadCount(unread);
-    }, [notifications]); // Khi notifications thay đổi, cập nhật lại bộ đếm
+    // Hàm để định dạng timestamp thành ngày giờ dễ đọc
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // tháng bắt đầu từ 0
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    };
 
     return (
         <header id='header' className='header fixed-top d-flex align-items-center'>
@@ -34,7 +37,7 @@ function Header() {
             <div className='header__section d-flex'>
                 <span className='bell' onClick={toggleDropdown}>
                     <i className='ri-notification-line'></i>
-                    {unreadCount > 0 && 
+                    {unreadCount > 0 &&
                         <span className="notification-count">{unreadCount}</span>
                     }
                     {isDropdownVisible && (
@@ -54,12 +57,21 @@ function Header() {
                             </div>
                             <div className="notification-list">
                                 {notifications.length > 0 ? (
-                                    notifications.map((notification, index) => (
-                                        <div key={index} className="notification-item">
-                                            {/* Render chỉ nội dung message */}
-                                            {notification.message}
-                                        </div>
-                                    ))
+                                    // Sắp xếp mảng notifications theo thời gian (mới nhất xếp trước)
+                                    notifications
+                                        .sort((a, b) => b.timestamp - a.timestamp) // Sắp xếp theo timestamp, b - a để mới nhất xếp trên
+                                        .map((notification, index) => (
+                                            <div
+                                                key={index}
+                                                className={`notification-item ${isRead(notification.id) ? 'read' : 'unread'}`}
+                                            >
+                                                <div>{notification.message}</div>
+                                                {/* Hiển thị ngày giờ */}
+                                                <div className="notification-time">
+                                                    {formatTimestamp(notification.timestamp)}
+                                                </div>
+                                            </div>
+                                        ))
                                 ) : (
                                     <div className="no-notifications">Không có thông báo</div>
                                 )}

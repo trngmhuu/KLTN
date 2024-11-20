@@ -94,43 +94,43 @@ function ApproveTour({ changeComponent }) {
         changeComponent('update', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
     };
 
-    const handleDelete = async (tourCode) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            if (response.ok) {
-                fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
-                message.success('Tour đã được xóa thành công'); // Thông báo thành công
-            } else {
-                throw new Error('Bạn không có quyền thực hiện điều này');
-            }
-        } catch (error) {
-            console.error('Error deleting tour:', error);
-        }
-    };
+    // const handleDelete = async (tourCode) => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`,
+    //             },
+    //         });
+    //         if (response.ok) {
+    //             fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
+    //             message.success('Tour đã được xóa thành công'); // Thông báo thành công
+    //         } else {
+    //             throw new Error('Bạn không có quyền thực hiện điều này');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error deleting tour:', error);
+    //     }
+    // };
 
-    const showDeleteConfirm = (tourCode) => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn xóa Tour này?',
-            icon: <ExclamationCircleOutlined />,
-            content: `Mã tour: ${tourCode}`,
-            okText: 'Xóa',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                handleDelete(tourCode);
-            },
-            onCancel() {
-                console.log('Hủy hành động xóa');
-            },
-        });
-    };
+    // const showDeleteConfirm = (tourCode) => {
+    //     confirm({
+    //         title: 'Bạn có chắc chắn muốn xóa Tour này?',
+    //         icon: <ExclamationCircleOutlined />,
+    //         content: `Mã tour: ${tourCode}`,
+    //         okText: 'Xóa',
+    //         okType: 'danger',
+    //         cancelText: 'Hủy',
+    //         onOk() {
+    //             handleDelete(tourCode);
+    //         },
+    //         onCancel() {
+    //             console.log('Hủy hành động xóa');
+    //         },
+    //     });
+    // };
 
     const columns = [
         {

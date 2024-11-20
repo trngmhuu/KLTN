@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Container, Row } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
@@ -18,9 +18,18 @@ const Header = () => {
       children: [],
     },
     {
-      path: "/about",
+      path: "",
       display: "Khác",
-      children: []
+      children: [
+        {
+          path: "/bookings",
+          display: "Tra cứu đặt tour",
+        },
+        {
+          path: "/about",
+          display: "Về chúng tôi",
+        }
+      ],
     },
   ]);
 
@@ -101,6 +110,7 @@ const Header = () => {
             </div>
 
             {/* Menu */}
+
             <div className="navigation">
               <ul className="menu d-flex align-items-center gap-5">
                 {navLinks.map((item, index) => (

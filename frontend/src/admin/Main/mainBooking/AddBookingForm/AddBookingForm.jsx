@@ -4,10 +4,12 @@ import './addBookingForm.css';
 import moment from "moment";
 import cities from "../../../../assets/data/cities.json"
 import districts from "../../../../assets/data/districtData.json"
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { Option } = Select;
 
 function AddBookingForm({ changeComponent }) {
+    const { addNotification } = useNotifications();
     const [booking, setBooking] = useState({
         bookingCode: '',
         customerName: '',
@@ -173,7 +175,7 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        if (!booking.expectedDate || moment(booking.expectedDate, 'DD-MM-YYYY').isSameOrBefore(moment(), 'day')) {
+        if (!booking.expectedDate || moment(booking.expectedDate, 'DD/MM/YYYY').isSameOrBefore(moment(), 'day')) {
             message.error('Ngày dự kiến phải được chọn và sau ngày hiện tại!');
             focusInput("expectedDate")
             return;
@@ -190,42 +192,49 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        try {
-            // Thông tin khách hàng
-            const customerData = {
-                customerName: booking.customerName,
-                customerEmail: booking.customerEmail,
-                customerPhoneNumber: booking.customerPhoneNumber,
-                customerCity: booking.customerCity,
-                customerDistrict: booking.customerDistrict,
-                customerAddress: booking.customerAddress,
-            };
 
-            // Lưu thông tin khách hàng trước
-            const customerResponse = await fetch('http://localhost:8080/customers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(customerData),
-            });
+        // Thông tin khách hàng
+        const customerData = {
+            customerName: booking.customerName,
+            customerEmail: booking.customerEmail,
+            customerPhoneNumber: booking.customerPhoneNumber,
+            customerCity: booking.customerCity,
+            customerDistrict: booking.customerDistrict,
+            customerAddress: booking.customerAddress,
+        };
 
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/bookings/admin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(booking),
-            });
+        // Lưu thông tin khách hàng trước
+        const customerResponse = await fetch('http://localhost:8080/customers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(customerData),
+        });
 
-            if (!response.ok) throw new Error('Lỗi khi thêm booking');
-            message.success('Booking mới đã được thêm!');
-            changeComponent('list');
-        } catch (error) {
-            message.error('Không thể thêm booking. Vui lòng thử lại!');
-        }
+
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8080/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(booking),
+        });
+
+        if (!response.ok) throw new Error('Lỗi khi thêm booking');
+        const bookingData = await response.json();
+
+        // Lấy tên người dùng từ localStorage
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const username = userInfo?.username || 'Người dùng';
+
+        // Thêm thông báo
+        addNotification(`${username} vừa tạo đơn đặt tour mới với tour ${booking.tourCode}, mã đặt tour là ${bookingData.result.bookingCode}`);
+        message.success('Booking mới đã được thêm!');
+        changeComponent('list');
+
     };
 
     return (

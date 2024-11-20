@@ -12,13 +12,16 @@ import cities from "../../assets/data/cities.json";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNotifications } from '../../context/NotificationContext';
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat("vi-VN").format(price);
 };
 
 const Booking = ({ tour }) => {
+  const { addNotification } = useNotifications();
   const { price, isActive, tourCode, saleTour, percentSale } = tour;
+  const [loading, setLoading] = useState(false);
 
   const displayedPrice = saleTour ? price - (price * percentSale / 100) : price;
 
@@ -135,6 +138,7 @@ const Booking = ({ tour }) => {
   const handleClick = async (e) => {
     e.preventDefault();
     if (!validateFields()) return;
+    setLoading(true);
 
     try {
       const today = formatDate(new Date());  // Định dạng ngày hiện tại
@@ -174,11 +178,16 @@ const Booking = ({ tour }) => {
       });
 
       if (responseBooking.ok) {
+        const bookingData = await responseBooking.json();
+        addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
+        setLoading(false);
         navigate("/thank-you");
       } else {
+        setLoading(false);
         toast.error("Có lỗi xảy ra. Vui lòng thử lại sau!");
       }
     } catch (error) {
+      setLoading(false);
       toast.error("Lỗi kết nối. Vui lòng thử lại sau!");
     }
   };
@@ -357,6 +366,12 @@ const Booking = ({ tour }) => {
       </div>
 
       <div className="booking__bottom">
+        {loading && (
+          <div className="loading-spinner">
+            <i className="ri-loader-2-line ri-spin"></i> {/* Bạn có thể dùng spinner của icon hoặc một cái khác */}
+            Đang xử lý... Vui lòng đợi.
+          </div>
+        )}
         <ListGroup>
           <ListGroupItem className="border-0 px-0">
             <h5 className="d-flex align-items-center gap-1">
@@ -373,11 +388,12 @@ const Booking = ({ tour }) => {
         <Button
           className="btn primary__btn w-100 mt-4"
           onClick={handleClick}
-          disabled={!isActive}
+          disabled={!isActive || loading} // Vô hiệu hóa nút khi đang loading
         >
           Đặt tour
         </Button>
       </div>
+
     </div>
   );
 };
