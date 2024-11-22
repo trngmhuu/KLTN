@@ -19,7 +19,7 @@ const Header = () => {
     },
     {
       path: "",
-      display: "Về chúng tôi",
+      display: "Hỗ trợ KH",
       children: [
         {
           path: "/bookings",

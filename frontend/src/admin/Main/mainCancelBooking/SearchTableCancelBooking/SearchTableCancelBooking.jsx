@@ -2,14 +2,14 @@ import { Tag, Button, Form, Input, Table, Modal, message } from 'antd';
 import React, { useState, useEffect } from 'react';
 import './searchTableCancelBooking.css';
 import './transition.css';
-import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined, CloseCircleFilled } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const { confirm } = Modal;
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
-  };
+};
 
 function SearchTableCancelBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
@@ -39,7 +39,11 @@ function SearchTableCancelBooking({ changeComponent }) {
             console.log('Data:', result);
 
             if (Array.isArray(result.result)) {
-                setData(result.result); // Cập nhật với danh sách bookings từ `result`
+                // Lọc dữ liệu để chỉ lấy những booking có trạng thái "Đang chờ hủy"
+                const filteredData = result.result.filter(
+                    (booking) => booking.activeBooking === 'Đang chờ hủy'
+                );
+                setData(filteredData); // Cập nhật với danh sách bookings đã lọc
             } else {
                 throw new Error('Expected result to be an array');
             }
@@ -84,44 +88,47 @@ function SearchTableCancelBooking({ changeComponent }) {
         changeComponent('update', record.bookingCode); // Gọi hàm changeComponent với mã booking
     };
 
+    const handleCancelBooking = async (bookingCode) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/bookings/cancel/${bookingCode}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            if (response.ok) {
+                fetchData(); // Cập nhật lại danh sách sau khi hủy thành công
+                message.success('Đã hủy booking'); // Thông báo thành công
+            } else {
+                throw new Error('Failed to cancel booking');
+            }
+        } catch (error) {
+            console.error('Error canceling booking:', error);
+            message.error('Không thể hủy booking');
+        }
+    };
+    
 
-    // const handleDelete = async (bookingCode) => {
-    //     try {
-    //         const token = localStorage.getItem('token');
-    //         const response = await fetch(`http://localhost:8080/bookings/${bookingCode}`, {
-    //             method: 'DELETE',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //         });
-    //         if (response.ok) {
-    //             fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
-    //             message.success('Đặt chỗ đã được xóa thành công'); // Thông báo thành công
-    //         } else {
-    //             throw new Error('Failed to delete booking');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error deleting booking:', error);
-    //     }
-    // };
-
-    // const showDeleteConfirm = (bookingCode) => {
-    //     confirm({
-    //         title: 'Bạn có chắc chắn muốn xóa Đặt Chỗ này?',
-    //         icon: <ExclamationCircleOutlined />,
-    //         content: `Mã đặt chỗ: ${bookingCode}`,
-    //         okText: 'Xóa',
-    //         okType: 'danger',
-    //         cancelText: 'Hủy',
-    //         onOk() {
-    //             handleDelete(bookingCode);
-    //         },
-    //         onCancel() {
-    //             console.log('Hủy hành động xóa');
-    //         },
-    //     });
-    // };
+    const showCancelConfirm = (record) => {
+        confirm({
+            title: 'Bạn có chắc chắn muốn hủy booking này?',
+            icon: <ExclamationCircleOutlined />,
+            content: `Mã đặt chỗ: ${record.bookingCode}`,
+            okText: 'Xác nhận',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                handleCancelBooking(record.bookingCode); // Gọi hàm hủy booking
+            },
+            onCancel() {
+                console.log('Hủy hành động hủy');
+            },
+        });
+    };
+    
 
     const columns = [
         {
@@ -179,11 +186,27 @@ function SearchTableCancelBooking({ changeComponent }) {
         {
             title: 'Trạng Thái',
             key: 'activeBooking',
-            render: (_, { activeBooking }) => (
-                <Tag color={activeBooking ? 'green' : 'volcano'}>
-                    {activeBooking ? 'Hoạt động' : 'Đã hủy'}
-                </Tag>
-            ),
+            render: (_, { activeBooking }) => {
+                let color, text;
+
+                // Kiểm tra giá trị của activeBooking và gán màu sắc, nội dung tương ứng
+                if (activeBooking === 'Hoạt động') {
+                    color = 'green'; // Hoạt động
+                    text = 'Hoạt động';
+                } else if (activeBooking === 'Đang chờ hủy') {
+                    color = 'orange'; // Đang chờ hủy
+                    text = 'Đang chờ hủy';
+                } else if (activeBooking === 'Đã hủy') {
+                    color = 'volcano'; // Đã hủy
+                    text = 'Đã hủy';
+                } else {
+                    // Giá trị mặc định nếu không phải 3 giá trị trên (nếu có trường hợp khác)
+                    color = 'default';
+                    text = 'Không xác định';
+                }
+
+                return <Tag color={color}>{text}</Tag>;
+            },
         },
         {
             title: 'Thao tác',
@@ -191,7 +214,7 @@ function SearchTableCancelBooking({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    {/* <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode)}><DeleteFilled /></Button> */}
+                    <Button type="link" onClick={() => showCancelConfirm(record)}><CloseCircleFilled/></Button>
                 </div>
             ),
         }

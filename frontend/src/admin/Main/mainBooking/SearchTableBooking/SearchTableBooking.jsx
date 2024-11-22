@@ -9,7 +9,7 @@ const { confirm } = Modal;
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
-  };
+};
 
 function SearchTableBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
@@ -73,6 +73,13 @@ function SearchTableBooking({ changeComponent }) {
     };
 
     const handleEdit = (record) => {
+
+        if (record.activeBooking === "Đã hủy") {
+            // Nếu đã thanh toán, hiển thị thông báo lỗi và không cho phép cập nhật
+            message.error('Đặt chỗ này đã bị hủy, không thể cập nhật!');
+            return; // Không làm gì thêm, không mở form cập nhật
+        }
+
         // Kiểm tra nếu booking đã thanh toán
         if (record.payBooking) {
             // Nếu đã thanh toán, hiển thị thông báo lỗi và không cho phép cập nhật
@@ -80,12 +87,18 @@ function SearchTableBooking({ changeComponent }) {
             return; // Không làm gì thêm, không mở form cập nhật
         }
 
-        // Nếu chưa thanh toán, tiến hành mở form cập nhật
         changeComponent('update', record.bookingCode); // Gọi hàm changeComponent với mã booking
     };
 
 
-    const handleDelete = async (bookingCode) => {
+    const handleDelete = async (bookingCode, activeBooking) => {
+    
+        if (activeBooking !== "Đã hủy") {
+            message.error("Chỉ có thể xóa các booking đã hủy");
+            return;
+        }
+
+        // Tiến hành xóa nếu booking đã hủy
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/bookings/${bookingCode}`, {
@@ -95,6 +108,7 @@ function SearchTableBooking({ changeComponent }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
+    
             if (response.ok) {
                 fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
                 message.success('Đặt chỗ đã được xóa thành công'); // Thông báo thành công
@@ -105,8 +119,9 @@ function SearchTableBooking({ changeComponent }) {
             console.error('Error deleting booking:', error);
         }
     };
+    
 
-    const showDeleteConfirm = (bookingCode) => {
+    const showDeleteConfirm = (bookingCode, activeBooking) => {
         confirm({
             title: 'Bạn có chắc chắn muốn xóa Đặt Chỗ này?',
             icon: <ExclamationCircleOutlined />,
@@ -115,13 +130,14 @@ function SearchTableBooking({ changeComponent }) {
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                handleDelete(bookingCode);
+                handleDelete(bookingCode, activeBooking); // Truyền thêm activeBooking vào
             },
             onCancel() {
                 console.log('Hủy hành động xóa');
             },
         });
     };
+    
 
     const columns = [
         {
@@ -179,11 +195,27 @@ function SearchTableBooking({ changeComponent }) {
         {
             title: 'Trạng Thái',
             key: 'activeBooking',
-            render: (_, { activeBooking }) => (
-                <Tag color={activeBooking ? 'green' : 'volcano'}>
-                    {activeBooking ? 'Hoạt động' : 'Đã hủy'}
-                </Tag>
-            ),
+            render: (_, { activeBooking }) => {
+                let color, text;
+
+                // Kiểm tra giá trị của activeBooking và gán màu sắc, nội dung tương ứng
+                if (activeBooking === 'Hoạt động') {
+                    color = 'green'; // Hoạt động
+                    text = 'Hoạt động';
+                } else if (activeBooking === 'Đang chờ hủy') {
+                    color = 'orange'; // Đang chờ hủy
+                    text = 'Đang chờ hủy';
+                } else if (activeBooking === 'Đã hủy') {
+                    color = 'volcano'; // Đã hủy
+                    text = 'Đã hủy';
+                } else {
+                    // Giá trị mặc định nếu không phải 3 giá trị trên (nếu có trường hợp khác)
+                    color = 'default';
+                    text = 'Không xác định';
+                }
+
+                return <Tag color={color}>{text}</Tag>;
+            },
         },
         {
             title: 'Thao tác',
@@ -191,10 +223,10 @@ function SearchTableBooking({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode)}><DeleteFilled /></Button>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode, record.activeBooking)}><DeleteFilled /></Button>
                 </div>
             ),
-        }
+        }        
     ];
 
     return (

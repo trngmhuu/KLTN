@@ -11,6 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import DomesticTours from "../pages/DomesticTours";
 import InternationalTours from "../pages/InternationalTours";
 import ToursOnSale from "../pages/ToursOnSale";
+import About from "../pages/About";
 
 const Router = () => {
   return (
@@ -26,6 +27,7 @@ const Router = () => {
       <Route path="/tours/domestic" element={<DomesticTours />} />
       <Route path="/tours/international" element={<InternationalTours />} />
       <Route path="/tours/on-sale" element={<ToursOnSale />} />
+      <Route path="/about" element={<About/>}/>
 
       {/* Bọc AdminHomePage bằng PrivateRoute */}
       <Route

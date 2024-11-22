@@ -49,6 +49,7 @@ const Booking = ({ tour }) => {
     tourCode,
     isPay: ""
   });
+  
   const [selectedCity, setSelectedCity] = useState("Thành phố Hồ Chí Minh");
   const [districts, setDistricts] = useState(districtData[selectedCity] || []);
   const [selectedDistrict, setSelectedDistrict] = useState("");

@@ -22,7 +22,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
         typePay: '',
         totalMoney: '',
         payBooking: false,
-        activeBooking: true,
+        activeBooking: "",
     });
 
     const [tours, setTours] = useState([]); // State lưu danh sách các tour
@@ -69,7 +69,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                         numberOfCustomer: bookingData.numberOfCustomer,
                         bookingDate: bookingData.bookingDate,
                         expectedDate: bookingData.expectedDate
-                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('YYYY-MM-DD') // Chuyển đổi ngày dự kiến
+                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('DD/MM/YYYY') // Chuyển đổi ngày dự kiến
                             : null,
                         note: bookingData.note,
                         tourCode: bookingData.tourCode,
@@ -212,12 +212,6 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
         if (!booking.tourCode.trim()) {
             message.error("Chưa chọn tour");
             focusInput("tourCode");
-            return;
-        }
-
-        if (!booking.expectedDate || moment(booking.expectedDate).isSameOrBefore(moment(), 'day')) {
-            message.error('Ngày dự kiến phải được chọn và sau ngày hiện tại!');
-            focusInput("expectedDate");
             return;
         }
 
@@ -375,14 +369,13 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                                 disabled
                             />
                         </Form.Item>
-                        {/* Thêm phần để chọn activeBooking */}
                         <Form.Item label="Trạng thái booking">
                             <Select
                                 value={booking.activeBooking}
                                 onChange={handleActiveBookingChange}
                             >
-                                <Option value={true}>Hoạt động</Option>
-                                <Option value={false}>Đã hủy</Option>
+                                <Option value="Hoạt động">Hoạt động</Option>
+                                <Option value="Đang chờ hủy">Đang chờ hủy</Option>
                             </Select>
                         </Form.Item>
                     </Col>

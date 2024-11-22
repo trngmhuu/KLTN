@@ -69,7 +69,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                         numberOfCustomer: bookingData.numberOfCustomer,
                         bookingDate: bookingData.bookingDate,
                         expectedDate: bookingData.expectedDate
-                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('YYYY-MM-DD') // Chuyển đổi ngày dự kiến
+                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('DD/MM/YYYY') // Chuyển đổi ngày dự kiến
                             : null,
                         note: bookingData.note,
                         tourCode: bookingData.tourCode,
@@ -215,12 +215,6 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             return;
         }
 
-        if (!booking.expectedDate || moment(booking.expectedDate).isSameOrBefore(moment(), 'day')) {
-            message.error('Ngày dự kiến phải được chọn và sau ngày hiện tại!');
-            focusInput("expectedDate");
-            return;
-        }
-
         if (!booking.typePay.trim()) {
             message.error("Chưa chọn hình thức thanh toán");
             focusInput("typePay");
@@ -233,7 +227,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
         }
 
         try {
-            
+
 
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/bookings/bookingCode/${booking.bookingCode}`, {
@@ -335,12 +329,27 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                         {selectedTour && (
                             <div className="tour-info">
                                 <h3>Thông tin tour</h3>
+                                <img src={selectedTour.image} alt="" style={{ width: "100%", height: "100%" }} />
                                 <p><strong>Mã Tour:</strong> {selectedTour.tourCode}</p>
                                 <p><strong>Tên Tour:</strong> {selectedTour.name}</p>
-                                <p><strong>Ngày khởi hành:</strong> {selectedTour.startDate}</p>
-                                <p><strong>Ngày kết thúc:</strong> {selectedTour.endDate}</p>
-                                <p><strong>Giá Tour:</strong> {selectedTour.price}</p>
-                                <p><strong>Mô tả:</strong> {selectedTour.description}</p>
+                                <p>
+                                    <strong>Loại tour:</strong>{" "}
+                                    {selectedTour.typeId === "1" ? "Tour trong nước" : selectedTour.typeId === "2" ? "Tour nước ngoài" : "Không xác định"}
+                                </p>
+                                <p><strong>Phân loại:</strong> {selectedTour.typeTourName}</p>
+                                <p>
+                                    <strong>Thời gian đi:</strong> {selectedTour.durationTour}
+                                </p>
+                                <p>
+                                    <strong>Phương tiện:</strong> {selectedTour.vehicle}
+                                </p>
+                                <p><strong>Điểm khởi hành:</strong> {selectedTour.locationStart}</p>
+                                <p>
+                                    <strong>Các ngày khởi hành:</strong>{" "}
+                                    {selectedTour.startDay.length === 7
+                                        ? "Hằng ngày"
+                                        : selectedTour.startDay.join(", ")}
+                                </p>
                             </div>
                         )}
                         {/* Các trường nhập liệu bên phải */}
@@ -376,15 +385,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                             />
                         </Form.Item>
                         {/* Thêm phần để chọn activeBooking */}
-                        <Form.Item label="Trạng thái booking">
+                        {/* <Form.Item label="Trạng thái booking">
                             <Select
                                 value={booking.activeBooking}
                                 onChange={handleActiveBookingChange}
                             >
-                                <Option value={true}>Hoạt động</Option>
-                                <Option value={false}>Đã hủy</Option>
+                                <Option value="Hoạt động">Hoạt động</Option>
+                                <Option value="Đang chờ hủy">Đang chờ hủy</Option>
+                                <Option value="Đã hủy">Đã hủy</Option>
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                     </Col>
                 </Row>
 

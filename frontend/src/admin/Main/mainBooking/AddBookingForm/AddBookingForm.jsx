@@ -19,15 +19,15 @@ function AddBookingForm({ changeComponent }) {
         customerDistrict: '',
         customerAddress: '',
         numberOfCustomer: 1,
-        bookingDate: moment().format('DD-MM-YYYY'),
+        bookingDate: moment().format('DD/MM/YYYY'),
         expectedDate: '',
         note: '',
         tourCode: '',
         typePay: '',
         totalMoney: '',
         payBooking: false,
-        activeBooking: true,
     });
+    
 
     const [tours, setTours] = useState([]); // State lưu danh sách các tour
     const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
