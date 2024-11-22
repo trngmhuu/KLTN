@@ -320,7 +320,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Trạng thái booking">
+                        <Form.Item label="Trạng thái thanh toán">
                             <Select
                                 value={booking.payBooking}
                                 onChange={handleActiveBookingChangePay}
@@ -381,8 +381,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                                 value={booking.activeBooking}
                                 onChange={handleActiveBookingChange}
                             >
-                                <Option value={true}>Xác nhận</Option>
-                                <Option value={false}>Hủy booking</Option>
+                                <Option value={true}>Hoạt động</Option>
+                                <Option value={false}>Đã hủy</Option>
                             </Select>
                         </Form.Item>
                     </Col>

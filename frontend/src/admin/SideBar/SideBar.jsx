@@ -143,7 +143,7 @@ function SideBar({ changeComponent }) {
                             </a>
                         </li>
                         <li>
-                            <a href="#" onClick={() => changeComponent('bookingcancel')}>
+                            <a href="#" onClick={() => changeComponent('cancelBooking')}>
                                 <i className="bi bi-circle"></i>
                                 <span>Yêu cầu hủy Booking</span>
                             </a>

@@ -20,7 +20,7 @@ function MainApproveTour() {
 
     return (
         <main id="main" className={`main ${animation}`}>
-            <PageTitle page={currentComponent === 'list' ? 'Duyệt tour' : currentComponent === 'update' ? 'Cập nhật Tour' : 'Thêm Tour'} />
+            <PageTitle page={currentComponent === 'list' ? 'Duyệt tour' : currentComponent === 'update' ? 'Cập nhật Tour' : null} />
             {
                 currentComponent === 'list' ? (
                     <SearchTableApproveTour changeComponent={handleComponentChange} onEditTour={handleComponentChange} />

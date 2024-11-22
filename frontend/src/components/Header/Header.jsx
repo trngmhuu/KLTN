@@ -19,7 +19,7 @@ const Header = () => {
     },
     {
       path: "",
-      display: "Khác",
+      display: "Về chúng tôi",
       children: [
         {
           path: "/bookings",
@@ -27,7 +27,7 @@ const Header = () => {
         },
         {
           path: "/about",
-          display: "Về chúng tôi",
+          display: "Giới thiệu",
         }
       ],
     },
@@ -114,7 +114,7 @@ const Header = () => {
             <div className="navigation">
               <ul className="menu d-flex align-items-center gap-5">
                 {navLinks.map((item, index) => (
-                  <li className="nav__item" key={index}>
+                  <li className="nav__item other__item" key={index}>
                     <NavLink
                       to={item.path}
                       className={(navClass) =>

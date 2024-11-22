@@ -1,15 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, DatePicker, Select, Row, Col } from 'antd';
-import './addBookingForm.css';
-import moment from "moment";
-import cities from "../../../../assets/data/cities.json"
-import districts from "../../../../assets/data/districtData.json"
-import { useNotifications } from '../../../../context/NotificationContext';
+import './updateCancelBooking.css';
+import moment from 'moment';
 
 const { Option } = Select;
 
-function AddBookingForm({ changeComponent }) {
-    const { addNotification } = useNotifications();
+function UpdateCancelBooking({ changeComponent, bookingCode }) {
     const [booking, setBooking] = useState({
         bookingCode: '',
         customerName: '',
@@ -19,7 +15,7 @@ function AddBookingForm({ changeComponent }) {
         customerDistrict: '',
         customerAddress: '',
         numberOfCustomer: 1,
-        bookingDate: moment().format('DD-MM-YYYY'),
+        bookingDate: '',
         expectedDate: '',
         note: '',
         tourCode: '',
@@ -52,6 +48,50 @@ function AddBookingForm({ changeComponent }) {
         };
         fetchTours();
     }, []); // Chạy khi component được render lần đầu tiên
+
+    // useEffect để gọi API và lấy thông tin khi bookingCode thay đổi
+    useEffect(() => {
+        const fetchBookingByCode = async () => {
+            if (bookingCode) {
+                try {
+                    const response = await fetch(`http://localhost:8080/bookings/by-bookingcode/${bookingCode}`);
+                    if (!response.ok) throw new Error('Không tìm thấy booking với mã này');
+                    const data = await response.json();
+                    const bookingData = data.result;
+
+                    // Cập nhật các trường dữ liệu cho form
+                    setBooking({
+                        bookingCode: bookingData.bookingCode,
+                        customerName: bookingData.customerName,
+                        customerEmail: bookingData.customerEmail,
+                        customerPhoneNumber: bookingData.customerPhoneNumber,
+                        customerAddress: bookingData.customerAddress,
+                        numberOfCustomer: bookingData.numberOfCustomer,
+                        bookingDate: bookingData.bookingDate,
+                        expectedDate: bookingData.expectedDate
+                            ? moment(bookingData.expectedDate, 'DD-MM-YYYY').format('YYYY-MM-DD') // Chuyển đổi ngày dự kiến
+                            : null,
+                        note: bookingData.note,
+                        tourCode: bookingData.tourCode,
+                        typePay: bookingData.typePay,
+                        totalMoney: bookingData.totalMoney,
+                        payBooking: bookingData.payBooking,
+                        activeBooking: bookingData.activeBooking,
+                    });
+
+                    // Set selectedTour nếu có thông tin tour
+                    if (bookingData.tourCode) {
+                        handleTourChange(bookingData.tourCode);  // Lấy thông tin tour tương ứng
+                    }
+                } catch (error) {
+                    message.error(error.message);
+                    setSelectedTour(null); // Reset khi có lỗi
+                }
+            }
+        };
+
+        fetchBookingByCode();
+    }, [bookingCode]); // Chạy lại mỗi khi bookingCode thay đổi
 
     // Hàm để lấy thông tin chi tiết của tour khi người dùng chọn
     const handleTourChange = async (tourCode) => {
@@ -87,6 +127,8 @@ function AddBookingForm({ changeComponent }) {
         }
     };
 
+
+
     // Hàm tính toán tổng tiền khi số lượng khách thay đổi
     const handleNumberOfCustomerChange = (e) => {
         const numberOfCustomer = e.target.value;
@@ -104,11 +146,18 @@ function AddBookingForm({ changeComponent }) {
     };
 
     const handleDateChange = (name, date) => {
-        setBooking({ ...booking, [name]: date ? date.format('DD-MM-YYYY') : '' });
+        setBooking({ ...booking, [name]: date ? date.format('YYYY-MM-DD') : '' });
     };
 
     const handleSelectChange = (name, value) => {
         setBooking({ ...booking, [name]: value });
+    };
+    const handleActiveBookingChange = (value) => {
+        setBooking({ ...booking, activeBooking: value });
+    };
+
+    const handleActiveBookingChangePay = (value) => {
+        setBooking({ ...booking, payBooking: value });
     };
 
     const focusInput = (name) => {
@@ -117,21 +166,12 @@ function AddBookingForm({ changeComponent }) {
         }
     };
 
-    const [availableDistricts, setAvailableDistricts] = useState([]);
-    // 2. Hàm xử lý thay đổi khi người dùng chọn Tỉnh/Thành phố
-    const handleCityChange = (city) => {
-        setBooking((prevBooking) => ({ ...prevBooking, customerCity: city, customerDistrict: '' }));
-        // Lọc danh sách quận/huyện theo Tỉnh/Thành phố đã chọn
-        const filteredDistricts = districts[city] || [];
-        setAvailableDistricts(filteredDistricts);
-    };
-
-    // 3. Hàm xử lý khi người dùng chọn Quận/Huyện
-    const handleDistrictChange = (district) => {
-        setBooking((prevBooking) => ({ ...prevBooking, customerDistrict: district }));
-    };
-
-    const addBooking = async () => {
+    const updateBooking = async () => {
+        if (!booking.bookingCode.trim()) {
+            message.error('Mã booking không được để trống!');
+            focusInput('bookingCode');
+            return;
+        }
 
         if (!booking.customerName.trim()) {
             message.error('Tên khách hàng không được để trống!');
@@ -151,17 +191,17 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        if (!booking.customerCity.trim()) {
-            message.error('Vui lòng chọn Tỉnh/Thành phố!');
-            focusInput("customerCity");
-            return;
-        }
+        // if (!booking.customerCity.trim()) {
+        //     message.error('Vui lòng chọn Tỉnh/Thành phố!');
+        //     focusInput("customerCity");
+        //     return;
+        // }
 
-        if (!booking.customerDistrict.trim()) {
-            message.error('Vui lòng chọn Quận/Huyện!');
-            focusInput("customerDistrict");
-            return;
-        }
+        // if (!booking.customerDistrict.trim()) {
+        //     message.error('Vui lòng chọn Quận/Huyện!');
+        //     focusInput("customerDistrict");
+        //     return;
+        // }
 
         if (booking.numberOfCustomer <= 0) {
             message.error('Số lượng khách hàng phải lớn hơn 0!');
@@ -175,9 +215,9 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        if (!booking.expectedDate || moment(booking.expectedDate, 'DD/MM/YYYY').isSameOrBefore(moment(), 'day')) {
+        if (!booking.expectedDate || moment(booking.expectedDate).isSameOrBefore(moment(), 'day')) {
             message.error('Ngày dự kiến phải được chọn và sau ngày hiện tại!');
-            focusInput("expectedDate")
+            focusInput("expectedDate");
             return;
         }
 
@@ -192,55 +232,25 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        // Chuẩn hóa định dạng ngày thành dd/mm/yyyy
-        const formattedBooking = {
-            ...booking,
-            bookingDate: moment(booking.bookingDate, 'DD-MM-YYYY').format('DD/MM/YYYY'),
-            expectedDate: moment(booking.expectedDate, 'DD-MM-YYYY').format('DD/MM/YYYY'),
-        };
+        try {
+            
 
-        // Thông tin khách hàng
-        const customerData = {
-            customerName: booking.customerName,
-            customerEmail: booking.customerEmail,
-            customerPhoneNumber: booking.customerPhoneNumber,
-            customerCity: booking.customerCity,
-            customerDistrict: booking.customerDistrict,
-            customerAddress: booking.customerAddress,
-        };
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/bookings/bookingCode/${booking.bookingCode}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(booking),
+            });
 
-        // Lưu thông tin khách hàng trước
-        const customerResponse = await fetch('http://localhost:8080/customers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(customerData),
-        });
-
-
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/bookings/admin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(formattedBooking),
-        });
-
-        if (!response.ok) throw new Error('Lỗi khi thêm booking');
-        const bookingData = await response.json();
-
-        // Lấy tên người dùng từ localStorage
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        const username = userInfo?.username || 'Người dùng';
-
-        // Thêm thông báo
-        addNotification(`${username} vừa tạo đơn đặt tour mới với tour ${booking.tourCode}, mã đặt tour là ${bookingData.result.bookingCode}`);
-        message.success('Booking mới đã được thêm!');
-        changeComponent('list');
-
+            if (!response.ok) throw new Error('Lỗi khi cập nhật booking');
+            message.success('Booking đã được cập nhật!');
+            changeComponent('list');
+        } catch (error) {
+            message.error('Không thể cập nhật booking. Vui lòng thử lại!');
+        }
     };
 
     return (
@@ -249,7 +259,14 @@ function AddBookingForm({ changeComponent }) {
                 <Row gutter={16}>
                     <Col span={12}>
                         {/* Các trường nhập liệu bên trái */}
-
+                        <Form.Item label="Mã Booking">
+                            <Input
+                                name="bookingCode"
+                                value={booking.bookingCode}
+                                onChange={handleInputChange} // Lắng nghe thay đổi mã booking
+                                ref={(el) => (inputRefs.current.bookingCode = el)}
+                            />
+                        </Form.Item>
                         <Form.Item label="Tên khách hàng">
                             <Input
                                 name="customerName"
@@ -274,34 +291,6 @@ function AddBookingForm({ changeComponent }) {
                                 ref={(el) => (inputRefs.current.customerPhoneNumber = el)}
                             />
                         </Form.Item>
-                        <Form.Item label="Tỉnh/Thành phố">
-                            <Select
-                                name="customerCity"
-                                value={booking.customerCity}
-                                onChange={handleCityChange}
-                                placeholder="Chọn Tỉnh/Thành phố"
-                                ref={(el) => (inputRefs.current.customerCity = el)}
-                            >
-                                {cities.map((city) => (
-                                    <Option key={city} value={city}>{city}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item label="Quận/Huyện">
-                            <Select
-                                name="customerDistrict"
-                                value={booking.customerDistrict}
-                                onChange={handleDistrictChange}
-                                placeholder="Chọn Quận/Huyện"
-                                disabled={!booking.customerCity} // Chỉ cho phép chọn khi đã chọn Tỉnh/Thành phố
-                                ref={(el) => (inputRefs.current.customerDistrict = el)}
-                            >
-                                {availableDistricts.map((district) => (
-                                    <Option key={district} value={district}>{district}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
 
                         <Form.Item label="Địa chỉ cụ thể">
                             <Input
@@ -316,40 +305,31 @@ function AddBookingForm({ changeComponent }) {
                                 name="numberOfCustomer"
                                 value={booking.numberOfCustomer}
                                 onChange={handleNumberOfCustomerChange} // Cập nhật tổng tiền
-                                ref={(el) => (inputRefs.current.numberOfCustomer = el)}
                             />
                         </Form.Item>
                         <Form.Item label="Mã Tour">
                             <Select
                                 name="tourCode"
                                 value={booking.tourCode}
-                                onChange={handleTourChange} // Cập nhật thông tin khi chọn tour
-                                placeholder="Chọn mã tour"
-                                ref={(el) => (inputRefs.current.tourCode = el)}
+                                onChange={handleTourChange} // Khi chọn tour
                             >
                                 {tours.map((tour) => (
                                     <Option key={tour.tourCode} value={tour.tourCode}>
-                                        {tour.tourCode} - {tour.name}
+                                        {tour.tourCode}-{tour.name}
                                     </Option>
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Ngày dự kiến">
-                            <DatePicker
-                                format="YYYY-MM-DD"
-                                onChange={(date) => handleDateChange('expectedDate', date)}
-                                ref={(el) => (inputRefs.current.expectedDate = el)}
-                            />
-                        </Form.Item>
-                        <Form.Item label="Ghi chú">
-                            <Input.TextArea
-                                name="note"
-                                value={booking.note}
-                                onChange={handleInputChange}
-                            />
+                        <Form.Item label="Trạng thái thanh toán">
+                            <Select
+                                value={booking.payBooking}
+                                onChange={handleActiveBookingChangePay}
+                            >
+                                <Option value={true}>Đã thanh toán</Option>
+                                <Option value={false}>Chưa thanh toán</Option>
+                            </Select>
                         </Form.Item>
                     </Col>
-
                     <Col span={12}>
                         {/* Thông tin tour hiển thị bên phải */}
                         {selectedTour && (
@@ -357,48 +337,60 @@ function AddBookingForm({ changeComponent }) {
                                 <h3>Thông tin tour</h3>
                                 <p><strong>Mã Tour:</strong> {selectedTour.tourCode}</p>
                                 <p><strong>Tên Tour:</strong> {selectedTour.name}</p>
-                                {/* <p><strong>Ngày khởi hành:</strong> {selectedTour.startDay}</p> */}
+                                <p><strong>Ngày khởi hành:</strong> {selectedTour.startDate}</p>
+                                <p><strong>Ngày kết thúc:</strong> {selectedTour.endDate}</p>
                                 <p><strong>Giá Tour:</strong> {selectedTour.price}</p>
+                                <p><strong>Mô tả:</strong> {selectedTour.description}</p>
                             </div>
                         )}
+                        {/* Các trường nhập liệu bên phải */}
+                        <Form.Item label="Ngày dự kiến">
+                            <DatePicker
+                                value={booking.expectedDate ? moment(booking.expectedDate, 'YYYY-MM-DD') : null}
+                                onChange={(date) => handleDateChange('expectedDate', date)}
+                            />
+                        </Form.Item>
+
+
+                        <Form.Item label="Ghi chú">
+                            <Input.TextArea
+                                name="note"
+                                value={booking.note}
+                                onChange={handleInputChange}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Hình thức thanh toán">
+                            <Select
+                                value={booking.typePay}
+                                onChange={(value) => handleSelectChange('typePay', value)}
+                            >
+                                <Option value="cash">Tiền mặt</Option>
+                                <Option value="creditCard">Thẻ tín dụng</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="Tổng tiền">
+                            <Input
+                                name="totalMoney"
+                                value={booking.totalMoney}
+                                disabled
+                            />
+                        </Form.Item>
+                        {/* Thêm phần để chọn activeBooking */}
+                        <Form.Item label="Trạng thái booking">
+                            <Select
+                                value={booking.activeBooking}
+                                onChange={handleActiveBookingChange}
+                            >
+                                <Option value={true}>Hoạt động</Option>
+                                <Option value={false}>Đã hủy</Option>
+                            </Select>
+                        </Form.Item>
                     </Col>
                 </Row>
 
-                <Form.Item label="Hình thức thanh toán">
-                    <Select
-                        name="typePay"
-                        value={booking.typePay}
-                        onChange={(value) => handleSelectChange('typePay', value)}
-                        placeholder="Chọn hình thức thanh toán"
-                        ref={(el) => (inputRefs.current.expectedDate = el)}
-                    >
-                        <Option value="Tiền mặt">Tiền mặt</Option>
-                        <Option value="Chuyển khoản">Chuyển khoản</Option>
-                    </Select>
-                </Form.Item>
-                <Form.Item label="Tổng tiền">
-                    <Input
-                        type="number"
-                        name="totalMoney"
-                        value={booking.totalMoney}
-                        onChange={handleInputChange}
-                        readOnly // Không cho phép người dùng chỉnh sửa trực tiếp
-                    />
-                </Form.Item>
-                <Form.Item label="Đã thanh toán">
-                    <Select
-                        name="payBooking"
-                        value={booking.payBooking}
-                        onChange={(value) => handleSelectChange('payBooking', value)}
-                        placeholder="Chọn trạng thái thanh toán"
-                    >
-                        <Option value={true}>Đã thanh toán</Option>
-                        <Option value={false}>Chưa thanh toán</Option>
-                    </Select>
-                </Form.Item>
                 <Form.Item>
-                    <Button type="primary" onClick={addBooking}>
-                        Lưu Booking
+                    <Button type="primary" onClick={updateBooking}>
+                        Cập nhật
                     </Button>
                     <Button onClick={() => changeComponent('list')} style={{ marginLeft: '10px' }}>
                         Hủy
@@ -408,5 +400,4 @@ function AddBookingForm({ changeComponent }) {
         </div>
     );
 }
-
-export default AddBookingForm;
+export default UpdateCancelBooking;

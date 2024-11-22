@@ -80,7 +80,7 @@
     top: 75%;
     /* Đặt menu con ngay dưới menu chính */
     margin-left: -83px;
-    min-width: 200px;
+    width: 170px;
     padding: 0px 0;
 }
 

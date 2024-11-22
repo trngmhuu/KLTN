@@ -1,6 +1,6 @@
 import { Tag, Button, Form, Input, Table, Modal, message } from 'antd';
 import React, { useState, useEffect } from 'react';
-import './searchTableBooking.css';
+import './searchTableCancelBooking.css';
 import './transition.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -11,7 +11,7 @@ const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
 
-function SearchTableBooking({ changeComponent }) {
+function SearchTableCancelBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
         customerName: '',
         bookingCode: '',
@@ -85,43 +85,43 @@ function SearchTableBooking({ changeComponent }) {
     };
 
 
-    const handleDelete = async (bookingCode) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/bookings/${bookingCode}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (response.ok) {
-                fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
-                message.success('Đặt chỗ đã được xóa thành công'); // Thông báo thành công
-            } else {
-                throw new Error('Failed to delete booking');
-            }
-        } catch (error) {
-            console.error('Error deleting booking:', error);
-        }
-    };
+    // const handleDelete = async (bookingCode) => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const response = await fetch(`http://localhost:8080/bookings/${bookingCode}`, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //         });
+    //         if (response.ok) {
+    //             fetchData(); // Cập nhật lại danh sách sau khi xóa thành công
+    //             message.success('Đặt chỗ đã được xóa thành công'); // Thông báo thành công
+    //         } else {
+    //             throw new Error('Failed to delete booking');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error deleting booking:', error);
+    //     }
+    // };
 
-    const showDeleteConfirm = (bookingCode) => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn xóa Đặt Chỗ này?',
-            icon: <ExclamationCircleOutlined />,
-            content: `Mã đặt chỗ: ${bookingCode}`,
-            okText: 'Xóa',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                handleDelete(bookingCode);
-            },
-            onCancel() {
-                console.log('Hủy hành động xóa');
-            },
-        });
-    };
+    // const showDeleteConfirm = (bookingCode) => {
+    //     confirm({
+    //         title: 'Bạn có chắc chắn muốn xóa Đặt Chỗ này?',
+    //         icon: <ExclamationCircleOutlined />,
+    //         content: `Mã đặt chỗ: ${bookingCode}`,
+    //         okText: 'Xóa',
+    //         okType: 'danger',
+    //         cancelText: 'Hủy',
+    //         onOk() {
+    //             handleDelete(bookingCode);
+    //         },
+    //         onCancel() {
+    //             console.log('Hủy hành động xóa');
+    //         },
+    //     });
+    // };
 
     const columns = [
         {
@@ -191,7 +191,7 @@ function SearchTableBooking({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode)}><DeleteFilled /></Button>
+                    {/* <Button type="link" danger onClick={() => showDeleteConfirm(record.bookingCode)}><DeleteFilled /></Button> */}
                 </div>
             ),
         }
@@ -263,7 +263,7 @@ function SearchTableBooking({ changeComponent }) {
                             pagination={{
                                 pageSize: 3,
                                 showSizeChanger: true,
-                                pageSizeOptions: ['3', '5', '10'],
+                                // pageSizeOptions: ['3', '5', '10'],
                             }}
                         />
                     </div>
@@ -273,4 +273,4 @@ function SearchTableBooking({ changeComponent }) {
     );
 }
 
-export default SearchTableBooking;
+export default SearchTableCancelBooking;
