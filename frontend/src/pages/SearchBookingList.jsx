@@ -19,6 +19,13 @@ const SearchBookingList = () => {
   const [tour, setTour] = useState(null); // State để lưu thông tin tour
   const [cancellationReason, setCancellationReason] = useState(""); // State để lưu lý do hủy tour
 
+  const calculateDaysDifference = (currentDate, expectedDate) => {
+    const [expectedDay, expectedMonth, expectedYear] = expectedDate.split("/").map(Number);
+    const expected = new Date(expectedYear, expectedMonth - 1, expectedDay);
+    const current = new Date();
+    return Math.floor((expected - current) / (1000 * 60 * 60 * 24));
+  };
+
   // Callback để nhận thông tin từ SearchBarBooking
   const handleBookingData = async (data) => {
     setBooking(data);
@@ -40,7 +47,7 @@ const SearchBookingList = () => {
       setTour(null);
     }
   };
-  
+
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Quản lý trạng thái modal
 
@@ -65,7 +72,7 @@ const SearchBookingList = () => {
     addNotification(
       `Khách hàng ${booking.customerName} vừa yêu cầu hủy tour có mã booking ${booking.bookingCode} với lý do: "${cancellationReason}"`
     );
-  
+
     try {
       // Gửi PUT request để yêu cầu hủy tour
       const response = await fetch(
@@ -77,36 +84,36 @@ const SearchBookingList = () => {
           }
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Không thể yêu cầu hủy tour. Vui lòng thử lại.");
       }
-  
+
       // Lấy lại thông tin booking sau khi đã yêu cầu hủy
       const bookingResponse = await fetch(`http://localhost:8080/bookings/by-bookingcode/${booking.bookingCode}`);
       const bookingData = await bookingResponse.json();
-  
+
       if (!bookingResponse.ok) {
         throw new Error("Không thể tải lại thông tin đặt tour.");
       }
-  
+
       setBooking(bookingData.result); // Cập nhật lại thông tin booking
       setCancellationReason(""); // Xóa lý do hủy
-  
+
       // Cập nhật thông tin tour tương ứng
       if (bookingData.result && bookingData.result.tourCode) {
         const tourResponse = await fetch(
           `http://localhost:8080/tours/by-tourcode/${bookingData.result.tourCode}`
         );
         const tourData = await tourResponse.json();
-  
+
         if (!tourResponse.ok) {
           throw new Error("Không tìm thấy thông tin tour.");
         }
-  
+
         setTour(tourData.result); // Cập nhật lại thông tin tour
       }
-  
+
       // Đóng modal
       toggleModal();
     } catch (err) {
@@ -117,7 +124,7 @@ const SearchBookingList = () => {
       });
     }
   };
-  
+
 
   return (
     <>
@@ -208,7 +215,11 @@ const SearchBookingList = () => {
                       onChange={(e) => setCancellationReason(e.target.value)}
                       className="form-control mt-2"
                       placeholder="Nhập lý do hủy tour"
-                      disabled={booking.payBooking || booking.activeBooking === "Đang chờ hủy" || booking.activeBooking === "Đã hủy"} // Vô hiệu hóa input nếu đã thanh toán
+                      disabled={
+                        calculateDaysDifference(new Date(), booking.expectedDate) <= 5 || // Thêm kiểm tra ngày
+                        booking.activeBooking === "Đang chờ hủy" ||
+                        booking.activeBooking === "Đã hủy"
+                      }
                     />
                     {/* Hiển thị thông báo phù hợp dựa trên trạng thái */}
                     {booking.activeBooking === "Đã hủy" ? (
@@ -219,20 +230,20 @@ const SearchBookingList = () => {
                       <span style={{ color: "orange", fontWeight: "500", fontSize: "1rem", fontStyle: "italic" }}>
                         (*) Đang chờ nhân viên xác nhận hủy. Chúng tôi sẽ liên lạc đến bạn trong thời gian sớm nhất!
                       </span>
+                    ) : calculateDaysDifference(new Date(), booking.expectedDate) <= 5 ? (
+                      <span style={{ color: "red", fontWeight: "500", fontSize: "1rem", fontStyle: "italic" }}>
+                        (*) Không thể hủy tour trong vòng 5 ngày trước ngày khởi hành
+                      </span>
                     ) : booking.payBooking ? (
                       <span style={{ color: "red", fontWeight: "500", fontSize: "1rem", fontStyle: "italic" }}>
-                        (*) Booking đã thanh toán sẽ không thể hủy
+                        (*) Chúng tôi sẽ chỉ có thể hoàn lại 80% trên tổng giá trị đã thanh toán. Xin lỗi quý khách vì sự bất tiện này!
                       </span>
-                    ) : (
-                      <span style={{ color: "red", fontWeight: "500", fontSize: "1rem", fontStyle: "italic" }}>
-                        (*) Bạn có thể hủy tour này
-                      </span>
-                    )}
+                    ) : null}
                   </div>
                   <button
                     className="btn primary__btn mt-2 btnCancelTour"
                     onClick={handleCancelRequest} // Gọi handleCancelRequest thay vì toggleModal
-                    disabled={booking.payBooking || booking.activeBooking === "Đang chờ hủy" || booking.activeBooking === "Đã hủy"} // Vô hiệu hóa nếu đã thanh toán, đang chờ hủy hoặc đã hủy
+                    disabled={booking.activeBooking === "Đang chờ hủy" || booking.activeBooking === "Đã hủy"} // Vô hiệu hóa nếu đã thanh toán, đang chờ hủy hoặc đã hủy
                   >
                     Nhập
                   </button>

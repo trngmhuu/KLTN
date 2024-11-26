@@ -14,7 +14,6 @@ function UpdateTourForm({ changeComponent, tourCode }) {
     const [tour, setTour] = useState({
         tourCode: '',
         name: '',
-        description: '',
         typeTourName: '',
         typeId: '',
         locationStart: '',
@@ -52,7 +51,7 @@ function UpdateTourForm({ changeComponent, tourCode }) {
         };
 
         fetchTourByCode();
-    }, [tourCode]);
+    }, [tourCode, token]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -129,12 +128,6 @@ function UpdateTourForm({ changeComponent, tourCode }) {
             return;
         }
 
-        if (!tour.description?.trim()) {
-            message.error('Mô tả không được để trống!');
-            focusInput('description');
-            return;
-        }
-
         const price = String(tour.price || '');
 
         if (!price.trim()) {
@@ -197,7 +190,6 @@ function UpdateTourForm({ changeComponent, tourCode }) {
         const tourUpdateRequest = {
             tourCode: tour.tourCode,
             name: tour.name,
-            description: tour.description,
             typeTourName: tour.typeTourName,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
@@ -267,14 +259,6 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             value={tour.name}
                             onChange={handleInputChange}
                             ref={(el) => (inputRefs.current.name = el)}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Mô tả">
-                        <Input.TextArea
-                            name="description"
-                            value={tour.description}
-                            onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.description = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Giá">

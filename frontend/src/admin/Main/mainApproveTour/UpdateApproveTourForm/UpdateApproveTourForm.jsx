@@ -129,12 +129,6 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
             return;
         }
 
-        if (!tour.description?.trim()) {
-            message.error('Mô tả không được để trống!');
-            focusInput('description');
-            return;
-        }
-
         const price = String(tour.price || '');
 
         if (!price.trim()) {

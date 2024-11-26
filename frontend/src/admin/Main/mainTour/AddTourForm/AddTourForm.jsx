@@ -12,7 +12,6 @@ function AddTourForm({ changeComponent }) {
     const [tour, setTour] = useState({
         tourCode: '',
         name: '',
-        description: '',
         image: null,
         typeTourName: '',
         typeId: '',
@@ -93,12 +92,6 @@ function AddTourForm({ changeComponent }) {
             return;
         }
 
-        if (!tour.description.trim()) {
-            message.error('Mô tả không được để trống!');
-            focusInput('description');
-            return;
-        }
-
         if (!tour.price.trim()) {
             message.error('Giá không được để trống!');
             focusInput('price');
@@ -163,7 +156,6 @@ function AddTourForm({ changeComponent }) {
         const tourJson = JSON.stringify({
             tourCode: tour.tourCode,
             name: tour.name,
-            description: tour.description,
             typeTourName: tour.typeTourName,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
@@ -229,14 +221,6 @@ function AddTourForm({ changeComponent }) {
                             value={tour.name}
                             onChange={handleInputChange}
                             ref={(el) => (inputRefs.current.name = el)}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Mô tả">
-                        <Input.TextArea
-                            name="description"
-                            value={tour.description}
-                            onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.description = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Giá">
@@ -336,17 +320,6 @@ function AddTourForm({ changeComponent }) {
                             <Option value="Máy bay">Máy bay</Option>
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item label="Trạng thái tour">
-                        <Select
-                            name="isActive"
-                            value={tour.isActive}
-                            onChange={(value) => setTour({ ...tour, isActive: value })}
-                            ref={(el) => (inputRefs.current.isActive = el)}
-                        >
-                            <Option value={true}>Đang nhận khách</Option>
-                            <Option value={false}>Chưa thể đặt</Option>
-                        </Select>
-                    </Form.Item> */}
                     <Form.Item label="Giảm giá">
                         <Select
                             name="saleTour"

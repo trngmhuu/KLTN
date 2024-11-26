@@ -373,8 +373,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                                 value={booking.typePay}
                                 onChange={(value) => handleSelectChange('typePay', value)}
                             >
-                                <Option value="cash">Tiền mặt</Option>
-                                <Option value="creditCard">Thẻ tín dụng</Option>
+                                <Option value="Tiền mặt">Tiền mặt</Option>
+                                <Option value="Chuyển khoản">Chuyển khoản</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item label="Tổng tiền">

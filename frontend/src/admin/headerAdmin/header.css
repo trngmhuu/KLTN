@@ -124,9 +124,8 @@
 
 .notification-item.unread::after {
     content: '';
-    position: absolute;
     right: 0;
-    margin: 50px 10px 0px 0px;
+    margin: -10px 0px 0px 300px;
     width: 10px;
     height: 10px;
     background-color: #28a745; /* Dấu chấm xanh cho thông báo chưa đọc */

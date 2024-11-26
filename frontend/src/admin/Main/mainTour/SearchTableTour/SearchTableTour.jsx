@@ -4,8 +4,6 @@ import './searchTableTour.css';
 import './transition.css';
 import { DeleteFilled, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import moment from 'moment/moment';
-import { Container, Row, Col } from "reactstrap";
 import { useNotifications } from '../../../../context/NotificationContext';
 const { confirm } = Modal;
 
@@ -96,6 +94,11 @@ function SearchTableTour({ changeComponent }) {
     const handleEdit = (record) => {
         changeComponent('update', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
     };
+
+    const handleTourDescription = (record) => {
+        changeComponent('description', record.tourCode); // Truyền toàn bộ record để sử dụng trong UpdateTourForm
+    };
+
 
     const handleDelete = async (tourCode) => {
         try {
@@ -241,6 +244,7 @@ function SearchTableTour({ changeComponent }) {
             key: 'action',
             render: (text, record) => (
                 <div className="action-buttons">
+                    <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
                     <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
                 </div>

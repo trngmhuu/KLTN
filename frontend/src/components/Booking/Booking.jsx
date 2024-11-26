@@ -370,7 +370,6 @@ const Booking = ({ tour }) => {
         {loading && (
           <div className="loading-spinner">
             <i className="ri-loader-2-line ri-spin"></i> {/* Bạn có thể dùng spinner của icon hoặc một cái khác */}
-            Đang xử lý... Vui lòng đợi.
           </div>
         )}
         <ListGroup>
