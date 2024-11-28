@@ -14,7 +14,6 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
     const [tour, setTour] = useState({
         tourCode: '',
         name: '',
-        description: '',
         typeTourName: '',
         typeId: '',
         locationStart: '',
@@ -191,7 +190,6 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
         const tourUpdateRequest = {
             tourCode: tour.tourCode,
             name: tour.name,
-            description: tour.description,
             typeTourName: tour.typeTourName,
             typeId: tour.typeId,
             locationStart: tour.locationStart,
@@ -266,14 +264,6 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
                             value={tour.name}
                             onChange={handleInputChange}
                             ref={(el) => (inputRefs.current.name = el)}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Mô tả">
-                        <Input.TextArea
-                            name="description"
-                            value={tour.description}
-                            onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.description = el)}
                         />
                     </Form.Item>
                     <Form.Item label="Giá">

@@ -11,6 +11,7 @@ const formatPrice = (price) => {
 
 const TourDetails = () => {
   const { id } = useParams();
+  const [descriptions, setDescriptions] = useState([]); // State lưu danh sách description
   const [tour, setTour] = useState(null); // State để lưu đối tượng tour
   const [loading, setLoading] = useState(true); // State để kiểm soát trạng thái loading
   // Hàm kiểm tra xem startDay có phải là đầy đủ từ thứ 2 -> chủ nhật không
@@ -18,6 +19,22 @@ const TourDetails = () => {
     const weekdays = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
     return weekdays.every(day => tour.startDay.includes(day));
   };
+  const fetchDescriptions = useCallback(async (tourCode) => {
+    try {
+      const response = await fetch(`http://localhost:8080/tours-description/by-tourcode/${tourCode}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch descriptions');
+      }
+      const data = await response.json();
+      setDescriptions(data.result); // Cập nhật danh sách description
+    } catch (error) {
+      console.error('Error fetching descriptions:', error);
+    }
+  }, []);
+
   const fetchTour = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/tours/by-tourcode/${id}`, {
@@ -42,11 +59,11 @@ const TourDetails = () => {
   }, [id]); // thêm 'id' vào đây
 
   useEffect(() => {
-    if (id) { // Chỉ gọi API khi có tourCode
-      fetchTour();
+    if (id) {
+      fetchTour(); // Hàm cũ để lấy thông tin tour
+      fetchDescriptions(id); // Hàm mới để lấy danh sách description
     }
-  }, [id, fetchTour]); // id và fetchTour được đồng bộ
-
+  }, [id, fetchTour, fetchDescriptions]);
 
   if (loading) {
     return (
@@ -68,17 +85,6 @@ const TourDetails = () => {
                 <img src={tour.image} alt="" />
                 <div className="tour__info">
                   <h1>{tour.name}</h1>
-                  {/* <div className="d-flex align-items-center gap-5">
-                    <span className="tour__rating d-flex align-items-center gap-1">
-                      <i
-                        className="ri-star-fill"
-                        style={{ color: "var(--secondary-color)" }}
-                      ></i>
-                    </span>
-                    <span>
-                      <i className="ri-map-pin-fill"></i>
-                    </span>
-                  </div> */}
                   <div className="tour__extra-details">
                     <Row>
                       <Col lg="6">
@@ -130,8 +136,28 @@ const TourDetails = () => {
                       </Col>
                     </Row>
                   </div>
-                  <h2>Lịch trình</h2>
-                  <p>{tour.description}</p>
+                  <div className="title__itinerary">
+                    <span>Lịch trình</span>
+                  </div>
+                  <div className="itinerary__content">
+                    {descriptions.length > 0 ? (
+                      descriptions.map((desc, index) => (
+                        <div key={index} style={{ marginBottom: '20px' }}>
+                          <h2>{desc.header}</h2>
+                          <p style={{ whiteSpace: 'pre-line' }}>{desc.content}</p>
+                          {desc.image && (
+                            <img
+                              src={desc.image}
+                              alt={desc.header}
+                            />
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <p style={{ fontStyle: 'italic' }}>Không có lịch trình nào được cung cấp.</p>
+                    )}
+                  </div>
+
                 </div>
               </div>
             </Col>

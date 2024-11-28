@@ -12,7 +12,7 @@
 }
 
 .tour__info h1 {
-    font-size: 1.7rem;
+    font-size: 2rem;
     font-weight: bold;
 }
 
@@ -216,4 +216,40 @@
       transform: rotate(360deg);
     }
   }
+
+.title__itinerary {
+    margin-top: -20px;
+}
   
+.title__itinerary span {
+    font-weight: 500;
+    color: black;
+    font-size: 25px;
+}
+
+.itinerary__content  {
+    margin-top: 10px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.itinerary__content h2 {
+    font-weight: bold;
+    font-size: medium;
+    color: #0059ff;
+}
+
+.itinerary__content p {
+    text-align: justify;
+    color: black;
+    font-weight: 490;
+    line-height: normal;
+}
+
+.itinerary__content img {
+    width: 100%;
+    height: 100%;
+}

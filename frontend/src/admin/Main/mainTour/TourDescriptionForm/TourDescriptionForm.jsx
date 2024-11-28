@@ -76,7 +76,7 @@ function TourDescriptionForm({ changeComponent, tourCode }) {
 
             message.success('Thêm lịch trình thành công!');
             setTourDescription({ tourCode: tourCode || '', header: '', content: '', image: null });
-form.resetFields(); // Reset tất cả trường form
+            form.resetFields(); // Reset tất cả trường form
             getTourDescriptions(tourDescription.tourCode);
         } catch (error) {
             console.error('Error adding tour description:', error);
@@ -113,12 +113,12 @@ form.resetFields(); // Reset tất cả trường form
         const updatedDescriptionJson = JSON.stringify({
             header: desc.header,
             content: desc.content,
+
         });
         formData.append('tourDescription', new Blob([updatedDescriptionJson], { type: 'application/json' }));
         if (desc.image instanceof File) {
             formData.append('image', desc.image);
         }
-        else formData.append('image', desc.image);
 
         try {
             const response = await fetch(`http://localhost:8080/tours-description/${desc.idAsString}`, {
@@ -149,7 +149,7 @@ form.resetFields(); // Reset tất cả trường form
 
     return (
         <div className="tour-description-form-container">
-<Form form={form} layout="vertical" initialValues={{ tourCode }}>
+            <Form form={form} layout="vertical" initialValues={{ tourCode }}>
                 {/* */}
                 <Form.Item label="Mã tour cần thêm lịch trình" name="tourCode">
                     <Input
@@ -218,7 +218,7 @@ form.resetFields(); // Reset tất cả trường form
                                 // Editable form
                                 <div>
                                     <Input
-name="header"
+                                        name="header"
                                         value={desc.header}
                                         onChange={(e) => handleEditInputChange(e, index)} // Sử dụng hàm mới
                                     />
@@ -267,8 +267,8 @@ name="header"
                             ) : (
                                 // View only
                                 <div>
-<h3>{desc.header}</h3>
-                                    <p>{desc.content}</p>
+                                    <h3>{desc.header}</h3>
+                                    <p style={{ whiteSpace: 'pre-line' }}>{desc.content}</p>
                                     {/* Check if desc.image is already a URL or Blob */}
                                     {desc.image && (
                                         <div style={{ marginTop: '10px' }}>

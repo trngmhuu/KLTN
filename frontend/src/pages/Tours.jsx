@@ -8,19 +8,14 @@ import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
 
 const Tours = () => {
-
-
-  // Config page
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
-  useEffect(() => {
-    const pages = Math.ceil(5 / 4);
-    setPageCount(pages);
-  }, [page]);
-
   const tourtypename = useParams();
   const [tours, setTours] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  
+  const itemsPerPage = 8; // Hiển thị 8 item mỗi trang
 
+  // Lấy dữ liệu các tour
   const fetchTour = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/tours/by-typetourname/${tourtypename.tourtypename}`, {
@@ -43,10 +38,18 @@ const Tours = () => {
   }, [tourtypename]);
 
   useEffect(() => {
-    if (tourtypename) { // Chỉ gọi API khi có tourCode
+    if (tourtypename) { // Chỉ gọi API khi có tourType
       fetchTour();
     }
   }, [tourtypename, fetchTour]);
+
+  useEffect(() => {
+    const pages = Math.ceil(tours.length / itemsPerPage); // Tính số trang
+    setPageCount(pages);
+  }, [tours]);
+
+  // Cắt tours theo trang hiện tại
+  const paginatedTours = tours.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
   return (
     <>
@@ -63,7 +66,7 @@ const Tours = () => {
       <section className="pt-0">
         <Container>
           <Row>
-            {tours?.map((tour) => (
+            {paginatedTours?.map((tour) => (
               <Col lg="3" className="mb-4" key={tour.tourCode}>
                 <TourCard tour={tour} />
               </Col>

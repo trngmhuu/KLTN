@@ -37,13 +37,13 @@
 #durationTour {
     border: none; /* Loại bỏ viền */
     outline: none; /* Loại bỏ viền khi chọn */
-    appearance: none; /* Ẩn biểu tượng mũi tên mặc định trên một số trình duyệt */
-    -webkit-appearance: none; /* Ẩn biểu tượng mũi tên mặc định trên Safari */
-    -moz-appearance: none;
-    font-size: 0.9rem;
-    color: var(--text-color);
-    font-weight: 500;
-    padding: 5px;
+}
+
+#durationTour option {
+    font-size: 1rem;
+    color: black;
+    font-weight: normal;
+    padding: 10px;
 }
 
 .search__icon i {
@@ -71,4 +71,16 @@
         justify-content: center;
         margin-top: 0.5rem;
     }
+}
+
+#locationStart {
+    border: none;
+    border-radius: 7px;
+    outline: none;
+}
+
+#name {
+    border: none;
+    border-radius: 7px;
+    outline: none;
 }

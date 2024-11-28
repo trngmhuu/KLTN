@@ -19,6 +19,8 @@ import MainCustomer from '../Main/mainCustomer/MainCustomer';
 import MainCoupon from '../Main/mainCoupon/MainCoupon';
 import MainApproveTour from '../Main/mainApproveTour/MainApproveTour'
 import MainCancelBooking from '../Main/mainCancelBooking/MainCancelBooking';
+import MainBookingSta from '../Main/mainBookingSta/MainBookingSta';
+import MainCustomerSta from '../Main/mainCustomerSta/MainCustomerSta';
 
 
 function HomePage() {
@@ -43,6 +45,8 @@ function HomePage() {
         approveTour: <MainApproveTour />,
         cancelBooking: <MainCancelBooking />,
         coupon: <MainCoupon />,
+        bookingSta: <MainBookingSta />,
+        customerSta: <MainCustomerSta />
         // new: <MainNew />
     };
 
@@ -77,5 +81,4 @@ function HomePage() {
         </div>
     )
 }
-
 export default HomePage

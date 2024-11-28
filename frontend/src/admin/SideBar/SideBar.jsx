@@ -37,15 +37,15 @@ function SideBar({ changeComponent }) {
                         data-bs-parent="#sidebar-nav"
                     >
                         <li>
-                            <a href="#">
+                            <a href="#" onClick={() => changeComponent('bookingSta')}>
                                 <i className="bi bi-circle"></i>
-                                <span>Doanh thu</span>
+                                <span>Doanh thu Booking</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="#" onClick={() => changeComponent('customerSta')}>
                                 <i className="bi bi-circle"></i>
-                                <span>Thống kê</span>
+                                <span>Doanh thu Khách Hàng</span>
                             </a>
                         </li>
                     </ul>
@@ -67,7 +67,7 @@ function SideBar({ changeComponent }) {
                 {userRole.includes('ADMIN') && (
                     <li className="nav-item">
                         <a className="nav-link collapsed" onClick={() => changeComponent('tourtype')}>
-                            <i className="bi bi-card-list"></i>
+<i className="bi bi-card-list"></i>
                             <span>Quản lý danh mục Tour</span>
                         </a>
                     </li>
@@ -134,7 +134,7 @@ function SideBar({ changeComponent }) {
                     <ul
                         id="components-nav-booking"
                         className="nav-content collapse"
-                        data-bs-parent="#sidebar-nav"
+data-bs-parent="#sidebar-nav"
                     >
                         <li>
                             <a href="#" onClick={() => changeComponent('booking')}>

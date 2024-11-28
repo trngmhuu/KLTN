@@ -49,6 +49,8 @@ const SearchBookingList = () => {
   };
 
 
+
+
   const [isModalOpen, setIsModalOpen] = useState(false); // Quản lý trạng thái modal
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
@@ -125,6 +127,47 @@ const SearchBookingList = () => {
     }
   };
 
+  const handlePayment = async () => {
+    if (!booking) {
+      toast.error("Không tìm thấy thông tin booking.", {
+        position: "top-left",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/payment/payment-link`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bookingCode: booking.bookingCode,
+          totalMoney: booking.totalMoney,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Không thể tạo liên kết thanh toán.");
+      }
+
+      const data = await response.json();
+      toast.success("Đang chuyển hướng đến trang thanh toán...", {
+        position: "top-left",
+        autoClose: 3000,
+      });
+
+      // Chuyển hướng người dùng đến trang thanh toán
+      window.location.href = data.paymentUrl;
+    } catch (err) {
+      console.error("Lỗi khi tạo hoặc thực hiện thanh toán:", err.message);
+      toast.error("Đã có lỗi xảy ra khi thực hiện thanh toán. Vui lòng thử lại.", {
+        position: "top-left",
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <>
@@ -205,8 +248,21 @@ const SearchBookingList = () => {
                   )}
                 </div>
                 <div className="booking-details-footer">
+                  <div className="payment__section">
+                    <button
+                      className="btn primary__btn"
+                      onClick={handlePayment}
+                      disabled={
+                        booking.payBooking ||
+                        booking.activeBooking === "Đã hủy" ||
+                        booking.activeBooking === "Đang chờ hủy"
+                      }
+                    >
+                      Thực hiện thanh toán
+                    </button>
+                  </div>
                   {/* Thêm ô input cho lý do hủy tour */}
-                  <div className="cancellation-reason">
+                  <div className="cancellation-reason mt-2">
                     <label htmlFor="cancellationReason"><strong>Lý do hủy tour:</strong></label>
                     <input
                       type="text"
@@ -236,14 +292,14 @@ const SearchBookingList = () => {
                       </span>
                     ) : booking.payBooking ? (
                       <span style={{ color: "red", fontWeight: "500", fontSize: "1rem", fontStyle: "italic" }}>
-                        (*) Chúng tôi sẽ chỉ có thể hoàn lại 80% trên tổng giá trị đã thanh toán. Xin lỗi quý khách vì sự bất tiện này!
+                        (*) Trong vòng 5 ngày trước ngày đi, chúng tôi sẽ chỉ có thể hoàn lại 80% trên tổng giá trị đã thanh toán nếu quý khách thực hiện hủy tour. Xin lỗi quý khách vì sự bất tiện này!
                       </span>
                     ) : null}
                   </div>
                   <button
-                    className="btn primary__btn mt-2 btnCancelTour"
+                    className="btnCancelTour btn primary__btn mt-2"
                     onClick={handleCancelRequest} // Gọi handleCancelRequest thay vì toggleModal
-                    disabled={booking.activeBooking === "Đang chờ hủy" || booking.activeBooking === "Đã hủy"} // Vô hiệu hóa nếu đã thanh toán, đang chờ hủy hoặc đã hủy
+                    disabled={calculateDaysDifference(new Date(), booking.expectedDate) <= 5 || booking.activeBooking === "Đang chờ hủy" || booking.activeBooking === "Đã hủy"} // Vô hiệu hóa nếu đã thanh toán, đang chờ hủy hoặc đã hủy
                   >
                     Nhập
                   </button>

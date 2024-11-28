@@ -82,8 +82,19 @@
     margin-bottom: 10px;
 }
 
-.btnCancelTour:hover {
+.booking-details-footer {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+}
+
+.booking-details-footer button {
+    color: white;
+    font-weight: bold;
+}
+
+.booking-details-footer button:hover {
     color: black;
+    font-weight: bold;
 }
 
 @-webkit-keyframes my {
@@ -162,4 +173,10 @@
     color: red;
     font-weight: bold;
     font-style: italic;
+}
+
+.payment__section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

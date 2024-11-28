@@ -49,7 +49,6 @@ const Booking = ({ tour }) => {
     tourCode,
     isPay: ""
   });
-  
   const [selectedCity, setSelectedCity] = useState("Thành phố Hồ Chí Minh");
   const [districts, setDistricts] = useState(districtData[selectedCity] || []);
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -94,7 +93,7 @@ const Booking = ({ tour }) => {
     const { customerName, customerEmail, customerPhoneNumber, expectedDate, numberOfCustomer } = credentials;
 
     // Kiểm tra họ tên
-    const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
+const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
     if (!customerName || !nameRegex.test(customerName)) {
       toast.error("Họ tên không được để trống và không được chứa số hoặc ký tự đặc biệt.");
       nameRef.current?.focus();
@@ -180,9 +179,10 @@ const Booking = ({ tour }) => {
 
       if (responseBooking.ok) {
         const bookingData = await responseBooking.json();
-        addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
+addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
         setLoading(false);
-        navigate("/thank-you");
+        // Truyền dữ liệu booking qua navigate
+        navigate("/thank-you", { state: { bookingData: bookingData.result } });
       } else {
         setLoading(false);
         toast.error("Có lỗi xảy ra. Vui lòng thử lại sau!");
@@ -265,7 +265,7 @@ const Booking = ({ tour }) => {
             >
               {districts.map((district, index) => (
                 <option key={index} value={district}>{district}</option>
-              ))}
+))}
             </select>
           </FormGroup>
 
@@ -341,7 +341,7 @@ const Booking = ({ tour }) => {
             </p>
           )}
           {paymentMethod === "Chuyển khoản" && (
-            <p style={{ textAlign: "justify" }}>
+<p style={{ textAlign: "justify" }}>
               Quý khách sau khi thực hiện việc chuyển khoản,
               vui lòng gửi email đính kèm hóa đơn chuyển khoản đến <b>minhhuu0705@gmail.com </b>
               hoặc gọi số <b>0123456789</b> để được nhân viên xác nhận.
@@ -369,7 +369,7 @@ const Booking = ({ tour }) => {
       <div className="booking__bottom">
         {loading && (
           <div className="loading-spinner">
-            <i className="ri-loader-2-line ri-spin"></i> {/* Bạn có thể dùng spinner của icon hoặc một cái khác */}
+            <i class="ri-restart-line"></i>
           </div>
         )}
         <ListGroup>

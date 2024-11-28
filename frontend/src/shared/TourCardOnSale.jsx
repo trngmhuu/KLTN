@@ -23,7 +23,7 @@ const TourCardOnSale = ({ tour }) => {
             <Link to={`/tours/${tourCode}`}>{name}</Link>
           </h5>
           Thời gian đi: <span style={{fontWeight: 500}}>{durationTour}</span>
-          <div className="unfixedPrice">{formatPrice(price)} VNĐ/người</div>
+          <div className="unfixedPrice" style={{fontSize: "1rem"}}>{formatPrice(price)} VNĐ/người</div>
           <div className="card_bottom d-flex align-items-center justify-content-between mt-3">
             <h5>
               {formatPrice(price - (price * percentSale / 100))} <span style={{fontSize: "1rem"}}> VNĐ/người</span>

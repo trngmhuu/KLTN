@@ -11,7 +11,9 @@ import PrivateRoute from "./PrivateRoute";
 import DomesticTours from "../pages/DomesticTours";
 import InternationalTours from "../pages/InternationalTours";
 import ToursOnSale from "../pages/ToursOnSale";
-import About from "../pages/About";
+import PayDone from "../pages/PayDone";
+import PayFail from "../pages/PayFail";
+import SearchResultList from "../pages/SearchResultList";
 
 const Router = () => {
   return (
@@ -27,7 +29,9 @@ const Router = () => {
       <Route path="/tours/domestic" element={<DomesticTours />} />
       <Route path="/tours/international" element={<InternationalTours />} />
       <Route path="/tours/on-sale" element={<ToursOnSale />} />
-      <Route path="/about" element={<About/>}/>
+      <Route path="/bookings/done" element={<PayDone />} />
+      <Route path="/bookings/fail" element={<PayFail />} />
+      <Route path="/searchTours" element={<SearchResultList/>}/>
 
       {/* Bọc AdminHomePage bằng PrivateRoute */}
       <Route

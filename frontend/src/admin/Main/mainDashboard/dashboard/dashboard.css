@@ -1,0 +1,54 @@
+.dashboard .stats-container {
+    display: flex;
+    gap: 20px;
+    /* Khoảng cách giữa các ô */
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* Cho phép các ô xuống hàng khi không đủ không gian */
+}
+
+.dashboard .stat-box {
+    flex: 1;
+    min-width: 220px;
+    /* Đảm bảo mỗi ô có kích thước tối thiểu */
+    padding: 20px;
+    background-color: #f1f1f1;
+    /* Màu nền của các ô */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.dashboard .stat-box:hover {
+    background-color: #e0e0e0;
+    /* Màu khi hover */
+}
+
+.dashboard .stat-box h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.dashboard .stat-box p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    /* Màu chữ */
+}
+
+.dashboard .chart-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard h4 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
