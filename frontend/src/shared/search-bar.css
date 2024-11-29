@@ -34,17 +34,7 @@
     margin-bottom: 0;
 }
 
-#durationTour {
-    border: none; /* Loại bỏ viền */
-    outline: none; /* Loại bỏ viền khi chọn */
-}
 
-#durationTour option {
-    font-size: 1rem;
-    color: black;
-    font-weight: normal;
-    padding: 10px;
-}
 
 .search__icon i {
     font-size: 1.6rem;
@@ -77,10 +67,19 @@
     border: none;
     border-radius: 7px;
     outline: none;
+    width: fit-content;
 }
 
 #name {
     border: none;
     border-radius: 7px;
     outline: none;
+    width: fit-content;
+}
+
+#selectDurationTour {
+    border: none;
+    border-radius: 7px;
+    outline: none;
+    width: fit-content;
 }

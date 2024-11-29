@@ -1,22 +1,23 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import "./search-bar.css"
 import { Col, Form, FormGroup } from "reactstrap"
 import cities from "../assets/data/cities.json"
-import SearchResultList from '../pages/SearchResultList'
 import { useNavigate } from "react-router-dom"
 
-const SearchBar = () => {
+const SearchBarByTourType = ({ typeTourName }) => {
     const navigate = useNavigate();
+
     const [searchParams, setSearchParams] = useState({
         locationStart: '',
         name: '',
-        durationTour: ''
+        durationTour: '',
+        typeTourName: typeTourName || ''
     });
 
     const handleSearch = async () => {
         try {
             const queryParams = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`http://localhost:8080/tours/searchTour?${queryParams}`, {
+            const response = await fetch(`http://localhost:8080/tours/searchTourTypeTour?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,10 +26,9 @@ const SearchBar = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log(result.result); // Kiểm tra dữ liệu trả về từ API
+                console.log(result.result);
 
-                // Chuyển hướng đến SearchResultList với dữ liệu
-                navigate("/searchTours", { state: { searchResults: result.result } });
+                //navigate("/tours/domestic", { state: { searchResults: result.result } });
             } else {
                 throw new Error('Không thể lấy dữ liệu người dùng');
             }
@@ -100,4 +100,4 @@ const SearchBar = () => {
     </Col>
 }
 
-export default SearchBar
+export default SearchBarByTourType

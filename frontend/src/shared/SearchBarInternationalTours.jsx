@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react'
 import "./search-bar.css"
 import { Col, Form, FormGroup } from "reactstrap"
+import countries from "../assets/data/countries.json"
 import cities from "../assets/data/cities.json"
-import SearchResultList from '../pages/SearchResultList'
 import { useNavigate } from "react-router-dom"
 
-const SearchBar = () => {
+const SearchBarInternationalTours = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useState({
         locationStart: '',
@@ -16,7 +16,7 @@ const SearchBar = () => {
     const handleSearch = async () => {
         try {
             const queryParams = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`http://localhost:8080/tours/searchTour?${queryParams}`, {
+            const response = await fetch(`http://localhost:8080/tours/searchTourTypeId2?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,10 +25,9 @@ const SearchBar = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log(result.result); // Kiểm tra dữ liệu trả về từ API
-
-                // Chuyển hướng đến SearchResultList với dữ liệu
-                navigate("/searchTours", { state: { searchResults: result.result } });
+                console.log(result.result); 
+                
+                navigate("/tours/international", { state: { searchResults: result.result } });
             } else {
                 throw new Error('Không thể lấy dữ liệu người dùng');
             }
@@ -42,7 +41,7 @@ const SearchBar = () => {
     return <Col lg="12">
         <div className="search__bar">
             <Form className="d-flex align-items-center gap-4">
-                <FormGroup className="d-flex gap-3 form__group form__group-fast">
+                {/* <FormGroup className="d-flex gap-3 form__group form__group-fast">
                     <span><i class="ri-map-pin-line"></i></span>
                     <div>
                         <h6>Bạn đi từ đâu</h6>
@@ -57,7 +56,7 @@ const SearchBar = () => {
                             ))}
                         </select>
                     </div>
-                </FormGroup>
+                </FormGroup> */}
                 <FormGroup className="d-flex gap-3 form__group form__group-last">
                     <span><i class="ri-map-pin-line"></i></span>
                     <div>
@@ -68,8 +67,8 @@ const SearchBar = () => {
                             onChange={(e) => setSearchParams({ ...searchParams, name: e.target.value })}
                         >
                             <option value="">Tất cả điểm đến</option>
-                            {cities.map((city, index) => (
-                                <option key={index} value={city}>{city}</option>
+                            {countries.map((country, index) => (
+                                <option key={index} value={country}>{country}</option>
                             ))}
                         </select>
                     </div>
@@ -100,4 +99,4 @@ const SearchBar = () => {
     </Col>
 }
 
-export default SearchBar
+export default SearchBarInternationalTours

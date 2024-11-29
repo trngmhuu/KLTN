@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "./searchBarBooking.css";
+import "./search-bar.css";
 import { Col, Form, FormGroup } from "reactstrap";
 
 const SearchBarBooking = ({ onBookingFound }) => {

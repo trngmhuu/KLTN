@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import CommonSection from "../shared/CommonSection";
 import "../styles/tours.css";
 import TourCard from "./../shared/TourCard";
-import SearchBar from "./../shared/SearchBar";
 import Newsletter from "./../shared/Newsletter";
 import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
+import SearchBarByTourType from "../shared/SearchBarByTourType";
+import SearchBar from "../shared/SearchBar"
 
 const Tours = () => {
   const tourtypename = useParams();
@@ -59,7 +60,8 @@ const Tours = () => {
       <section>
         <Container>
           <Row>
-            <SearchBar />
+            {/* <SearchBarByTourType typeTourName={tourtypename.tourtypename} /> */}
+            <SearchBar/>
           </Row>
         </Container>
       </section>

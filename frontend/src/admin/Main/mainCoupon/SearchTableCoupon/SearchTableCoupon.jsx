@@ -239,12 +239,6 @@ function SearchTableCoupon() {
                 onOk={handleSaveNewCoupon}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Mã giảm giá">
-                        <Input
-                            value={newCoupon.codeCoupon}
-                            onChange={(e) => handleNewCouponChange('codeCoupon', e.target.value)}
-                        />
-                    </Form.Item>
                     <Form.Item label="Chiết khấu">
                         <Input
                             value={newCoupon.discount}

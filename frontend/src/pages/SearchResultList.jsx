@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CommonSection from "../shared/CommonSection";
 import "../styles/tours.css";
 import TourCard from "./../shared/TourCard";

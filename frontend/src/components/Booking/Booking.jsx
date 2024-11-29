@@ -69,6 +69,35 @@ const Booking = ({ tour }) => {
     return `${day}/${month}/${year}`;
   };
 
+  const [couponCode, setCouponCode] = useState("");
+  const [coupon, setCoupon] = useState(null);
+
+  const handleCouponCheck = async () => {
+    if (!couponCode) {
+      toast.error("Vui lòng nhập mã giảm giá.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/coupons/by-codecoupon/${couponCode}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCoupon(result.result);
+        toast.success("Mã giảm giá hợp lệ!");
+      } else {
+        toast.error("Mã giảm giá không hợp lệ.");
+      }
+    } catch (error) {
+      console.error("Error checking coupon:", error);
+      toast.error("Lỗi kết nối. Vui lòng thử lại.");
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -87,13 +116,15 @@ const Booking = ({ tour }) => {
     }
   };
 
-  const totalAmount = displayedPrice * Number(credentials.numberOfCustomer);
+  const totalAmount = coupon && coupon.activeCoupon
+    ? displayedPrice * (1 - coupon.discount / 100) * Number(credentials.numberOfCustomer)
+    : displayedPrice * Number(credentials.numberOfCustomer);
 
   const validateFields = () => {
     const { customerName, customerEmail, customerPhoneNumber, expectedDate, numberOfCustomer } = credentials;
 
     // Kiểm tra họ tên
-const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
+    const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
     if (!customerName || !nameRegex.test(customerName)) {
       toast.error("Họ tên không được để trống và không được chứa số hoặc ký tự đặc biệt.");
       nameRef.current?.focus();
@@ -179,7 +210,7 @@ const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
 
       if (responseBooking.ok) {
         const bookingData = await responseBooking.json();
-addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
+        addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
         setLoading(false);
         // Truyền dữ liệu booking qua navigate
         navigate("/thank-you", { state: { bookingData: bookingData.result } });
@@ -265,7 +296,7 @@ addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booki
             >
               {districts.map((district, index) => (
                 <option key={index} value={district}>{district}</option>
-))}
+              ))}
             </select>
           </FormGroup>
 
@@ -341,7 +372,7 @@ addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booki
             </p>
           )}
           {paymentMethod === "Chuyển khoản" && (
-<p style={{ textAlign: "justify" }}>
+            <p style={{ textAlign: "justify" }}>
               Quý khách sau khi thực hiện việc chuyển khoản,
               vui lòng gửi email đính kèm hóa đơn chuyển khoản đến <b>minhhuu0705@gmail.com </b>
               hoặc gọi số <b>0123456789</b> để được nhân viên xác nhận.
@@ -354,7 +385,7 @@ addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booki
             </p>
           )}
 
-          {/* Note section */}
+          {/* Ghi chú */}
           <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Ghi chú:</span>
           <FormGroup className="d-flex align-items-center gap-3 mt-2">
             <textarea
@@ -363,7 +394,38 @@ addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booki
               onChange={handleChange}
             />
           </FormGroup>
+
+          {/* Mã giảm giá */}
+          <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Mã giảm giá:</span>
+          <FormGroup className="d-flex align-items-center gap-3 mt-2">
+            <input
+              placeholder="Nhập mã giảm giá (nếu có)"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}  // Cập nhật giá trị mã giảm giá
+            />
+          </FormGroup>
+          <Button
+            className="btn primary__btn w-100"
+            onClick={handleCouponCheck}
+            disabled={!isActive || loading} // Vô hiệu hóa nút khi đang loading
+          >
+            Kiểm tra mã giảm giá
+          </Button>
+          {/* Hiển thị thông tin coupon nếu có */}
+          {coupon && coupon.activeCoupon && (
+            <div className="coupon-info mt-3">
+              <h6>Mã giảm giá: <b>{coupon.codeCoupon}</b></h6>
+              <p>Giảm giá: <b>{coupon.discount}%</b></p>
+              <p style={{ color: "green", fontWeight: "bold", fontStyle: "italic" }}>Mã giảm giá này vẫn còn hiệu lực! Bạn đã tiết kiệm được: {formatPrice(displayedPrice * coupon.discount / 100 * credentials.numberOfCustomer)} VNĐ</p>
+
+            </div>
+          )}
+
+          {coupon && !coupon.activeCoupon && (
+            <p style={{ color: "red" }}>Mã giảm giá này không còn hiệu lực.</p>
+          )}
         </Form>
+
       </div>
 
       <div className="booking__bottom">
