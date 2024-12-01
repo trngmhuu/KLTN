@@ -101,7 +101,17 @@ function SearchTableTour({ changeComponent }) {
 
 
     const handleDelete = async (tourCode) => {
+        // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        // const roles = userInfo?.roles || [];
+
+        // // Kiểm tra nếu vai trò là "EMPLOYEE"
+        // if (roles.includes("EMPLOYEE")) {
+        //     message.error("Bạn không có quyền thực hiện điều này");
+        //     return;
+        // }
         try {
+
+
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
                 method: 'DELETE',
@@ -242,14 +252,24 @@ function SearchTableTour({ changeComponent }) {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (text, record) => (
-                <div className="action-buttons">
-                    <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
-                    <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
-                </div>
-            ),
+            render: (text, record) => {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                const roles = userInfo?.roles || [];
+
+                return (
+                    <div className="action-buttons">
+                        <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
+                        <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
+                        {roles.includes("EMPLOYEE") ? null : (
+                            <Button type="link" danger onClick={() => showDeleteConfirm(record)}>
+                                <DeleteFilled />
+                            </Button>
+                        )}
+                    </div>
+                );
+            },
         }
+
     ];
 
     return (
