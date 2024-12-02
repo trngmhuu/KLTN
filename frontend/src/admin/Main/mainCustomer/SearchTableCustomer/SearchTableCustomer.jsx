@@ -229,6 +229,36 @@ function SearchTableCustomer() {
         }
     };
 
+    const searchCustomers = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const queryParams = new URLSearchParams({
+                ...(searchParams.customerName && { customerName: searchParams.customerName }),
+                ...(searchParams.customerEmail && { customerEmail: searchParams.customerEmail }),
+                ...(searchParams.customerPhoneNumber && { customerPhone: searchParams.customerPhoneNumber }),
+                limit: 100, // Default limit
+            }).toString();
+
+            const response = await fetch(`http://localhost:8080/customers/searchCustomer?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch customers.');
+
+            const result = await response.json();
+            setData(result.result || []);
+            message.success('Tìm kiếm thành công!');
+        } catch (error) {
+            console.error('Error searching customers:', error);
+            message.error('Có lỗi xảy ra khi tìm kiếm khách hàng!');
+        }
+    };
+
+
     const columns = [
         { title: 'Tên khách hàng', dataIndex: 'customerName', key: 'customerName' },
         { title: 'Email', dataIndex: 'customerEmail', key: 'customerEmail' },
@@ -286,8 +316,9 @@ function SearchTableCustomer() {
                             <Button type="primary" onClick={handleReset}>Xóa Trắng</Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">Tìm kiếm</Button>
+                            <Button type="primary" onClick={searchCustomers}>Tìm kiếm</Button>
                         </Form.Item>
+
                     </Form>
                 </li>
             </ul>

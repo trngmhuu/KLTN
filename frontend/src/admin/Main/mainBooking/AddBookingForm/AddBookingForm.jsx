@@ -187,10 +187,10 @@ function AddBookingForm({ changeComponent }) {
             return;
         }
 
-        if (booking.payBooking === null || booking.payBooking === undefined) {
-            message.error('Vui lòng chọn trạng thái thanh toán!');
-            return;
-        }
+        // if (booking.payBooking === null || booking.payBooking === undefined) {
+        //     message.error('Vui lòng chọn trạng thái thanh toán!');
+        //     return;
+        // }
 
         // Chuẩn hóa định dạng ngày thành dd/mm/yyyy
         const formattedBooking = {
@@ -385,7 +385,7 @@ function AddBookingForm({ changeComponent }) {
                         readOnly // Không cho phép người dùng chỉnh sửa trực tiếp
                     />
                 </Form.Item>
-                <Form.Item label="Đã thanh toán">
+                {/* <Form.Item label="Đã thanh toán">
                     <Select
                         name="payBooking"
                         value={booking.payBooking}
@@ -395,7 +395,7 @@ function AddBookingForm({ changeComponent }) {
                         <Option value={true}>Đã thanh toán</Option>
                         <Option value={false}>Chưa thanh toán</Option>
                     </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                     <Button type="primary" onClick={addBooking}>
                         Lưu Booking

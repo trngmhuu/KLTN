@@ -36,7 +36,6 @@ function SearchTableCancelBooking({ changeComponent }) {
             }
 
             const result = await response.json();
-            console.log('Data:', result);
 
             if (Array.isArray(result.result)) {
                 // Lọc dữ liệu để chỉ lấy những booking có trạng thái "Đang chờ hủy"

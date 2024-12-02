@@ -83,3 +83,10 @@
     outline: none;
     width: fit-content;
 }
+
+#travelType {
+    outline: none;
+    border: none;
+    border-radius: 7px;
+    width: fit-content;
+}

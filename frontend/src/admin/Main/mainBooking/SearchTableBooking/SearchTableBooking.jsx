@@ -36,7 +36,6 @@ function SearchTableBooking({ changeComponent }) {
             }
 
             const result = await response.json();
-            console.log('Data:', result);
 
             if (Array.isArray(result.result)) {
                 setData(result.result); // Cập nhật với danh sách bookings từ `result`

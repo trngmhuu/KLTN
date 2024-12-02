@@ -152,9 +152,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     const handleSelectChange = (name, value) => {
         setBooking({ ...booking, [name]: value });
     };
-    const handleActiveBookingChange = (value) => {
-        setBooking({ ...booking, activeBooking: value });
-    };
+    // const handleActiveBookingChange = (value) => {
+    //     setBooking({ ...booking, activeBooking: value });
+    // };
 
     const handleActiveBookingChangePay = (value) => {
         setBooking({ ...booking, payBooking: value });

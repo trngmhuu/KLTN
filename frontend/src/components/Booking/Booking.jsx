@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./booking.css";
 import {
   Form,
@@ -71,6 +71,12 @@ const Booking = ({ tour }) => {
 
   const [couponCode, setCouponCode] = useState("");
   const [coupon, setCoupon] = useState(null);
+
+  useEffect(() => {
+    if (!couponCode) {
+      setCoupon(null); // Xóa thông tin mã giảm giá nếu ô nhập trống
+    }
+  }, [couponCode]);
 
   const handleCouponCheck = async () => {
     if (!couponCode) {

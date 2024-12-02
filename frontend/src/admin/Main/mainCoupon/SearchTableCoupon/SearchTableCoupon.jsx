@@ -36,6 +36,30 @@ function SearchTableCoupon() {
         }
     };
 
+    const fetchSearchData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const queryParams = new URLSearchParams({
+                codeCoupon: searchParams.codeCoupon,
+                limit: '10',
+            });
+
+            const response = await fetch(`http://localhost:8080/coupons/searchCoupon?${queryParams.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const result = await response.json();
+            setData(result.result);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     useEffect(() => {
         fetchData(); // Lấy dữ liệu khi component mount
     }, []);
@@ -204,7 +228,7 @@ function SearchTableCoupon() {
                             <Button type="primary" onClick={handleReset}>Xóa Trắng</Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">Tìm kiếm</Button>
+                            <Button type="primary" onClick={fetchSearchData}>Tìm kiếm</Button>
                         </Form.Item>
                     </Form>
                 </li>
@@ -239,6 +263,12 @@ function SearchTableCoupon() {
                 onOk={handleSaveNewCoupon}
             >
                 <Form layout="vertical">
+                    <Form.Item label="Mã giảm giá">
+                        <Input
+                            value={newCoupon.codeCoupon}
+                            onChange={(e) => handleNewCouponChange('codeCoupon', e.target.value)}
+                        />
+                    </Form.Item>
                     <Form.Item label="Chiết khấu">
                         <Input
                             value={newCoupon.discount}

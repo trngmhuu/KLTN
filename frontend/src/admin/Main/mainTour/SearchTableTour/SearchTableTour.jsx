@@ -65,6 +65,36 @@ function SearchTableTour({ changeComponent }) {
         }
     };
 
+    const searchToursAdmin = async () => {
+        try {
+            const { name, tourCode } = searchParams;
+            const queryParams = new URLSearchParams({
+                ...(name && { name }),
+                ...(tourCode && { tourCode }),
+                limit: 10,  // Adjust as needed
+            }).toString();
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/tours/searchTourAdmin?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            setData(result.result || []);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+            message.error('Không thể tìm kiếm dữ liệu từ API.');
+        }
+    };
+
+
 
 
     useEffect(() => {
@@ -101,17 +131,7 @@ function SearchTableTour({ changeComponent }) {
 
 
     const handleDelete = async (tourCode) => {
-        // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        // const roles = userInfo?.roles || [];
-
-        // // Kiểm tra nếu vai trò là "EMPLOYEE"
-        // if (roles.includes("EMPLOYEE")) {
-        //     message.error("Bạn không có quyền thực hiện điều này");
-        //     return;
-        // }
         try {
-
-
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
                 method: 'DELETE',
@@ -252,24 +272,14 @@ function SearchTableTour({ changeComponent }) {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (text, record) => {
-                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-                const roles = userInfo?.roles || [];
-
-                return (
-                    <div className="action-buttons">
-                        <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
-                        <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                        {roles.includes("EMPLOYEE") ? null : (
-                            <Button type="link" danger onClick={() => showDeleteConfirm(record)}>
-                                <DeleteFilled />
-                            </Button>
-                        )}
-                    </div>
-                );
-            },
+            render: (text, record) => (
+                <div className="action-buttons">
+                    <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
+                    <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
+                </div>
+            ),
         }
-
     ];
 
     return (
@@ -302,10 +312,11 @@ function SearchTableTour({ changeComponent }) {
                             </Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">
+                            <Button type="primary" onClick={searchToursAdmin}>
                                 Tìm kiếm
                             </Button>
                         </Form.Item>
+
                     </Form>
                 </li>
             </ul>
