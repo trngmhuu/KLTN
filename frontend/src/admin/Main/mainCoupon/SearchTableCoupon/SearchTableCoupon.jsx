@@ -7,7 +7,8 @@ const { confirm } = Modal;
 const { Option } = Select;
 
 function SearchTableCoupon() {
-    const [searchParams, setSearchParams] = useState({ codeCoupon: '' });
+    const [searchParams, setSearchParams] = useState({ codeCoupon: '', discount: '' });
+
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [newCoupon, setNewCoupon] = useState({ codeCoupon: '', discount: '', description: '', activeCoupon: true });
@@ -41,6 +42,7 @@ function SearchTableCoupon() {
             const token = localStorage.getItem('token');
             const queryParams = new URLSearchParams({
                 codeCoupon: searchParams.codeCoupon,
+                discount: searchParams.discount,
                 limit: '10',
             });
 
@@ -107,7 +109,13 @@ function SearchTableCoupon() {
         }
     };
 
-    const showDeleteConfirm = (codeCoupon) => {
+    const showDeleteConfirm = (record) => {
+
+        if (record.activeCoupon) {
+            message.error('Phải chuyển mã giảm giá này về trạng thái không hoạt động mới có thể xóa.');
+            return;
+        }
+
         confirm({
             title: 'Bạn có chắc chắn muốn xóa mã giảm giá này?',
             icon: <ExclamationCircleOutlined />,
@@ -115,7 +123,7 @@ function SearchTableCoupon() {
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                handleDelete(codeCoupon);
+                handleDelete(record.codeCoupon);
             },
         });
     };
@@ -127,6 +135,12 @@ function SearchTableCoupon() {
 
     // Save coupon mới
     const handleSaveNewCoupon = async () => {
+
+        if (!newCoupon.discount || isNaN(newCoupon.discount) || Number(newCoupon.discount) <= 0) {
+            message.error('Chiết khấu phải là số lớn hơn 0!');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8080/coupons', {
@@ -202,12 +216,12 @@ function SearchTableCoupon() {
                     <Button type="link" onClick={() => handleEdit(record)}>
                         <EyeOutlined />
                     </Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record.codeCoupon)}>
+                    <Button type="link" danger onClick={() => showDeleteConfirm(record)}>
                         <DeleteFilled />
                     </Button>
                 </div>
             ),
-        },
+        },        
     ];
 
     return (
@@ -224,6 +238,15 @@ function SearchTableCoupon() {
                                 onChange={handleInputChange}
                             />
                         </Form.Item>
+                        <Form.Item>
+                            <Input
+                                name="discount"
+                                placeholder="Chiết khấu"
+                                value={searchParams.discount}
+                                onChange={handleInputChange}
+                            />
+                        </Form.Item>
+
                         <Form.Item>
                             <Button type="primary" onClick={handleReset}>Xóa Trắng</Button>
                         </Form.Item>
@@ -263,12 +286,6 @@ function SearchTableCoupon() {
                 onOk={handleSaveNewCoupon}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Mã giảm giá">
-                        <Input
-                            value={newCoupon.codeCoupon}
-                            onChange={(e) => handleNewCouponChange('codeCoupon', e.target.value)}
-                        />
-                    </Form.Item>
                     <Form.Item label="Chiết khấu">
                         <Input
                             value={newCoupon.discount}

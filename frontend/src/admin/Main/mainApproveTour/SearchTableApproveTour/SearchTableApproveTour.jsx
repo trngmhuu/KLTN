@@ -66,6 +66,45 @@ function ApproveTour({ changeComponent }) {
         }
     };
 
+    // New function for fetching inactive tours based on search parameters
+    const fetchInactiveTours = async () => {
+        const { name, tourCode } = searchParams; // Extract search parameters
+
+        try {
+            // Construct the query parameters
+            const token = localStorage.getItem('token');
+
+            const queryParams = new URLSearchParams({
+                ...(name && { name }),
+                ...(tourCode && { tourCode }),
+                limit: 100,  // Adjust as needed
+            }).toString();
+
+            const response = await fetch(`http://localhost:8080/tours/searchTourAdminFalse?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+
+            if (Array.isArray(result.result)) {
+                setData(result.result); // Update the state with the filtered tours
+            } else {
+                throw new Error('Expected result to be an array');
+            }
+        } catch (error) {
+            console.error('Error fetching inactive tours:', error);
+            message.error('Không thể tải dữ liệu từ API.');
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -259,7 +298,7 @@ function ApproveTour({ changeComponent }) {
                             </Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">
+                            <Button type="primary" onClick={fetchInactiveTours}>
                                 Tìm kiếm
                             </Button>
                         </Form.Item>

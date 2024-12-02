@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import "./search-bar.css"
 import { Col, Form, FormGroup } from "reactstrap"
 import countries from "../assets/data/countries.json"
-import cities from "../assets/data/cities.json"
 import { useNavigate } from "react-router-dom"
 
 const SearchBarInternationalTours = () => {

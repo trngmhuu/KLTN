@@ -161,12 +161,12 @@ data-bs-parent="#sidebar-nav"
                 </li>
 
                 {/* Hiển thị cho cả ADMIN và EMPLOYEE */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link collapsed" onClick={() => changeComponent('new')}>
                         <i class="bi bi-newspaper"></i>
                         <span>Quản lý Tin Tức</span>
                     </a>
-                </li>
+                </li> */}
             </ul>
         </aside>
     );

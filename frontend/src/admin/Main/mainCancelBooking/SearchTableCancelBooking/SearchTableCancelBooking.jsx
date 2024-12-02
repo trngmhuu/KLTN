@@ -13,7 +13,6 @@ const formatPrice = (price) => {
 
 function SearchTableCancelBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
-        customerName: '',
         bookingCode: '',
     });
 
@@ -66,7 +65,6 @@ function SearchTableCancelBooking({ changeComponent }) {
 
     const handleReset = () => {
         setSearchParams({
-            customerName: '',
             bookingCode: '',
         });
     };
@@ -97,7 +95,7 @@ function SearchTableCancelBooking({ changeComponent }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
-    
+
             if (response.ok) {
                 fetchData(); // Cập nhật lại danh sách sau khi hủy thành công
                 message.success('Đã hủy booking'); // Thông báo thành công
@@ -109,7 +107,7 @@ function SearchTableCancelBooking({ changeComponent }) {
             message.error('Không thể hủy booking');
         }
     };
-    
+
 
     const showCancelConfirm = (record) => {
         confirm({
@@ -127,7 +125,7 @@ function SearchTableCancelBooking({ changeComponent }) {
             },
         });
     };
-    
+
 
     const columns = [
         {
@@ -213,11 +211,44 @@ function SearchTableCancelBooking({ changeComponent }) {
             render: (text, record) => (
                 <div className="action-buttons">
                     <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" onClick={() => showCancelConfirm(record)}><CloseCircleFilled/></Button>
+                    <Button type="link" onClick={() => showCancelConfirm(record)}><CloseCircleFilled /></Button>
                 </div>
             ),
         }
     ];
+
+    const handleSearch = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const queryParams = new URLSearchParams({
+                bookingCode: searchParams.bookingCode,
+                limit: 100  // Default limit, adjust as needed
+            }).toString();
+
+            const response = await fetch(`http://localhost:8080/bookings/searchCancel?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+
+            if (Array.isArray(result.result)) {
+                setData(result.result); // Update with search results
+            } else {
+                throw new Error('Expected result to be an array');
+            }
+        } catch (error) {
+            console.error('Error searching data:', error);
+            message.error('Không thể tìm kiếm dữ liệu từ API.');
+        }
+    };
 
     return (
         <div>
@@ -225,15 +256,6 @@ function SearchTableCancelBooking({ changeComponent }) {
                 <li className='search-container'>
                     <h6>Tìm kiếm Đặt Chỗ</h6>
                     <Form className="custom-inline-form-booking" layout="inline">
-                        <Form.Item>
-                            <Input
-                                name="customerName"
-                                placeholder="Tên Khách Hàng"
-                                value={searchParams.customerName}
-                                onChange={handleInputChange}
-                                style={{ width: "100%" }}
-                            />
-                        </Form.Item>
                         <Form.Item>
                             <Input
                                 name="bookingCode"
@@ -249,7 +271,7 @@ function SearchTableCancelBooking({ changeComponent }) {
                             </Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">
+                            <Button type="primary" onClick={handleSearch}>
                                 Tìm kiếm
                             </Button>
                         </Form.Item>

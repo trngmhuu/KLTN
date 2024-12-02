@@ -13,26 +13,22 @@ const PayDone = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    console.log(searchParams)
-    const sessionId = searchParams.get("session_id"); // Lấy session_id từ URL
-    console.log("session_id từ URL:", sessionId); // Kiểm tra xem session_id có đúng k
+    const sessionId = searchParams.get("session_id");
 
     if (sessionId) {
-      // Gửi yêu cầu đến backend để xử lý thanh toán
       fetch(`http://localhost:8080/pay/done?session_id=${sessionId}`)
         .then((response) => {
-          if (response.ok) {
-            const data = response.json();
-            console.log(data);
-            return data;
-            
-          } else {
+          if (!response.ok) {
             throw new Error("Có lỗi xảy ra khi xử lý thanh toán");
           }
+          return response.json(); // Chuyển đổi response thành JSON
         })
         .then((data) => {
           setLoading(false);
-          setPaymentStatus("Thanh toán thành công!");
+          if (data.bookingCode) {
+            addNotification(`Khách hàng vừa thanh toán cho đơn đặt tour có mã ${data.bookingCode}`);
+          }
+          setPaymentStatus(data.message); // Sử dụng message từ backend
         })
         .catch((error) => {
           setLoading(false);
@@ -43,6 +39,7 @@ const PayDone = () => {
       setError("Không tìm thấy session_id.");
     }
   }, [location]);
+
 
   return (
     <section>
