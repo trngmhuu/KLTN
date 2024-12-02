@@ -88,6 +88,11 @@ const TourDetails = () => {
                   <div className="tour__extra-details">
                     <Row>
                       <Col lg="6">
+                        <span style={{whiteSpace: "nowrap"}}>
+                          <i class="ri-barcode-line"></i>
+                          <span className="titles">Mã tour:</span>
+                          {tour.tourCode}
+                        </span>
                         <span style={{ whiteSpace: "nowrap" }}>
                           <i class="ri-calendar-line"></i>
                           <span className="titles">Thời gian đi:</span>

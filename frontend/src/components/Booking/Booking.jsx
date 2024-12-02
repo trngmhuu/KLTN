@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import "./booking.css";
 import {
   Form,
@@ -20,6 +20,8 @@ const formatPrice = (price) => {
 
 const Booking = ({ tour }) => {
   const { addNotification } = useNotifications();
+  const [isCouponLocked, setIsCouponLocked] = useState(false);
+
   const { price, isActive, tourCode, saleTour, percentSale } = tour;
   const [loading, setLoading] = useState(false);
 
@@ -72,12 +74,6 @@ const Booking = ({ tour }) => {
   const [couponCode, setCouponCode] = useState("");
   const [coupon, setCoupon] = useState(null);
 
-  useEffect(() => {
-    if (!couponCode) {
-      setCoupon(null); // Xóa thông tin mã giảm giá nếu ô nhập trống
-    }
-  }, [couponCode]);
-
   const handleCouponCheck = async () => {
     if (!couponCode) {
       toast.error("Vui lòng nhập mã giảm giá.");
@@ -96,6 +92,7 @@ const Booking = ({ tour }) => {
         const result = await response.json();
         setCoupon(result.result);
         toast.success("Mã giảm giá hợp lệ!");
+        setIsCouponLocked(true); // Khóa trường input và nút
       } else {
         toast.error("Mã giảm giá không hợp lệ.");
       }
@@ -104,6 +101,7 @@ const Booking = ({ tour }) => {
       toast.error("Lỗi kết nối. Vui lòng thử lại.");
     }
   };
+
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -122,6 +120,13 @@ const Booking = ({ tour }) => {
     }
   };
 
+  const handleRemoveCoupon = () => {
+    setCoupon(null);
+    setCouponCode("");
+    setIsCouponLocked(false); // Mở khóa trường input và nút
+    toast.info("Bạn đã hủy áp mã giảm giá.");
+  };
+
   const totalAmount = coupon && coupon.activeCoupon
     ? displayedPrice * (1 - coupon.discount / 100) * Number(credentials.numberOfCustomer)
     : displayedPrice * Number(credentials.numberOfCustomer);
@@ -130,7 +135,7 @@ const Booking = ({ tour }) => {
     const { customerName, customerEmail, customerPhoneNumber, expectedDate, numberOfCustomer } = credentials;
 
     // Kiểm tra họ tên
-    const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~`]+$/;
+    const nameRegex = /^[^\d!@#$%^&*()_+={}[\]:;"'<>,.?~]+$/;
     if (!customerName || !nameRegex.test(customerName)) {
       toast.error("Họ tên không được để trống và không được chứa số hoặc ký tự đặc biệt.");
       nameRef.current?.focus();
@@ -334,7 +339,7 @@ const Booking = ({ tour }) => {
           <FormGroup className="d-flex align-items-center gap-3">
             <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Số lượng hành khách:</span>
             <input
-              type="number"
+              type="text"
               placeholder="Số người đi"
               id="numberOfCustomer"
               required
@@ -403,27 +408,36 @@ const Booking = ({ tour }) => {
 
           {/* Mã giảm giá */}
           <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Mã giảm giá:</span>
+          {/* Ô input mã giảm giá */}
           <FormGroup className="d-flex align-items-center gap-3 mt-2">
             <input
               placeholder="Nhập mã giảm giá (nếu có)"
               value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}  // Cập nhật giá trị mã giảm giá
+              onChange={(e) => setCouponCode(e.target.value)} // Cập nhật giá trị mã giảm giá
+              disabled={isCouponLocked} // Vô hiệu hóa nếu đã khóa
             />
           </FormGroup>
           <Button
-            className="btn primary__btn w-100"
-            onClick={handleCouponCheck}
-            disabled={!isActive || loading} // Vô hiệu hóa nút khi đang loading
-          >
-            Kiểm tra mã giảm giá
-          </Button>
+              className="btn primary__btn w-100"
+              onClick={handleCouponCheck}
+              disabled={isCouponLocked || !isActive || loading} // Vô hiệu hóa nút khi đã khóa hoặc đang loading
+            >
+              Kiểm tra mã giảm giá
+            </Button>
           {/* Hiển thị thông tin coupon nếu có */}
           {coupon && coupon.activeCoupon && (
             <div className="coupon-info mt-3">
               <h6>Mã giảm giá: <b>{coupon.codeCoupon}</b></h6>
               <p>Giảm giá: <b>{coupon.discount}%</b></p>
-              <p style={{ color: "green", fontWeight: "bold", fontStyle: "italic" }}>Mã giảm giá này vẫn còn hiệu lực! Bạn đã tiết kiệm được: {formatPrice(displayedPrice * coupon.discount / 100 * credentials.numberOfCustomer)} VNĐ</p>
-
+              <p style={{ color: "green", fontWeight: "bold", fontStyle: "italic" }}>
+                Mã giảm giá này vẫn còn hiệu lực! Bạn đã tiết kiệm được: {formatPrice(displayedPrice * coupon.discount / 100 * credentials.numberOfCustomer)} VNĐ
+              </p>
+              <Button
+                className="btn danger__btn w-100 mt-2"
+                onClick={handleRemoveCoupon}
+              >
+                Hủy áp mã giảm giá
+              </Button>
             </div>
           )}
 
