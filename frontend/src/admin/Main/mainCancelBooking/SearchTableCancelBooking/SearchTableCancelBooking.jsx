@@ -74,12 +74,6 @@ function SearchTableCancelBooking({ changeComponent }) {
     };
 
     const handleEdit = (record) => {
-        // Kiểm tra nếu booking đã thanh toán
-        if (record.payBooking) {
-            // Nếu đã thanh toán, hiển thị thông báo lỗi và không cho phép cập nhật
-            message.error('Đặt chỗ này đã thanh toán, không thể cập nhật!');
-            return; // Không làm gì thêm, không mở form cập nhật
-        }
 
         // Nếu chưa thanh toán, tiến hành mở form cập nhật
         changeComponent('update', record.bookingCode); // Gọi hàm changeComponent với mã booking
