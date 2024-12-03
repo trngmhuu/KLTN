@@ -17,7 +17,11 @@ const SearchBar = () => {
     const handleSearch = async () => {
         try {
             const queryParams = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`http://localhost:8080/tours/searchTour?${queryParams}`, {
+            const apiUrl = travelType === "Du lịch trong nước"
+                ? `http://localhost:8080/tours/searchTourTypeId1?${queryParams}`
+                : `http://localhost:8080/tours/searchTourTypeId2?${queryParams}`;
+
+            const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,14 +44,18 @@ const SearchBar = () => {
 
     const handleTravelTypeChange = (e) => {
         const value = e.target.value;
-        setSearchParams((prevParams) => ({
-            ...prevParams,
-            locationStart: value === "Du lịch nước ngoài" ? "" : prevParams.locationStart,
-        }));
+    
+        // Cập nhật loại hình du lịch và reset các trường tìm kiếm
         setTravelType(value);
+        setSearchParams({
+            locationStart: '',
+            name: '',
+            durationTour: ''
+        });
     };
+    
 
-    const travelOptions = searchParams.travelType === 'domestic' ? cities : countries;
+    const travelOptions = travelType === "Du lịch trong nước" ? cities : countries;
 
     return (
         <Col lg="12">
@@ -91,7 +99,6 @@ const SearchBar = () => {
                             </div>
                         </FormGroup>
                     )}
-
 
                     {/* Trường name */}
                     <FormGroup className="d-flex gap-3 form__group form__group-last">

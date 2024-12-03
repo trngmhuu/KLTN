@@ -357,17 +357,19 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             <Option value="Máy bay">Máy bay</Option>
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item label="Trạng thái tour">
-                        <Select
-                            name="isActive"
-                            value={tour.isActive}
-                            onChange={(value) => setTour({ ...tour, isActive: value })}
-                            ref={(el) => (inputRefs.current.isActive = el)}
-                        >
-                            <Option value={true}>Đang nhận khách</Option>
-                            <Option value={false}>Chưa thể đặt</Option>
-                        </Select>
-                    </Form.Item> */}
+                    {JSON.parse(localStorage.getItem('userInfo'))?.roles?.includes('ADMIN') && (
+                        <Form.Item label="Trạng thái tour">
+                            <Select
+                                name="isActive"
+                                value={tour.isActive}
+                                onChange={(value) => setTour({ ...tour, isActive: value })}
+                                ref={(el) => (inputRefs.current.isActive = el)}
+                            >
+                                <Option value={true}>Đang nhận khách</Option>
+                                <Option value={false}>Chưa thể đặt</Option>
+                            </Select>
+                        </Form.Item>
+                    )}
                     <Form.Item label="Giảm giá">
                         <Select
                             name="saleTour"

@@ -191,18 +191,6 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             return;
         }
 
-        // if (!booking.customerCity.trim()) {
-        //     message.error('Vui lòng chọn Tỉnh/Thành phố!');
-        //     focusInput("customerCity");
-        //     return;
-        // }
-
-        // if (!booking.customerDistrict.trim()) {
-        //     message.error('Vui lòng chọn Quận/Huyện!');
-        //     focusInput("customerDistrict");
-        //     return;
-        // }
-
         if (booking.numberOfCustomer <= 0) {
             message.error('Số lượng khách hàng phải lớn hơn 0!');
             focusInput('numberOfCustomer');
