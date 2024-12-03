@@ -24,6 +24,10 @@ const quick_links_2 = [
     path: "/tours/international",
     display: "Tour nước ngoài",
   },
+  {
+    path: "/bookings",
+    display: "Tra cứu đặt tour"
+  }
 ];
 
 const Footer = () => {

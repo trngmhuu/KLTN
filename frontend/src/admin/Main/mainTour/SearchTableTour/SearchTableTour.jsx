@@ -71,8 +71,8 @@ function SearchTableTour({ changeComponent }) {
             const queryParams = new URLSearchParams({
                 ...(name && { name }),
                 ...(tourCode && { tourCode }),
-                limit: 10,  // Adjust as needed
             }).toString();
+            console.log("Query Params:", queryParams);
             const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8080/tours/searchTourAdmin?${queryParams}`, {
                 method: 'GET',
@@ -93,8 +93,6 @@ function SearchTableTour({ changeComponent }) {
             message.error('Không thể tìm kiếm dữ liệu từ API.');
         }
     };
-
-
 
 
     useEffect(() => {

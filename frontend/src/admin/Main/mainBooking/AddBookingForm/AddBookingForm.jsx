@@ -39,7 +39,7 @@ function AddBookingForm({ changeComponent }) {
     const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
     const inputRefs = useRef({});
 
-    // useEffect để lấy danh sách mã tour từ API
+    // Lấy danh sách tour
     useEffect(() => {
         const fetchTours = async () => {
             try {
@@ -96,8 +96,6 @@ function AddBookingForm({ changeComponent }) {
         }
     };
 
-
-
     // Hàm tính toán tổng tiền khi số lượng khách thay đổi
     const handleNumberOfCustomerChange = (e) => {
         const numberOfCustomer = e.target.value;
@@ -129,15 +127,12 @@ function AddBookingForm({ changeComponent }) {
     };
 
     const [availableDistricts, setAvailableDistricts] = useState([]);
-    // 2. Hàm xử lý thay đổi khi người dùng chọn Tỉnh/Thành phố
     const handleCityChange = (city) => {
         setBooking((prevBooking) => ({ ...prevBooking, customerCity: city, customerDistrict: '' }));
-        // Lọc danh sách quận/huyện theo Tỉnh/Thành phố đã chọn
         const filteredDistricts = districts[city] || [];
         setAvailableDistricts(filteredDistricts);
     };
 
-    // 3. Hàm xử lý khi người dùng chọn Quận/Huyện
     const handleDistrictChange = (district) => {
         setBooking((prevBooking) => ({ ...prevBooking, customerDistrict: district }));
     };
@@ -224,7 +219,6 @@ function AddBookingForm({ changeComponent }) {
             },
             body: JSON.stringify(customerData),
         });
-
 
         const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:8080/bookings/admin', {
