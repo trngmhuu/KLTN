@@ -37,6 +37,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   const [tours, setTours] = useState([]); // State lưu danh sách các tour
   const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
   const inputRefs = useRef({});
+  const [disablePaySelect, setDisablePaySelect] = useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -92,6 +93,8 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             payBooking: bookingData.payBooking,
             activeBooking: bookingData.activeBooking,
           });
+
+          setDisablePaySelect(bookingData.payBooking === true);
 
           // Set selectedTour nếu có thông tin tour
           if (bookingData.tourCode) {
@@ -210,18 +213,6 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
       return;
     }
 
-    // if (!booking.customerCity.trim()) {
-    //     message.error('Vui lòng chọn Tỉnh/Thành phố!');
-    //     focusInput("customerCity");
-    //     return;
-    // }
-
-    // if (!booking.customerDistrict.trim()) {
-    //     message.error('Vui lòng chọn Quận/Huyện!');
-    //     focusInput("customerDistrict");
-    //     return;
-    // }
-
     if (booking.numberOfCustomer <= 0) {
       message.error("Số lượng khách hàng phải lớn hơn 0!");
       focusInput("numberOfCustomer");
@@ -279,6 +270,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                 value={booking.bookingCode}
                 onChange={handleInputChange} // Lắng nghe thay đổi mã booking
                 ref={(el) => (inputRefs.current.bookingCode = el)}
+                disabled
               />
             </Form.Item>
             <Form.Item label="Tên khách hàng">
@@ -319,6 +311,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                 name="numberOfCustomer"
                 value={booking.numberOfCustomer}
                 onChange={handleNumberOfCustomerChange} // Cập nhật tổng tiền
+                disabled={disablePaySelect}
               />
             </Form.Item>
             <Form.Item label="Mã Tour">
@@ -326,6 +319,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                 name="tourCode"
                 value={booking.tourCode}
                 onChange={handleTourChange} // Khi chọn tour
+                disabled
               >
                 {tours.map((tour) => (
                   <Option key={tour.tourCode} value={tour.tourCode}>
@@ -338,7 +332,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
               <Select
                 value={booking.payBooking}
                 onChange={handleActiveBookingChangePay}
-                disabled={booking.payBooking === true} // Vô hiệu hóa nếu đã thanh toán
+                disabled={disablePaySelect} // Sử dụng state disablePaySelect
               >
                 <Option value={true}>Đã thanh toán</Option>
                 <Option value={false}>Chưa thanh toán</Option>
@@ -375,7 +369,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
               <DatePicker
                 value={
                   booking.expectedDate
-                    ? moment(booking.expectedDate, "YYYY-MM-DD")
+                    ? moment(booking.expectedDate, "DD-MM-YYYY")
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
@@ -393,6 +387,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
               <Select
                 value={booking.typePay}
                 onChange={(value) => handleSelectChange("typePay", value)}
+                disabled={disablePaySelect}
               >
                 <Option value="cash">Tiền mặt</Option>
                 <Option value="creditCard">Thẻ tín dụng</Option>

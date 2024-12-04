@@ -284,6 +284,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 value={booking.bookingCode}
                 onChange={handleInputChange} // Lắng nghe thay đổi mã booking
                 ref={(el) => (inputRefs.current.bookingCode = el)}
+                disabled
               />
             </Form.Item>
             <Form.Item label="Tên khách hàng">
@@ -324,6 +325,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 name="numberOfCustomer"
                 value={booking.numberOfCustomer}
                 onChange={handleNumberOfCustomerChange} // Cập nhật tổng tiền
+                disabled={disablePaySelect}
               />
             </Form.Item>
             <Form.Item label="Mã Tour">
@@ -355,7 +357,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             {/* Thông tin tour hiển thị bên phải */}
             {selectedTour && (
               <div className="tour-info">
-                <h3>Thông tin tour</h3>
+                <h3 style={{fontWeight: "bold"}}>Thông tin tour</h3>
                 <img
                   src={selectedTour.image}
                   alt=""
@@ -400,7 +402,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <DatePicker
                 value={
                   booking.expectedDate
-                    ? moment(booking.expectedDate, "YYYY-MM-DD")
+                    ? moment(booking.expectedDate, "DD-MM-YYYY")
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
@@ -418,6 +420,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Select
                 value={booking.typePay}
                 onChange={(value) => handleSelectChange("typePay", value)}
+                disabled={disablePaySelect}
               >
                 <Option value="Tiền mặt">Tiền mặt</Option>
                 <Option value="Chuyển khoản">Chuyển khoản</Option>
