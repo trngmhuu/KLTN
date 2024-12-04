@@ -37,6 +37,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const [tours, setTours] = useState([]); // State lưu danh sách các tour
   const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
   const inputRefs = useRef({});
+  const [disablePaySelect, setDisablePaySelect] = useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -97,8 +98,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             bookingDate: bookingData.bookingDate,
             expectedDate: bookingData.expectedDate
               ? moment(bookingData.expectedDate, "DD-MM-YYYY").format(
-                  "DD/MM/YYYY"
-                ) // Chuyển đổi ngày dự kiến
+                "DD/MM/YYYY"
+              ) // Chuyển đổi ngày dự kiến
               : null,
             note: bookingData.note,
             tourCode: bookingData.tourCode,
@@ -107,6 +108,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             payBooking: bookingData.payBooking,
             activeBooking: bookingData.activeBooking,
           });
+          setDisablePaySelect(bookingData.payBooking === true);
 
           // Set selectedTour nếu có thông tin tour
           if (bookingData.tourCode) {
@@ -329,6 +331,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 name="tourCode"
                 value={booking.tourCode}
                 onChange={handleTourChange} // Khi chọn tour
+                disabled
               >
                 {tours.map((tour) => (
                   <Option key={tour.tourCode} value={tour.tourCode}>
@@ -341,7 +344,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Select
                 value={booking.payBooking}
                 onChange={handleActiveBookingChangePay}
-                disabled={booking.payBooking === true} // Vô hiệu hóa nếu đã thanh toán
+                disabled={disablePaySelect} // Sử dụng state disablePaySelect
               >
                 <Option value={true}>Đã thanh toán</Option>
                 <Option value={false}>Chưa thanh toán</Option>
@@ -369,8 +372,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                   {selectedTour.typeId === "1"
                     ? "Tour trong nước"
                     : selectedTour.typeId === "2"
-                    ? "Tour nước ngoài"
-                    : "Không xác định"}
+                      ? "Tour nước ngoài"
+                      : "Không xác định"}
                 </p>
                 <p>
                   <strong>Phân loại:</strong> {selectedTour.typeTourName}

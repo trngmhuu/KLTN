@@ -5,7 +5,6 @@ import TourCard from "./../shared/TourCard";
 import Newsletter from "./../shared/Newsletter";
 import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
-import SearchBarByTourType from "../shared/SearchBarByTourType";
 import SearchBar from "../shared/SearchBar"
 
 const Tours = () => {
