@@ -11,6 +11,8 @@ import {
 } from "antd";
 import "./updateBookingForm.css";
 import moment from "moment";
+import cities from "../../../../assets/data/cities.json"
+import districts from "../../../../assets/data/districtData.json"
 
 const { Option } = Select;
 
@@ -98,8 +100,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             bookingDate: bookingData.bookingDate,
             expectedDate: bookingData.expectedDate
               ? moment(bookingData.expectedDate, "DD-MM-YYYY").format(
-                "DD/MM/YYYY"
-              ) // Chuyển đổi ngày dự kiến
+                  "DD/MM/YYYY"
+                ) // Chuyển đổi ngày dự kiến
               : null,
             note: bookingData.note,
             tourCode: bookingData.tourCode,
@@ -188,9 +190,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const handleSelectChange = (name, value) => {
     setBooking({ ...booking, [name]: value });
   };
-  // const handleActiveBookingChange = (value) => {
-  //     setBooking({ ...booking, activeBooking: value });
-  // };
+  const handleActiveBookingChange = (value) => {
+      setBooking({ ...booking, activeBooking: value });
+  };
 
   const handleActiveBookingChangePay = (value) => {
     setBooking({ ...booking, payBooking: value });
@@ -272,6 +274,17 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     }
   };
 
+  // Function to check if user is an admin
+  const isAdmin = () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      return userInfo && userInfo.roles && userInfo.roles.includes('ADMIN');
+    } catch (error) {
+      console.error("Error checking admin role:", error);
+      return false;
+    }
+  };
+
   return (
     <div className="add-booking-form-container">
       <Form layout="vertical">
@@ -319,6 +332,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 onChange={handleInputChange}
               />
             </Form.Item>
+
             <Form.Item label="Số lượng khách hàng">
               <Input
                 type="number"
@@ -357,7 +371,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             {/* Thông tin tour hiển thị bên phải */}
             {selectedTour && (
               <div className="tour-info">
-                <h3 style={{fontWeight: "bold"}}>Thông tin tour</h3>
+                <h3 style={{ fontWeight: "bold" }}>Thông tin tour</h3>
                 <img
                   src={selectedTour.image}
                   alt=""
@@ -374,8 +388,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                   {selectedTour.typeId === "1"
                     ? "Tour trong nước"
                     : selectedTour.typeId === "2"
-                      ? "Tour nước ngoài"
-                      : "Không xác định"}
+                    ? "Tour nước ngoài"
+                    : "Không xác định"}
                 </p>
                 <p>
                   <strong>Phân loại:</strong> {selectedTour.typeTourName}
@@ -431,15 +445,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             </Form.Item>
             {/* Thêm phần để chọn activeBooking */}
             {/* <Form.Item label="Trạng thái booking">
-                            <Select
-                                value={booking.activeBooking}
-                                onChange={handleActiveBookingChange}
-                            >
-                                <Option value="Hoạt động">Hoạt động</Option>
-                                <Option value="Đang chờ hủy">Đang chờ hủy</Option>
-                                <Option value="Đã hủy">Đã hủy</Option>
-                            </Select>
-                        </Form.Item> */}
+              <Select
+                value={booking.activeBooking}
+                onChange={handleActiveBookingChange}
+                disabled={!isAdmin()}
+              >
+                <Option value="Hoạt động">Hoạt động</Option>
+                <Option value="Đang chờ hủy">Đang chờ hủy</Option>
+                <Option value="Đã hủy">Đã hủy</Option>
+              </Select>
+            </Form.Item> */}
           </Col>
         </Row>
 
