@@ -45,8 +45,6 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   const [availableDistricts, setAvailableDistricts] = useState([]);
   const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
   const [isExpiredTour, setIsExpiredTour] = useState(false);
-  const [disableBookingStatusSelect, setDisableBookingStatusSelect] =
-    useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {

@@ -42,6 +42,22 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const [disablePaySelect, setDisablePaySelect] = useState(false);
   const [isExpiredTour, setIsExpiredTour] = useState(false);
   const [disableBookingStatusSelect, setDisableBookingStatusSelect] = useState(false);
+  // New state to track if update button should be disabled
+  const [isUpdateDisabled, setIsUpdateDisabled] = useState(false);
+
+  // useEffect to check expected date and update update button status
+  useEffect(() => {
+    if (booking.expectedDate) {
+      const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
+      const today = moment().startOf('day');
+      
+      // Disable update button only if expected date is before today
+      setIsUpdateDisabled(expectedDate.isBefore(today));
+    } else {
+      // If no expected date, enable update button
+      setIsUpdateDisabled(false);
+    }
+  }, [booking.expectedDate]);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -289,15 +305,15 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
       return;
     }
 
-    if (booking.expectedDate) {
-      const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
-      const today = moment().startOf('day');
+    // if (booking.expectedDate) {
+    //   const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
+    //   const today = moment().startOf('day');
   
-      if (expectedDate.isSameOrBefore(today)) {
-        message.error("Ngày đi dự kiến phải sau ngày hiện tại");
-        return;
-      }
-    }
+    //   if (expectedDate.isSameOrBefore(today)) {
+    //     message.error("Ngày đi dự kiến phải sau ngày hiện tại");
+    //     return;
+    //   }
+    // }
 
     try {
       const token = localStorage.getItem("token");
@@ -495,7 +511,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
-                // disabled={isExpiredTour}
+                disabled={isUpdateDisabled}
               />
             </Form.Item>
 
@@ -535,7 +551,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
         </Row>
 
         <Form.Item>
-          <Button type="primary" onClick={updateBooking} disabled={booking.activeBooking === "Đã hủy"}>
+          <Button type="primary" onClick={updateBooking} disabled={booking.activeBooking === "Đã hủy" || isUpdateDisabled}>
             Cập nhật
           </Button>
           <Button
