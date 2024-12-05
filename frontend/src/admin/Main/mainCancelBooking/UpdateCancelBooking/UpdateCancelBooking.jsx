@@ -466,13 +466,16 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             )}
             {/* Các trường nhập liệu bên phải */}
             <Form.Item label="Ngày dự kiến">
-              <DatePicker
+            <DatePicker
                 value={
                   booking.expectedDate
                     ? moment(booking.expectedDate, "DD/MM/YYYY")
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
+                disabledDate={(current) =>
+                  current && current < moment().startOf("day")
+                }
               />
             </Form.Item>
 

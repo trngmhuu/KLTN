@@ -58,7 +58,7 @@ function SearchCustomerSta() {
         <div>
             <Title level={2}>Thống Kê Chi Tiền Của Khách Hàng</Title>
 
-            <Button type="primary" onClick={fetchCustomerStatistics} loading={loading} style={{ marginBottom: '10px' }}>
+            <Button type="primary" onClick={fetchCustomerStatistics} loading={loading} style={{ marginBottom: '10px', marginRight: "10px" }}>
                 Tải Thống Kê
             </Button>
 

@@ -13,6 +13,7 @@ import "./updateBookingForm.css";
 import moment from "moment";
 import cities from "../../../../assets/data/cities.json";
 import districts from "../../../../assets/data/districtData.json";
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { Option } = Select;
 
@@ -35,13 +36,14 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     payBooking: false,
     activeBooking: true,
   });
-
+  const { addNotification } = useNotifications();
   const [tours, setTours] = useState([]); // State lưu danh sách các tour
   const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
   const inputRefs = useRef({});
   const [disablePaySelect, setDisablePaySelect] = useState(false);
   const [isExpiredTour, setIsExpiredTour] = useState(false);
-  const [disableBookingStatusSelect, setDisableBookingStatusSelect] = useState(false);
+  const [disableBookingStatusSelect, setDisableBookingStatusSelect] =
+    useState(false);
   // New state to track if update button should be disabled
   const [isUpdateDisabled, setIsUpdateDisabled] = useState(false);
 
@@ -49,8 +51,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   useEffect(() => {
     if (booking.expectedDate) {
       const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
-      const today = moment().startOf('day');
-      
+      const today = moment().startOf("day");
+
       // Disable update button only if expected date is before today
       setIsUpdateDisabled(expectedDate.isBefore(today));
     } else {
@@ -92,16 +94,14 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           const data = await response.json();
           const bookingData = data.result;
 
-          const expectedDate = bookingData.expectedDate 
-          ? moment(bookingData.expectedDate, "DD/MM/YYYY") 
-          : null;
+          const expectedDate = bookingData.expectedDate
+            ? moment(bookingData.expectedDate, "DD/MM/YYYY")
+            : null;
 
-          const isExpired = expectedDate 
-          ? expectedDate.isSameOrBefore(moment(), 'day') 
-          : false;
-        setIsExpiredTour(isExpired);
-
-        
+          const isExpired = expectedDate
+            ? expectedDate.isSameOrBefore(moment(), "day")
+            : false;
+          setIsExpiredTour(isExpired);
 
           // Cập nhật các trường dữ liệu cho form
           setBooking({
@@ -137,7 +137,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             setDisableBookingStatusSelect(true);
           }
           setDisablePaySelect(bookingData.payBooking === true);
-          
+
           // Set selectedTour nếu có thông tin tour
           if (bookingData.tourCode) {
             handleTourChange(bookingData.tourCode); // Lấy thông tin tour tương ứng
@@ -234,9 +234,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   };
 
   const handleDateChange = (name, date) => {
-    setBooking({ 
-      ...booking, 
-      [name]: date ? date.format("DD/MM/YYYY") : "" 
+    setBooking({
+      ...booking,
+      [name]: date ? date.format("DD/MM/YYYY") : "",
     });
   };
 
@@ -244,7 +244,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     setBooking({ ...booking, [name]: value });
   };
   const handleActiveBookingChange = (value) => {
-      setBooking({ ...booking, activeBooking: value });
+    setBooking({ ...booking, activeBooking: value });
   };
 
   const handleActiveBookingChangePay = (value) => {
@@ -305,16 +305,6 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
       return;
     }
 
-    // if (booking.expectedDate) {
-    //   const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
-    //   const today = moment().startOf('day');
-  
-    //   if (expectedDate.isSameOrBefore(today)) {
-    //     message.error("Ngày đi dự kiến phải sau ngày hiện tại");
-    //     return;
-    //   }
-    // }
-
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -328,7 +318,12 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           body: JSON.stringify(booking),
         }
       );
+       // Lấy tên người dùng từ localStorage
+       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+       const username = userInfo?.username || 'Người dùng';
 
+       // Thêm thông báo
+       addNotification(`${username} vừa cập nhật đơn đặt tour với mã ${booking.bookingCode}`);
       if (!response.ok) throw new Error("Lỗi khi cập nhật booking");
       message.success("Booking đã được cập nhật!");
       changeComponent("list");
@@ -452,7 +447,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 <Option value={false}>Chưa thanh toán</Option>
               </Select>
               {isExpiredTour && booking.payBooking === false && (
-                <span style={{ color: 'red', marginTop: '5px', display: 'block' }}>
+                <span
+                  style={{ color: "red", marginTop: "5px", display: "block" }}
+                >
                   Tour này đã quá hạn
                 </span>
               )}
@@ -511,7 +508,10 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
-                disabled={isUpdateDisabled}
+                disabledDate={(current) =>
+                  current && current < moment().startOf("day")
+                }
+                disabled={isExpiredTour}
               />
             </Form.Item>
 
@@ -551,7 +551,11 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
         </Row>
 
         <Form.Item>
-          <Button type="primary" onClick={updateBooking} disabled={booking.activeBooking === "Đã hủy" || isUpdateDisabled}>
+          <Button
+            type="primary"
+            onClick={updateBooking}
+            disabled={booking.activeBooking === "Đã hủy" || isExpiredTour}
+          >
             Cập nhật
           </Button>
           <Button

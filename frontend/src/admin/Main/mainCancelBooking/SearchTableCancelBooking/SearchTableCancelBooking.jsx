@@ -4,6 +4,7 @@ import './searchTableCancelBooking.css';
 import './transition.css';
 import { ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, ReloadOutlined, CloseCircleFilled } from '@ant-design/icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useNotifications } from '../../../../context/NotificationContext';
 
 const { confirm } = Modal;
 
@@ -15,7 +16,7 @@ function SearchTableCancelBooking({ changeComponent }) {
     const [searchParams, setSearchParams] = useState({
         bookingCode: '',
     });
-
+    const { addNotification } = useNotifications();
     const [data, setData] = useState([]);
     // const [isModalVisible, setIsModalVisible] = useState(false);
 
