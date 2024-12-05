@@ -91,7 +91,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           const bookingData = data.result;
 
           const expectedDate = moment(bookingData.expectedDate, "DD-MM-YYYY");
-          const isExpired = expectedDate.isSameOrAfter(moment(), 'day');
+          const isExpired = expectedDate.isSameOrBefore(moment(), 'day');
           setIsExpiredTour(isExpired);
 
           // Cập nhật các trường dữ liệu cho form
