@@ -353,7 +353,7 @@ const SearchBookingList = () => {
                       }
                     />
                     {/* Hiển thị thông báo phù hợp dựa trên trạng thái */}
-                    {!booking.payBooking &&
+                    {
                     calculateDaysDifference(new Date(), booking.expectedDate) <
                       0 ? (
                       <span
