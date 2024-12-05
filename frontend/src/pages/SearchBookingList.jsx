@@ -322,7 +322,7 @@ const SearchBookingList = () => {
                         calculateDaysDifference(
                           new Date(),
                           booking.expectedDate
-                        ) < 0 ||
+                        ) <= 0 ||
                         booking.payBooking ||
                         booking.activeBooking === "Đã hủy" ||
                         booking.activeBooking === "Đang chờ hủy"
@@ -347,13 +347,15 @@ const SearchBookingList = () => {
                         calculateDaysDifference(
                           new Date(),
                           booking.expectedDate
-                        ) <= 5 || // Thêm kiểm tra ngày
+                        ) <= 0 ||
                         booking.activeBooking === "Đang chờ hủy" ||
                         booking.activeBooking === "Đã hủy"
                       }
                     />
                     {/* Hiển thị thông báo phù hợp dựa trên trạng thái */}
-                    {!booking.payBooking && calculateDaysDifference(new Date(), booking.expectedDate) < 0 ? (
+                    {!booking.payBooking &&
+                    calculateDaysDifference(new Date(), booking.expectedDate) <
+                      0 ? (
                       <span
                         style={{
                           color: "red",
@@ -411,7 +413,10 @@ const SearchBookingList = () => {
                     className="btnCancelTour btn primary__btn mt-2"
                     onClick={handleCancelRequest} // Gọi handleCancelRequest thay vì toggleModal
                     disabled={
-                      calculateDaysDifference(new Date(), booking.expectedDate) < 0 ||
+                      calculateDaysDifference(
+                        new Date(),
+                        booking.expectedDate
+                      ) <= 0 ||
                       booking.activeBooking === "Đang chờ hủy" ||
                       booking.activeBooking === "Đã hủy"
                     } // Vô hiệu hóa nếu đã thanh toán, đang chờ hủy hoặc đã hủy
