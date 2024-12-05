@@ -40,6 +40,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
   const inputRefs = useRef({});
   const [disablePaySelect, setDisablePaySelect] = useState(false);
+  const [isExpiredTour, setIsExpiredTour] = useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -89,6 +90,10 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           const data = await response.json();
           const bookingData = data.result;
 
+          const expectedDate = moment(bookingData.expectedDate, "DD-MM-YYYY");
+          const isExpired = expectedDate.isSameOrAfter(moment(), 'day');
+          setIsExpiredTour(isExpired);
+
           // Cập nhật các trường dữ liệu cho form
           setBooking({
             bookingCode: bookingData.bookingCode,
@@ -121,7 +126,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           }
 
           setDisablePaySelect(bookingData.payBooking === true);
-
+          
           // Set selectedTour nếu có thông tin tour
           if (bookingData.tourCode) {
             handleTourChange(bookingData.tourCode); // Lấy thông tin tour tương ứng
@@ -396,7 +401,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 name="numberOfCustomer"
                 value={booking.numberOfCustomer}
                 onChange={handleNumberOfCustomerChange} // Cập nhật tổng tiền
-                disabled={disablePaySelect}
+                disabled={disablePaySelect || isExpiredTour}
               />
             </Form.Item>
             <Form.Item label="Mã Tour">
@@ -417,11 +422,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Select
                 value={booking.payBooking}
                 onChange={handleActiveBookingChangePay}
-                disabled={disablePaySelect} // Sử dụng state disablePaySelect
+                disabled={disablePaySelect || isExpiredTour} // Sử dụng state disablePaySelect
               >
                 <Option value={true}>Đã thanh toán</Option>
                 <Option value={false}>Chưa thanh toán</Option>
               </Select>
+              {isExpiredTour && (
+                <span style={{ color: 'red', marginTop: '5px', display: 'block' }}>
+                  Tour này đã quá hạn
+                </span>
+              )}
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -491,7 +501,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Select
                 value={booking.typePay}
                 onChange={(value) => handleSelectChange("typePay", value)}
-                disabled={disablePaySelect}
+                disabled={disablePaySelect || isExpiredTour}
               >
                 <Option value="Tiền mặt">Tiền mặt</Option>
                 <Option value="Chuyển khoản">Chuyển khoản</Option>
