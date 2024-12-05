@@ -11,8 +11,8 @@ import {
 } from "antd";
 import "./updateBookingForm.css";
 import moment from "moment";
-import cities from "../../../../assets/data/cities.json"
-import districts from "../../../../assets/data/districtData.json"
+import cities from "../../../../assets/data/cities.json";
+import districts from "../../../../assets/data/districtData.json";
 
 const { Option } = Select;
 
@@ -95,6 +95,8 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             customerName: bookingData.customerName,
             customerEmail: bookingData.customerEmail,
             customerPhoneNumber: bookingData.customerPhoneNumber,
+            customerCity: bookingData.customerCity, // Thêm dòng này
+            customerDistrict: bookingData.customerDistrict,
             customerAddress: bookingData.customerAddress,
             numberOfCustomer: bookingData.numberOfCustomer,
             bookingDate: bookingData.bookingDate,
@@ -110,6 +112,14 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             payBooking: bookingData.payBooking,
             activeBooking: bookingData.activeBooking,
           });
+
+          if (bookingData.customerCity) {
+            setSelectedCity(bookingData.customerCity);
+            setAvailableDistricts(
+              districtsData[bookingData.customerCity] || []
+            );
+          }
+
           setDisablePaySelect(bookingData.payBooking === true);
 
           // Set selectedTour nếu có thông tin tour
@@ -125,6 +135,30 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
 
     fetchBookingByCode();
   }, [bookingCode]); // Chạy lại mỗi khi bookingCode thay đổi
+
+  const handleCityChange = (city) => {
+    // Update booking state
+    setBooking((prev) => ({
+      ...prev,
+      customerCity: city,
+      customerDistrict: "", // Reset district when city changes
+    }));
+
+    // Update selected city state
+    setSelectedCity(city);
+
+    // Update available districts
+    const cityDistricts = districtsData[city] || [];
+    setAvailableDistricts(cityDistricts);
+  };
+
+  // Method to handle district selection
+  const handleDistrictChange = (district) => {
+    setBooking((prev) => ({
+      ...prev,
+      customerDistrict: district,
+    }));
+  };
 
   // Hàm để lấy thông tin chi tiết của tour khi người dùng chọn
   const handleTourChange = async (tourCode) => {
@@ -190,9 +224,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const handleSelectChange = (name, value) => {
     setBooking({ ...booking, [name]: value });
   };
-  const handleActiveBookingChange = (value) => {
-      setBooking({ ...booking, activeBooking: value });
-  };
+  // const handleActiveBookingChange = (value) => {
+  //     setBooking({ ...booking, activeBooking: value });
+  // };
 
   const handleActiveBookingChangePay = (value) => {
     setBooking({ ...booking, payBooking: value });
@@ -274,16 +308,11 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     }
   };
 
-  // Function to check if user is an admin
-  const isAdmin = () => {
-    try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      return userInfo && userInfo.roles && userInfo.roles.includes('ADMIN');
-    } catch (error) {
-      console.error("Error checking admin role:", error);
-      return false;
-    }
-  };
+  const [citiesData] = useState(cities); // Dữ liệu các thành phố từ cites.json
+  const [districtsData] = useState(districts);
+  const [availableDistricts, setAvailableDistricts] = useState([]);
+  const districtRef = React.useRef(null);
+  const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
 
   return (
     <div className="add-booking-form-container">
@@ -323,6 +352,35 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 onChange={handleInputChange}
                 ref={(el) => (inputRefs.current.customerPhoneNumber = el)}
               />
+            </Form.Item>
+            <Form.Item label="Tỉnh/Thành phố">
+              <Select
+                value={booking.customerCity}
+                onChange={handleCityChange}
+                placeholder="Chọn tỉnh/thành phố"
+              >
+                {citiesData.map((city) => (
+                  <Option key={city} value={city}>
+                    {city}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            {/* New District Selection */}
+            <Form.Item label="Quận/Huyện">
+              <Select
+                value={booking.customerDistrict}
+                onChange={handleDistrictChange}
+                placeholder="Chọn quận/huyện"
+                disabled={!selectedCity}
+              >
+                {availableDistricts.map((district) => (
+                  <Option key={district} value={district}>
+                    {district}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item label="Địa chỉ cụ thể">
