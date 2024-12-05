@@ -24,6 +24,7 @@ function SearchTableCancelBooking({ changeComponent }) {
   });
   const { addNotification } = useNotifications();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   // const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchData = async () => {
@@ -86,6 +87,7 @@ function SearchTableCancelBooking({ changeComponent }) {
   };
 
   const handleCancelBooking = async (bookingCode) => {
+    setLoading(true); // Bắt đầu trạng thái loading
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -98,16 +100,17 @@ function SearchTableCancelBooking({ changeComponent }) {
           },
         }
       );
-
+  
       if (response.ok) {
         // Lấy tên người dùng từ localStorage
         const userInfo = JSON.parse(localStorage.getItem("userInfo"));
         const username = userInfo?.username || "Người dùng";
-
+  
         // Thêm thông báo
         addNotification(
           `${username} vừa hủy đơn đặt tour có mã ${bookingCode}`
         );
+        message.success("Hủy booking thành công!");
         fetchData(); // Cập nhật lại danh sách sau khi hủy thành công
       } else {
         throw new Error("Failed to cancel booking");
@@ -115,15 +118,18 @@ function SearchTableCancelBooking({ changeComponent }) {
     } catch (error) {
       console.error("Error canceling booking:", error);
       message.error("Không thể hủy booking");
+    } finally {
+      setLoading(false); // Kết thúc trạng thái loading
     }
   };
+  
 
   const showCancelConfirm = (record) => {
     confirm({
       title: "Bạn có chắc chắn muốn hủy booking này?",
       icon: <ExclamationCircleOutlined />,
       content: `Mã đặt chỗ: ${record.bookingCode}`,
-      okText: "Xác nhận",
+      okText: loading ? "Đang hủy..." : "Xác nhận",
       okType: "danger",
       cancelText: "Hủy",
       onOk() {
@@ -132,8 +138,10 @@ function SearchTableCancelBooking({ changeComponent }) {
       onCancel() {
         console.log("Hủy hành động hủy");
       },
+      okButtonProps: { loading }, // Gán trạng thái loading vào nút OK
     });
   };
+  
 
   const columns = [
     {
@@ -219,7 +227,7 @@ function SearchTableCancelBooking({ changeComponent }) {
           <Button type="link" onClick={() => handleEdit(record)}>
             <EyeOutlined />
           </Button>
-          <Button type="link" onClick={() => showCancelConfirm(record)}>
+          <Button type="link" onClick={() => showCancelConfirm(record)} loading={loading}>
             <CloseCircleFilled />
           </Button>
         </div>

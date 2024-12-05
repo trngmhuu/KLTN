@@ -320,16 +320,40 @@ function AddBookingForm({ changeComponent }) {
 
     if (!response.ok) throw new Error("Lỗi khi thêm booking");
     const bookingData = await response.json();
+// Lấy tên người dùng từ localStorage
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const username = userInfo?.username || "Người dùng";
 
-    // Lấy tên người dùng từ localStorage
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const username = userInfo?.username || "Người dùng";
+// Kiểm tra và hủy mã giảm giá nếu đã được sử dụng
+let notificationMessage = `${username} vừa tạo đơn đặt tour mới với tour ${booking.tourCode}, mã đặt tour là ${bookingData.result.bookingCode}`;
 
-    // Thêm thông báo
-    addNotification(
-      `${username} vừa tạo đơn đặt tour mới với tour ${booking.tourCode}, mã đặt tour là ${bookingData.result.bookingCode}`
+if (isCouponApplied && couponCode) {
+  try {
+    // Gọi API để hủy mã giảm giá
+    const couponCancelResponse = await fetch(
+      `http://localhost:8080/coupons/couponCancel/${couponCode}`,
+      {
+        method: "PUT", // Sử dụng PUT để cập nhật trạng thái
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
-    message.success("Booking mới đã được thêm!");
+
+    if (couponCancelResponse.ok) {
+      // Nếu hủy mã giảm giá thành công, cập nhật thông báo
+      notificationMessage += ` và sử dụng mã giảm giá ${couponCode}`;
+    }
+  } catch (couponError) {
+    console.error("Lỗi khi hủy mã giảm giá:", couponError);
+    message.warning("Không thể hủy mã giảm giá, nhưng đơn đặt tour đã được tạo.");
+  }
+}
+
+// Thêm thông báo
+addNotification(notificationMessage);
+
     changeComponent("list");
   };
 
@@ -354,18 +378,25 @@ function AddBookingForm({ changeComponent }) {
       }
 
       const data = await response.json();
-      const discount = data.result?.discount || 0; // Lấy discount từ coupon, mặc định là 0
+      const couponDiscount = data.result?.discount || 0; // Lấy discount từ coupon, mặc định là 0
 
       if (selectedTour && selectedTour.price) {
-        const totalBeforeDiscount =
-          selectedTour.price * booking.numberOfCustomer;
-        const discountedTotal = totalBeforeDiscount * (1 - discount / 100); // Áp dụng giảm giá
+        // Tính toán giá ban đầu với giảm giá tour
+        const priceWithTourDiscount = selectedTour.saleTour 
+          ? selectedTour.price * (1 - selectedTour.percentSale / 100) 
+          : selectedTour.price;
+
+        // Tính tổng tiền sau khi áp dụng giảm giá tour và mã giảm giá
+        const totalBeforeDiscount = priceWithTourDiscount * booking.numberOfCustomer;
+        const finalDiscountedTotal = totalBeforeDiscount * (1 - (couponDiscount / 100)); 
+
         setBooking((prevBooking) => ({
           ...prevBooking,
-          totalMoney: Math.round(discountedTotal), // Làm tròn tổng tiền
+          totalMoney: Math.round(finalDiscountedTotal), // Làm tròn tổng tiền
         }));
-        setIsCouponApplied(true); // Đánh dấu mã giảm giá đã được áp dụng
-        message.success(`Mã giảm giá hợp lệ! Giảm ${discount}%`);
+
+        setIsCouponApplied(true);
+        message.success(`Mã giảm giá hợp lệ! Giảm ${couponDiscount}%`);
       } else {
         message.warning("Vui lòng chọn tour trước khi áp dụng mã giảm giá.");
       }
@@ -382,47 +413,52 @@ function AddBookingForm({ changeComponent }) {
     setCouponCode(""); // Xóa mã giảm giá
     setIsCouponApplied(false); // Cho phép áp dụng mã giảm giá mới
 
-    if (selectedTour && selectedTour.price) {
-      let totalMoney;
+    if (selectedTour) {
+      // Tính lại giá tour với giảm giá ban đầu (nếu có)
+      const priceWithTourDiscount = selectedTour.saleTour && selectedTour.percentSale
+        ? selectedTour.price * (1 - selectedTour.percentSale / 100)
+        : selectedTour.price;
 
-      // Kiểm tra nếu tour có khuyến mãi
-      if (selectedTour.saleTour && selectedTour.percentSale) {
-        // Tính lại tổng tiền với giá đang giảm
-        const discountedPrice =
-          selectedTour.price * (1 - selectedTour.percentSale / 100);
-        totalMoney = discountedPrice * booking.numberOfCustomer;
-      } else {
-        // Nếu không có khuyến mãi, tính tổng tiền bình thường
-        totalMoney = selectedTour.price * booking.numberOfCustomer;
-      }
-
+      const totalPrice = priceWithTourDiscount * booking.numberOfCustomer;
+      
       setBooking((prevBooking) => ({
         ...prevBooking,
-        totalMoney: Math.round(totalMoney),
+        totalMoney: Math.round(totalPrice),
       }));
     }
   };
 
   useEffect(() => {
-    // Kiểm tra xem tour có giảm giá không và tính lại totalMoney
-    if (selectedTour && selectedTour.saleTour && selectedTour.percentSale) {
-      const discount = selectedTour.percentSale;
-      const priceBeforeDiscount = selectedTour.price * booking.numberOfCustomer;
-      const discountedPrice = priceBeforeDiscount * (1 - discount / 100); // Áp dụng giảm giá
-      setBooking((prevBooking) => ({
-        ...prevBooking,
-        totalMoney: Math.round(discountedPrice), // Làm tròn tổng tiền sau giảm giá
-      }));
-    } else if (selectedTour) {
-      // Nếu không có giảm giá, tính tổng tiền bình thường
-      const priceWithoutDiscount =
-        selectedTour.price * booking.numberOfCustomer;
-      setBooking((prevBooking) => ({
-        ...prevBooking,
-        totalMoney: priceWithoutDiscount,
-      }));
+    if (selectedTour) {
+      let priceWithTourDiscount;
+      
+      // Tính giá sau khi giảm giá tour
+      if (selectedTour.saleTour && selectedTour.percentSale) {
+        priceWithTourDiscount = selectedTour.price * (1 - selectedTour.percentSale / 100);
+      } else {
+        priceWithTourDiscount = selectedTour.price;
+      }
+
+      // Nếu đã áp dụng mã giảm giá, tính toán lại với mã giảm giá
+      if (isCouponApplied) {
+        const couponDiscount = 10; // Giả sử đã có mã giảm giá 10%
+        const totalBeforeDiscount = priceWithTourDiscount * booking.numberOfCustomer;
+        const finalDiscountedTotal = totalBeforeDiscount * (1 - (couponDiscount / 100));
+
+        setBooking((prevBooking) => ({
+          ...prevBooking,
+          totalMoney: Math.round(finalDiscountedTotal),
+        }));
+      } else {
+        // Nếu chưa áp dụng mã giảm giá, tính tổng tiền bình thường
+        const totalPrice = priceWithTourDiscount * booking.numberOfCustomer;
+        setBooking((prevBooking) => ({
+          ...prevBooking,
+          totalMoney: Math.round(totalPrice),
+        }));
+      }
     }
-  }, [selectedTour, booking.numberOfCustomer]); // Cập nhật mỗi khi selectedTour hoặc số lượng khách thay đổi
+  }, [selectedTour, booking.numberOfCustomer, isCouponApplied]);
 
   return (
     <div className="add-booking-form-container">

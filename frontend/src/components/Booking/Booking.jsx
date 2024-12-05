@@ -183,7 +183,7 @@ const Booking = ({ tour }) => {
     setLoading(true);
 
     try {
-      const today = formatDate(new Date());  // Định dạng ngày hiện tại
+      const today = formatDate(new Date()); // Định dạng ngày hiện tại
       const expectedDeparture = formatDate(credentials.expectedDate); // Định dạng ngày đi dự kiến
 
       // Đầu tiên, gửi yêu cầu POST đến API /customers để lưu thông tin khách hàng
@@ -202,6 +202,7 @@ const Booking = ({ tour }) => {
         }),
       });
 
+      // Gửi yêu cầu POST đến API /bookings để lưu thông tin đặt tour
       const responseBooking = await fetch("http://localhost:8080/bookings", {
         method: "POST",
         headers: {
@@ -221,7 +222,27 @@ const Booking = ({ tour }) => {
 
       if (responseBooking.ok) {
         const bookingData = await responseBooking.json();
-        addNotification(`Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`);
+
+        // Nếu có coupon, gọi API để hủy kích hoạt coupon
+        if (coupon && coupon.activeCoupon) {
+          await fetch(`http://localhost:8080/coupons/couponCancel/${coupon.codeCoupon}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          // Cập nhật thông báo với thông tin mã giảm giá
+          addNotification(
+            `Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode} và sử dụng coupon ${coupon.codeCoupon} để giảm ${coupon.discount}%`
+          );
+        } else {
+          // Thông báo mặc định không có mã giảm giá
+          addNotification(
+            `Một khách hàng đã đặt tour ${tourCode} với mã booking ${bookingData.result.bookingCode}`
+          );
+        }
+
         setLoading(false);
         // Truyền dữ liệu booking qua navigate
         navigate("/thank-you", { state: { bookingData: bookingData.result } });
