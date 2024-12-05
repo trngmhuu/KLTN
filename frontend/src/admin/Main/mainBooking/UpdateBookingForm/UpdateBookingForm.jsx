@@ -99,7 +99,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
             : null;
 
           const isExpired = expectedDate
-            ? expectedDate.isSameOrBefore(moment(), "day")
+            ? expectedDate.isBefore(moment(), "day")
             : false;
           setIsExpiredTour(isExpired);
 
