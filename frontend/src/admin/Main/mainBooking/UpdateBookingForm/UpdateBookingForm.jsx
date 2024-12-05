@@ -224,9 +224,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const handleSelectChange = (name, value) => {
     setBooking({ ...booking, [name]: value });
   };
-  // const handleActiveBookingChange = (value) => {
-  //     setBooking({ ...booking, activeBooking: value });
-  // };
+  const handleActiveBookingChange = (value) => {
+      setBooking({ ...booking, activeBooking: value });
+  };
 
   const handleActiveBookingChangePay = (value) => {
     setBooking({ ...booking, payBooking: value });
@@ -311,7 +311,6 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const [citiesData] = useState(cities); // Dữ liệu các thành phố từ cites.json
   const [districtsData] = useState(districts);
   const [availableDistricts, setAvailableDistricts] = useState([]);
-  const districtRef = React.useRef(null);
   const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
 
   return (
@@ -502,17 +501,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Input name="totalMoney" value={booking.totalMoney} disabled />
             </Form.Item>
             {/* Thêm phần để chọn activeBooking */}
-            {/* <Form.Item label="Trạng thái booking">
+            <Form.Item label="Trạng thái booking">
               <Select
                 value={booking.activeBooking}
                 onChange={handleActiveBookingChange}
-                disabled={!isAdmin()}
               >
                 <Option value="Hoạt động">Hoạt động</Option>
                 <Option value="Đang chờ hủy">Đang chờ hủy</Option>
                 <Option value="Đã hủy">Đã hủy</Option>
               </Select>
-            </Form.Item> */}
+            </Form.Item>
           </Col>
         </Row>
 

@@ -11,6 +11,8 @@ import {
 } from "antd";
 import "./updateCancelBooking.css";
 import moment from "moment";
+import cities from "../../../../assets/data/cities.json";
+import districts from "../../../../assets/data/districtData.json";
 
 const { Option } = Select;
 
@@ -38,6 +40,10 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   const [selectedTour, setSelectedTour] = useState(null); // State lưu thông tin tour khi chọn
   const inputRefs = useRef({});
   const [disablePaySelect, setDisablePaySelect] = useState(false);
+  const [citiesData] = useState(cities); // Dữ liệu các thành phố từ cites.json
+  const [districtsData] = useState(districts);
+  const [availableDistricts, setAvailableDistricts] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -78,6 +84,8 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             customerName: bookingData.customerName,
             customerEmail: bookingData.customerEmail,
             customerPhoneNumber: bookingData.customerPhoneNumber,
+            customerCity: bookingData.customerCity, // Thêm dòng này
+            customerDistrict: bookingData.customerDistrict,
             customerAddress: bookingData.customerAddress,
             numberOfCustomer: bookingData.numberOfCustomer,
             bookingDate: bookingData.bookingDate,
@@ -94,6 +102,13 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             activeBooking: bookingData.activeBooking,
           });
 
+          if (bookingData.customerCity) {
+            setSelectedCity(bookingData.customerCity);
+            setAvailableDistricts(
+              districtsData[bookingData.customerCity] || []
+            );
+          }
+
           setDisablePaySelect(bookingData.payBooking === true);
 
           // Set selectedTour nếu có thông tin tour
@@ -109,6 +124,30 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
 
     fetchBookingByCode();
   }, [bookingCode]); // Chạy lại mỗi khi bookingCode thay đổi
+
+  const handleCityChange = (city) => {
+    // Update booking state
+    setBooking((prev) => ({
+      ...prev,
+      customerCity: city,
+      customerDistrict: "", // Reset district when city changes
+    }));
+
+    // Update selected city state
+    setSelectedCity(city);
+
+    // Update available districts
+    const cityDistricts = districtsData[city] || [];
+    setAvailableDistricts(cityDistricts);
+  };
+
+  // Method to handle district selection
+  const handleDistrictChange = (district) => {
+    setBooking((prev) => ({
+      ...prev,
+      customerDistrict: district,
+    }));
+  };
 
   // Hàm để lấy thông tin chi tiết của tour khi người dùng chọn
   const handleTourChange = async (tourCode) => {
@@ -297,6 +336,35 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                 ref={(el) => (inputRefs.current.customerPhoneNumber = el)}
               />
             </Form.Item>
+            <Form.Item label="Tỉnh/Thành phố">
+              <Select
+                value={booking.customerCity}
+                onChange={handleCityChange}
+                placeholder="Chọn tỉnh/thành phố"
+              >
+                {citiesData.map((city) => (
+                  <Option key={city} value={city}>
+                    {city}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            {/* New District Selection */}
+            <Form.Item label="Quận/Huyện">
+              <Select
+                value={booking.customerDistrict}
+                onChange={handleDistrictChange}
+                placeholder="Chọn quận/huyện"
+                disabled={!selectedCity}
+              >
+                {availableDistricts.map((district) => (
+                  <Option key={district} value={district}>
+                    {district}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
 
             <Form.Item label="Địa chỉ cụ thể">
               <Input
@@ -343,7 +411,12 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             {/* Thông tin tour hiển thị bên phải */}
             {selectedTour && (
               <div className="tour-info">
-                <h3>Thông tin tour</h3>
+                <h3 style={{ fontWeight: "bold" }}>Thông tin tour</h3>
+                <img
+                  src={selectedTour.image}
+                  alt=""
+                  style={{ width: "100%", height: "100%" }}
+                />
                 <p>
                   <strong>Mã Tour:</strong> {selectedTour.tourCode}
                 </p>
@@ -351,16 +424,30 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                   <strong>Tên Tour:</strong> {selectedTour.name}
                 </p>
                 <p>
-                  <strong>Ngày khởi hành:</strong> {selectedTour.startDate}
+                  <strong>Loại tour:</strong>{" "}
+                  {selectedTour.typeId === "1"
+                    ? "Tour trong nước"
+                    : selectedTour.typeId === "2"
+                    ? "Tour nước ngoài"
+                    : "Không xác định"}
                 </p>
                 <p>
-                  <strong>Ngày kết thúc:</strong> {selectedTour.endDate}
+                  <strong>Phân loại:</strong> {selectedTour.typeTourName}
                 </p>
                 <p>
-                  <strong>Giá Tour:</strong> {selectedTour.price}
+                  <strong>Thời gian đi:</strong> {selectedTour.durationTour}
                 </p>
                 <p>
-                  <strong>Mô tả:</strong> {selectedTour.description}
+                  <strong>Phương tiện:</strong> {selectedTour.vehicle}
+                </p>
+                <p>
+                  <strong>Điểm khởi hành:</strong> {selectedTour.locationStart}
+                </p>
+                <p>
+                  <strong>Các ngày khởi hành:</strong>{" "}
+                  {selectedTour.startDay.length === 7
+                    ? "Hằng ngày"
+                    : selectedTour.startDay.join(", ")}
                 </p>
               </div>
             )}

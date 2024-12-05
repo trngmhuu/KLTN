@@ -14,6 +14,7 @@ import ToursOnSale from "../pages/ToursOnSale";
 import PayDone from "../pages/PayDone";
 import PayFail from "../pages/PayFail";
 import SearchResultList from "../pages/SearchResultList";
+import About from "../pages/About";
 
 const Router = () => {
   return (
@@ -30,7 +31,8 @@ const Router = () => {
       <Route path="/tours/on-sale" element={<ToursOnSale />} />
       <Route path="/bookings/done" element={<PayDone />} />
       <Route path="/bookings/fail" element={<PayFail />} />
-      <Route path="/searchTours" element={<SearchResultList/>}/>
+      <Route path="/searchTours" element={<SearchResultList />} />
+      <Route path="/about" element={<About />} />
 
       {/* Bọc AdminHomePage bằng PrivateRoute */}
       <Route
