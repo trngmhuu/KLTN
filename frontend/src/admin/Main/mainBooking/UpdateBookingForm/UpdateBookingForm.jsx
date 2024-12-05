@@ -41,24 +41,10 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   const inputRefs = useRef({});
   const [disablePaySelect, setDisablePaySelect] = useState(false);
   const [isExpiredTour, setIsExpiredTour] = useState(false);
+  const [disableBookingStatusSelect, setDisableBookingStatusSelect] = useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
-    <Form.Item>
-      <Button
-        type="primary"
-        onClick={updateBooking}
-        disabled={booking.payBooking === true} // Vô hiệu hóa nút nếu payBooking là true
-      >
-        Cập nhật
-      </Button>
-      <Button
-        onClick={() => changeComponent("list")}
-        style={{ marginLeft: "10px" }}
-      >
-        Hủy
-      </Button>
-    </Form.Item>;
     const fetchTours = async () => {
       try {
         const response = await fetch("http://localhost:8080/tours", {
@@ -124,7 +110,9 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               districtsData[bookingData.customerCity] || []
             );
           }
-
+          if (bookingData.activeBooking === "Đã hủy") {
+            setDisableBookingStatusSelect(true);
+          }
           setDisablePaySelect(bookingData.payBooking === true);
           
           // Set selectedTour nếu có thông tin tour
@@ -515,6 +503,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <Select
                 value={booking.activeBooking}
                 onChange={handleActiveBookingChange}
+                disabled={disableBookingStatusSelect} // Add this line
               >
                 <Option value="Hoạt động">Hoạt động</Option>
                 <Option value="Đang chờ hủy">Đang chờ hủy</Option>
@@ -525,7 +514,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
         </Row>
 
         <Form.Item>
-          <Button type="primary" onClick={updateBooking}>
+          <Button type="primary" onClick={updateBooking} disabled={booking.activeBooking === "Đã hủy"}>
             Cập nhật
           </Button>
           <Button

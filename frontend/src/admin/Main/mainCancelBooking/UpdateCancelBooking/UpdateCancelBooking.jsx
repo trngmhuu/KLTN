@@ -44,6 +44,8 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   const [districtsData] = useState(districts);
   const [availableDistricts, setAvailableDistricts] = useState([]);
   const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
+  const [isExpiredTour, setIsExpiredTour] = useState(false);
+  const [disableBookingStatusSelect, setDisableBookingStatusSelect] = useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -77,6 +79,9 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             throw new Error("Không tìm thấy booking với mã này");
           const data = await response.json();
           const bookingData = data.result;
+          const expectedDate = moment(bookingData.expectedDate, "DD-MM-YYYY");
+          const isExpired = expectedDate.isSameOrBefore(moment(), 'day');
+          setIsExpiredTour(isExpired);
 
           // Cập nhật các trường dữ liệu cho form
           setBooking({
@@ -379,7 +384,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
                 name="numberOfCustomer"
                 value={booking.numberOfCustomer}
                 onChange={handleNumberOfCustomerChange} // Cập nhật tổng tiền
-                disabled={disablePaySelect}
+                disabled={disablePaySelect || isExpiredTour}
               />
             </Form.Item>
             <Form.Item label="Mã Tour">
