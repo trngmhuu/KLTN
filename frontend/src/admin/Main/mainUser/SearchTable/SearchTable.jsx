@@ -243,15 +243,15 @@ function SearchTable() {
             key: 'gender',
             render: (gender) => (gender ? 'Nam' : 'Nữ'),
         },
-        {
-            title: 'Trạng thái',
-            key: 'isActive',
-            render: (_, { isActive }) => (
-                <Tag color={isActive ? 'green' : 'volcano'}>
-                    {isActive ? 'Hoạt động' : 'Không hoạt động'}
-                </Tag>
-            ),
-        },
+        // {
+        //     title: 'Trạng thái',
+        //     key: 'isActive',
+        //     render: (_, { isActive }) => (
+        //         <Tag color={isActive ? 'green' : 'volcano'}>
+        //             {isActive ? 'Hoạt động' : 'Không hoạt động'}
+        //         </Tag>
+        //     ),
+        // },
         {
             title: 'Vai trò',
             dataIndex: 'roles',
@@ -272,7 +272,7 @@ function SearchTable() {
         <div>
             <ul className='searchtable-container'>
                 <li className='search-container'>
-                    <h6>Tìm kiếm người dùng</h6>
+                    <h6>Tìm kiếm nhân viên</h6>
                     <Form className="custom-inline-form" layout="inline">
                         <Form.Item>
                             <Input
@@ -409,7 +409,7 @@ function SearchTable() {
                         />
                     </Form.Item>
 
-                    <Form.Item label="Trạng thái tài khoản">
+                    {/* <Form.Item label="Trạng thái tài khoản">
                         <Select
                             name="isActive"
                             value={newUser.isActive}
@@ -419,7 +419,7 @@ function SearchTable() {
                             <Select.Option value={true}>Đang hoạt động</Select.Option>
                             <Select.Option value={false}>Không hoạt động</Select.Option>
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item label="Vai trò">
                         <Select
@@ -453,7 +453,7 @@ function SearchTable() {
                         <p><strong>Số điện thoại:</strong> {selectedUser.phoneNumber}</p>
                         <p><strong>Địa chỉ:</strong> {selectedUser.address}</p>
                         <p><strong>Giới tính:</strong> {selectedUser.gender ? 'Nam' : 'Nữ'}</p>
-                        <p><strong>Trạng thái:</strong> {selectedUser.isActive ? 'Hoạt động' : 'Không hoạt động'}</p>
+                        {/* <p><strong>Trạng thái:</strong> {selectedUser.isActive ? 'Hoạt động' : 'Không hoạt động'}</p> */}
                         <p><strong>Vai trò:</strong> {selectedUser.roles.join(', ')}</p>
                     </div>
                 )}

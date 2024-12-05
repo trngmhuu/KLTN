@@ -45,7 +45,8 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   const [availableDistricts, setAvailableDistricts] = useState([]);
   const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
   const [isExpiredTour, setIsExpiredTour] = useState(false);
-  const [disableBookingStatusSelect, setDisableBookingStatusSelect] = useState(false);
+  const [disableBookingStatusSelect, setDisableBookingStatusSelect] =
+    useState(false);
 
   // useEffect để lấy danh sách mã tour từ API
   useEffect(() => {
@@ -79,8 +80,14 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
             throw new Error("Không tìm thấy booking với mã này");
           const data = await response.json();
           const bookingData = data.result;
-          const expectedDate = moment(bookingData.expectedDate, "DD-MM-YYYY");
-          const isExpired = expectedDate.isSameOrBefore(moment(), 'day');
+
+          const expectedDate = bookingData.expectedDate
+            ? moment(bookingData.expectedDate, "DD/MM/YYYY")
+            : null;
+
+          const isExpired = expectedDate
+            ? expectedDate.isSameOrBefore(moment(), "day")
+            : false;
           setIsExpiredTour(isExpired);
 
           // Cập nhật các trường dữ liệu cho form
@@ -212,7 +219,10 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   };
 
   const handleDateChange = (name, date) => {
-    setBooking({ ...booking, [name]: date ? date.format("YYYY-MM-DD") : "" });
+    setBooking({
+      ...booking,
+      [name]: date ? date.format("DD/MM/YYYY") : "",
+    });
   };
 
   const handleSelectChange = (name, value) => {
@@ -461,7 +471,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
               <DatePicker
                 value={
                   booking.expectedDate
-                    ? moment(booking.expectedDate, "DD-MM-YYYY")
+                    ? moment(booking.expectedDate, "DD/MM/YYYY")
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}

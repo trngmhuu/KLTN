@@ -76,9 +76,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
           const data = await response.json();
           const bookingData = data.result;
 
-          const expectedDate = moment(bookingData.expectedDate, "DD-MM-YYYY");
-          const isExpired = expectedDate.isSameOrBefore(moment(), 'day');
-          setIsExpiredTour(isExpired);
+          const expectedDate = bookingData.expectedDate 
+          ? moment(bookingData.expectedDate, "DD/MM/YYYY") 
+          : null;
+
+          const isExpired = expectedDate 
+          ? expectedDate.isSameOrBefore(moment(), 'day') 
+          : false;
+        setIsExpiredTour(isExpired);
+
+        
 
           // Cập nhật các trường dữ liệu cho form
           setBooking({
@@ -211,7 +218,10 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   };
 
   const handleDateChange = (name, date) => {
-    setBooking({ ...booking, [name]: date ? date.format("YYYY-MM-DD") : "" });
+    setBooking({ 
+      ...booking, 
+      [name]: date ? date.format("DD/MM/YYYY") : "" 
+    });
   };
 
   const handleSelectChange = (name, value) => {
@@ -277,6 +287,16 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     if (booking.payBooking === null || booking.payBooking === undefined) {
       message.error("Vui lòng chọn trạng thái thanh toán!");
       return;
+    }
+
+    if (booking.expectedDate) {
+      const expectedDate = moment(booking.expectedDate, "DD/MM/YYYY");
+      const today = moment().startOf('day');
+  
+      if (expectedDate.isSameOrBefore(today)) {
+        message.error("Ngày đi dự kiến phải sau ngày hiện tại");
+        return;
+      }
     }
 
     try {
@@ -415,7 +435,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
                 <Option value={true}>Đã thanh toán</Option>
                 <Option value={false}>Chưa thanh toán</Option>
               </Select>
-              {isExpiredTour && (
+              {isExpiredTour && booking.payBooking === false && (
                 <span style={{ color: 'red', marginTop: '5px', display: 'block' }}>
                   Tour này đã quá hạn
                 </span>
@@ -471,10 +491,11 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               <DatePicker
                 value={
                   booking.expectedDate
-                    ? moment(booking.expectedDate, "DD-MM-YYYY")
+                    ? moment(booking.expectedDate, "DD/MM/YYYY")
                     : null
                 }
                 onChange={(date) => handleDateChange("expectedDate", date)}
+                // disabled={isExpiredTour}
               />
             </Form.Item>
 
@@ -507,7 +528,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
               >
                 <Option value="Hoạt động">Hoạt động</Option>
                 <Option value="Đang chờ hủy">Đang chờ hủy</Option>
-                <Option value="Đã hủy">Đã hủy</Option>
+                {/* <Option value="Đã hủy">Đã hủy</Option> */}
               </Select>
             </Form.Item>
           </Col>
