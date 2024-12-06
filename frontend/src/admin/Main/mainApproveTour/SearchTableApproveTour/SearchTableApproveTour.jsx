@@ -40,7 +40,7 @@ function ApproveTour({ changeComponent }) {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8080/tours', {
+            const response = await fetch('https://tourwebbe.onrender.com/tours', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function ApproveTour({ changeComponent }) {
                 limit: 100,  // Adjust as needed
             }).toString();
 
-            const response = await fetch(`http://localhost:8080/tours/searchTourAdminFalse?${queryParams}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours/searchTourAdminFalse?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,9 +5,11 @@ import { NotificationProvider } from "./context/NotificationContext"
 function App() {
   return (
     <NotificationProvider>
-      <Layout />
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
     </NotificationProvider>
-  )
+  );
 }
 
 export default App;

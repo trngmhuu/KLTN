@@ -50,7 +50,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch("http://localhost:8080/tours", {
+        const response = await fetch("https://tourwebbe.onrender.com/tours", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
       if (bookingCode) {
         try {
           const response = await fetch(
-            `http://localhost:8080/bookings/by-bookingcode/${bookingCode}`
+            `https://tourwebbe.onrender.com/bookings/by-bookingcode/${bookingCode}`
           );
           if (!response.ok)
             throw new Error("Không tìm thấy booking với mã này");
@@ -169,7 +169,7 @@ function UpdateCancelBooking({ changeComponent, bookingCode }) {
     if (tourCode) {
       try {
         const response = await fetch(
-          `http://localhost:8080/tours/by-tourcode/${tourCode}`,
+          `https://tourwebbe.onrender.com/tours/by-tourcode/${tourCode}`,
           {
             method: "GET",
             headers: {

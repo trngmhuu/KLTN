@@ -30,7 +30,7 @@ function SearchTableBooking({ changeComponent }) {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/bookings", {
+      const response = await fetch("https://tourwebbe.onrender.com/bookings", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function SearchTableBooking({ changeComponent }) {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/bookings/${bookingCode}`,
+        `https://tourwebbe.onrender.com/bookings/${bookingCode}`,
         {
           method: "DELETE",
           headers: {
@@ -146,7 +146,7 @@ function SearchTableBooking({ changeComponent }) {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8080/bookings/search?${queryParams}`,
+        `https://tourwebbe.onrender.com/bookings/search?${queryParams}`,
         {
           method: "GET",
           headers: {

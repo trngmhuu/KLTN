@@ -18,7 +18,7 @@ const ThankYou = () => {
     if (bookingData) {
       const fetchPaymentLink = async () => {
         try {
-          const response = await fetch("http://localhost:8080/payment/payment-link", {
+          const response = await fetch("https://tourwebbe.onrender.com/payment/payment-link", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

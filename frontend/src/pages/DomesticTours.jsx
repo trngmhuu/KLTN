@@ -17,7 +17,7 @@ const DomesticTours = () => {
     useEffect(() => {
         const fetchDomesticTours = async () => {
             try {
-                const response = await fetch("http://localhost:8080/tours/by-type/1");
+                const response = await fetch("https://tourwebbe.onrender.com/tours/by-type/1");
                 const data = await response.json();
                 setDomesticTours(data.result);
             } catch (error) {

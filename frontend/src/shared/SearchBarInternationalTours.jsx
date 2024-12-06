@@ -15,7 +15,7 @@ const SearchBarInternationalTours = () => {
     const handleSearch = async () => {
         try {
             const queryParams = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`http://localhost:8080/tours/searchTourTypeId2?${queryParams}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours/searchTourTypeId2?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

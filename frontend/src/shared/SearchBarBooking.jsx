@@ -15,7 +15,7 @@ const SearchBarBooking = ({ onBookingFound }) => {
     try {
       // Gửi GET request tới endpoint cụ thể
       const response = await fetch(
-        `http://localhost:8080/bookings/by-bookingcode/${bookingCode}`
+        `https://tourwebbe.onrender.com/bookings/by-bookingcode/${bookingCode}`
       );
       if (!response.ok) {
         throw new Error("Không tìm thấy thông tin booking.");

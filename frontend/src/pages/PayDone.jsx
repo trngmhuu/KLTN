@@ -16,7 +16,7 @@ const PayDone = () => {
     const sessionId = searchParams.get("session_id");
 
     if (sessionId) {
-      fetch(`http://localhost:8080/pay/done?session_id=${sessionId}`)
+      fetch(`https://tourwebbe.onrender.com/pay/done?session_id=${sessionId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Có lỗi xảy ra khi xử lý thanh toán");

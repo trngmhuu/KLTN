@@ -37,7 +37,7 @@ function LoginForm() {
 
         // Tiếp tục xử lý đăng nhập nếu các trường hợp đều hợp lệ
         try {
-            const response = await fetch('http://localhost:8080/auth/login', {
+            const response = await fetch('https://tourwebbe.onrender.com/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function LoginForm() {
 
             if (decodedPayload.scope === 'ADMIN' || decodedPayload.scope === 'EMPLOYEE') {
                 // Gọi API để lấy roles và username của người dùng
-                const myinfoResponse = await fetch('http://localhost:8080/users/myinfo', {
+                const myinfoResponse = await fetch('https://tourwebbe.onrender.com/users/myinfo', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` },
                 });

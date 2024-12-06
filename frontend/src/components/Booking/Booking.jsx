@@ -81,7 +81,7 @@ const Booking = ({ tour }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/coupons/by-codecoupon/${couponCode}`, {
+      const response = await fetch(`https://tourwebbe.onrender.com/coupons/by-codecoupon/${couponCode}`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ const Booking = ({ tour }) => {
       const expectedDeparture = formatDate(credentials.expectedDate); // Định dạng ngày đi dự kiến
 
       // Đầu tiên, gửi yêu cầu POST đến API /customers để lưu thông tin khách hàng
-      const customerResponse = await fetch("http://localhost:8080/customers", {
+      const customerResponse = await fetch("https://tourwebbe.onrender.com/customers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -203,7 +203,7 @@ const Booking = ({ tour }) => {
       });
 
       // Gửi yêu cầu POST đến API /bookings để lưu thông tin đặt tour
-      const responseBooking = await fetch("http://localhost:8080/bookings", {
+      const responseBooking = await fetch("https://tourwebbe.onrender.com/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +225,7 @@ const Booking = ({ tour }) => {
 
         // Nếu có coupon, gọi API để hủy kích hoạt coupon
         if (coupon && coupon.activeCoupon) {
-          await fetch(`http://localhost:8080/coupons/couponCancel/${coupon.codeCoupon}`, {
+          await fetch(`https://tourwebbe.onrender.com/coupons/couponCancel/${coupon.codeCoupon}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

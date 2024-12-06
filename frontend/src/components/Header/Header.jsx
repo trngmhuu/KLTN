@@ -36,7 +36,7 @@ const Header = () => {
   // Hàm lấy danh sách tour từ API
   const fetchTourTypes = async () => {
     try {
-      const response = await fetch("http://localhost:8080/typetours");
+      const response = await fetch("https://tourwebbe.onrender.com/typetours");
 
       if (!response.ok) {
         throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);

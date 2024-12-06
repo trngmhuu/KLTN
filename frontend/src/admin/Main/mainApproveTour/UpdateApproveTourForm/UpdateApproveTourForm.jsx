@@ -33,7 +33,7 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
     useEffect(() => {
         const fetchTourByCode = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/tours/by-tourcode/${tourCode}`, {
+                const response = await fetch(`https://tourwebbe.onrender.com/tours/by-tourcode/${tourCode}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
 
     const fetchTypeToursByTypeId = async (typeId) => {
         try {
-            const response = await fetch(`http://localhost:8080/typetours/by-type/${typeId}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/typetours/by-type/${typeId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ function UpdateApproveTourForm({ changeComponent, tourCode }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/tours/by-tourcode/${tour.tourCode}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours/by-tourcode/${tour.tourCode}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,

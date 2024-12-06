@@ -35,7 +35,7 @@ function SearchBookingStat() {
             console.log('startDate:', startDate);
             console.log('endDate:', endDate);
             // Thêm token vào header của request
-            const response = await fetch(`http://localhost:8080/bookings/filter?startDate=${startDate}&endDate=${endDate}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/bookings/filter?startDate=${startDate}&endDate=${endDate}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,  // Thêm token vào header

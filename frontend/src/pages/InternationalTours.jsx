@@ -16,7 +16,7 @@ const InternationalTours = () => {
     useEffect(() => {
         const fetchInternationalTours = async () => {
             try {
-                const response = await fetch("http://localhost:8080/tours/by-type/2");
+                const response = await fetch("https://tourwebbe.onrender.com/tours/by-type/2");
                 const data = await response.json();
                 setInternationalTours(data.result);
             } catch (error) {

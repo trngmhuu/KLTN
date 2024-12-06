@@ -48,7 +48,7 @@ function AddBookingForm({ changeComponent }) {
     const fetchCustomers = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8080/customers", {
+        const response = await fetch("https://tourwebbe.onrender.com/customers", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -109,7 +109,7 @@ function AddBookingForm({ changeComponent }) {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch("http://localhost:8080/tours", {
+        const response = await fetch("https://tourwebbe.onrender.com/tours", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -138,7 +138,7 @@ function AddBookingForm({ changeComponent }) {
     if (tourCode) {
       try {
         const response = await fetch(
-          `http://localhost:8080/tours/by-tourcode/${tourCode}`,
+          `https://tourwebbe.onrender.com/tours/by-tourcode/${tourCode}`,
           {
             method: "GET",
             headers: {
@@ -300,7 +300,7 @@ function AddBookingForm({ changeComponent }) {
     };
 
     // Lưu thông tin khách hàng trước
-    const customerResponse = await fetch("http://localhost:8080/customers", {
+    const customerResponse = await fetch("https://tourwebbe.onrender.com/customers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -309,7 +309,7 @@ function AddBookingForm({ changeComponent }) {
     });
 
     const token = localStorage.getItem("token");
-    const response = await fetch("http://localhost:8080/bookings/admin", {
+    const response = await fetch("https://tourwebbe.onrender.com/bookings/admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -331,7 +331,7 @@ function AddBookingForm({ changeComponent }) {
       try {
         // Gọi API để hủy mã giảm giá
         const couponCancelResponse = await fetch(
-          `http://localhost:8080/coupons/couponCancel/${couponCode}`,
+          `https://tourwebbe.onrender.com/coupons/couponCancel/${couponCode}`,
           {
             method: "PUT", // Sử dụng PUT để cập nhật trạng thái
             headers: {
@@ -368,7 +368,7 @@ function AddBookingForm({ changeComponent }) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/coupons/by-codecoupon/${couponCode}`,
+        `https://tourwebbe.onrender.com/coupons/by-codecoupon/${couponCode}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

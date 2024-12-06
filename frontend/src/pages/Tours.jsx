@@ -18,7 +18,7 @@ const Tours = () => {
   // Lấy dữ liệu các tour
   const fetchTour = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8080/tours/by-typetourname/${tourtypename.tourtypename}`, {
+      const response = await fetch(`https://tourwebbe.onrender.com/tours/by-typetourname/${tourtypename.tourtypename}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

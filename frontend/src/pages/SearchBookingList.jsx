@@ -43,7 +43,7 @@ const SearchBookingList = () => {
     if (data && data.tourCode) {
       try {
         const response = await fetch(
-          `http://localhost:8080/tours/by-tourcode/${data.tourCode}`
+          `https://tourwebbe.onrender.com/tours/by-tourcode/${data.tourCode}`
         );
         if (!response.ok) {
           throw new Error("Không tìm thấy thông tin tour.");
@@ -85,7 +85,7 @@ const SearchBookingList = () => {
     try {
       // Gửi PUT request để yêu cầu hủy tour
       const response = await fetch(
-        `http://localhost:8080/bookings/pendingcancel/${booking.bookingCode}`,
+        `https://tourwebbe.onrender.com/bookings/pendingcancel/${booking.bookingCode}`,
         {
           method: "PUT",
           headers: {
@@ -100,7 +100,7 @@ const SearchBookingList = () => {
 
       // Lấy lại thông tin booking sau khi đã yêu cầu hủy
       const bookingResponse = await fetch(
-        `http://localhost:8080/bookings/by-bookingcode/${booking.bookingCode}`
+        `https://tourwebbe.onrender.com/bookings/by-bookingcode/${booking.bookingCode}`
       );
       const bookingData = await bookingResponse.json();
 
@@ -114,7 +114,7 @@ const SearchBookingList = () => {
       // Cập nhật thông tin tour tương ứng
       if (bookingData.result && bookingData.result.tourCode) {
         const tourResponse = await fetch(
-          `http://localhost:8080/tours/by-tourcode/${bookingData.result.tourCode}`
+          `https://tourwebbe.onrender.com/tours/by-tourcode/${bookingData.result.tourCode}`
         );
         const tourData = await tourResponse.json();
 
@@ -147,7 +147,7 @@ const SearchBookingList = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/payment/payment-link`,
+        `https://tourwebbe.onrender.com/payment/payment-link`,
         {
           method: "POST",
           headers: {

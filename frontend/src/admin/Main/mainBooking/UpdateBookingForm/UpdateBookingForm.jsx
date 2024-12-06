@@ -87,7 +87,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
       if (bookingCode) {
         try {
           const response = await fetch(
-            `http://localhost:8080/bookings/by-bookingcode/${bookingCode}`
+            `https://tourwebbe.onrender.com/bookings/by-bookingcode/${bookingCode}`
           );
           if (!response.ok)
             throw new Error("Không tìm thấy booking với mã này");
@@ -186,7 +186,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     if (tourCode) {
       try {
         const response = await fetch(
-          `http://localhost:8080/tours/by-tourcode/${tourCode}`,
+          `https://tourwebbe.onrender.com/tours/by-tourcode/${tourCode}`,
           {
             method: "GET",
             headers: {
@@ -308,7 +308,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/bookings/bookingCode/${booking.bookingCode}`,
+        `https://tourwebbe.onrender.com/bookings/bookingCode/${booking.bookingCode}`,
         {
           method: "PUT",
           headers: {
