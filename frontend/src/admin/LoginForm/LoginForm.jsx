@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './loginForm.css';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,15 @@ function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    // Kiểm tra nếu đã có token trong localStorage
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Nếu có token, điều hướng đến trang admin home
+            navigate('/admin/home');
+        }
+    }, [navigate]);  // Hàm này sẽ chạy mỗi khi `navigate` thay đổi
 
     const validateEmail = (email) => {
         // Regex để kiểm tra email hợp lệ

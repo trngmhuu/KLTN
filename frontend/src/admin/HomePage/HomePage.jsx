@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../headerAdmin/Header'
-import './homePage.css'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../headerAdmin/Header';
+import './homePage.css';
 import { CircleLoader } from 'react-spinners';
 import SideBar from '../SideBar/SideBar';
 
@@ -17,22 +18,29 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import MainBooking from '../Main/mainBooking/MainBooking';
 import MainCustomer from '../Main/mainCustomer/MainCustomer';
 import MainCoupon from '../Main/mainCoupon/MainCoupon';
-import MainApproveTour from '../Main/mainApproveTour/MainApproveTour'
+import MainApproveTour from '../Main/mainApproveTour/MainApproveTour';
 import MainCancelBooking from '../Main/mainCancelBooking/MainCancelBooking';
 import MainBookingSta from '../Main/mainBookingSta/MainBookingSta';
 import MainCustomerSta from '../Main/mainCustomerSta/MainCustomerSta';
-
+import { message } from 'antd';
 
 function HomePage() {
     const [loading, setLoading] = useState(false);
     const [activeComponent, setActiveComponent] = useState('dashboard');
+    const navigate = useNavigate();  // Khai báo useNavigate
 
     useEffect(() => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000);
-    }, [])
+        // Kiểm tra nếu không có token trong localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/admin/login');
+        } else {
+            setLoading(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
+        }
+    }, [navigate]);
 
     // Ánh xạ các component với tên
     const componentsMap = {
@@ -46,15 +54,13 @@ function HomePage() {
         cancelBooking: <MainCancelBooking />,
         coupon: <MainCoupon />,
         bookingSta: <MainBookingSta />,
-        customerSta: <MainCustomerSta />
-        // new: <MainNew />
+        customerSta: <MainCustomerSta />,
     };
 
     // Hàm để thay đổi component đang hiển thị
     const changeComponent = (component) => {
         setActiveComponent(component);
     };
-
 
     return (
         <div className='homePage'>
@@ -79,6 +85,7 @@ function HomePage() {
                     </>
             }
         </div>
-    )
+    );
 }
-export default HomePage
+
+export default HomePage;
