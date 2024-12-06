@@ -21,7 +21,7 @@ function SearchTableTourType() {
     const fetchData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/typetours', {
+            const response = await fetch('https://tourwebbe.onrender.com/typetours', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ function SearchTableTourType() {
     const handleSearch = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/typetours/search?name=${searchParams.name}&limit=10`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/typetours/search?name=${searchParams.name}&limit=10`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ function SearchTableTourType() {
             const token = localStorage.getItem('token');
 
             // Kiểm tra danh sách tour liên quan đến phân loại
-            const response = await fetch(`http://localhost:8080/tours`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ function SearchTableTourType() {
             }
 
             // Thực hiện xóa phân loại tour
-            const deleteResponse = await fetch(`http://localhost:8080/typetours/${name}`, {
+            const deleteResponse = await fetch(`https://tourwebbe.onrender.com/typetours/${name}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ function SearchTableTourType() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/typetours', {
+            const response = await fetch('https://tourwebbe.onrender.com/typetours', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -189,7 +189,7 @@ function SearchTableTourType() {
             const token = localStorage.getItem('token');
 
             // Kiểm tra danh sách tour liên quan đến phân loại ban đầu
-            const response = await fetch(`http://localhost:8080/tours`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ function SearchTableTourType() {
             }
 
             // Thực hiện cập nhật thông tin phân loại tour
-            const updateResponse = await fetch(`http://localhost:8080/typetours/${selectedTour.idAsString}`, {
+            const updateResponse = await fetch(`https://tourwebbe.onrender.com/typetours/${selectedTour.idAsString}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

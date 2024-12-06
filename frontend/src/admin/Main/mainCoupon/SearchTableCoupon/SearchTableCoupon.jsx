@@ -21,7 +21,7 @@ function SearchTableCoupon() {
     const fetchData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/coupons', {
+            const response = await fetch('https://tourwebbe.onrender.com/coupons', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ function SearchTableCoupon() {
                 limit: '10',
             });
 
-            const response = await fetch(`http://localhost:8080/coupons/searchCoupon?${queryParams.toString()}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/coupons/searchCoupon?${queryParams.toString()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ function SearchTableCoupon() {
     const handleDelete = async (codeCoupon) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/coupons/${codeCoupon}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/coupons/${codeCoupon}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function SearchTableCoupon() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/coupons', {
+            const response = await fetch('https://tourwebbe.onrender.com/coupons', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ function SearchTableCoupon() {
     const handleUpdateCoupon = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/coupons/${selectedCoupon.codeCoupon}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/coupons/${selectedCoupon.codeCoupon}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

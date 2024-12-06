@@ -41,7 +41,7 @@ function SearchTableTour({ changeComponent }) {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8080/tours', {
+            const response = await fetch('https://tourwebbe.onrender.com/tours', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function SearchTableTour({ changeComponent }) {
             }).toString();
             console.log("Query Params:", queryParams);
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/tours/searchTourAdmin?${queryParams}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours/searchTourAdmin?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ function SearchTableTour({ changeComponent }) {
     const handleDelete = async (tourCode) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours/${tourCode}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

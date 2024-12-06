@@ -15,7 +15,7 @@ function SearchCustomerSta() {
     const fetchCustomerStatistics = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/bookings/customer-statistics', {
+            const response = await fetch('hhttps://tourwebbe.onrender.com/bookings/customer-statistics', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

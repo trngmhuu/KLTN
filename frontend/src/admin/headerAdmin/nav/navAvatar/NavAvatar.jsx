@@ -21,7 +21,7 @@ function NavAvatar() {
     const fetchUserInfo = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/users/myinfo', {
+            const response = await fetch('https://tourwebbe.onrender.com/users/myinfo', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -77,7 +77,7 @@ function NavAvatar() {
     // Update user info
     const handleUpdate = async (values) => {
         try {
-            const response = await fetch(`http://localhost:8080/users/id/${userInfo.idAsString}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/users/id/${userInfo.idAsString}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ function NavAvatar() {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/users/idpassword/${userInfo.idAsString}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/users/idpassword/${userInfo.idAsString}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

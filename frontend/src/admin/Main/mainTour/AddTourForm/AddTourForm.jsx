@@ -40,7 +40,7 @@ function AddTourForm({ changeComponent }) {
 
     const fetchTypeToursByTypeId = async (typeId) => {
         try {
-            const response = await fetch(`http://localhost:8080/typetours/by-type/${typeId}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/typetours/by-type/${typeId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ function AddTourForm({ changeComponent }) {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/tours', {
+            const response = await fetch('https://tourwebbe.onrender.com/tours', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,

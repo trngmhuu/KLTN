@@ -23,15 +23,15 @@ function Dashboard() {
                 };
 
                 // Gọi API lấy số lượng khách hàng
-                const customerRes = await fetch('http://localhost:8080/customers/count', { headers });
+                const customerRes = await fetch('https://tourwebbe.onrender.com/customers/count', { headers });
                 const customerData = await customerRes.json();
 
                 // Gọi API lấy số lượng tour
-                const tourRes = await fetch('http://localhost:8080/tours/count-active', { headers });
+                const tourRes = await fetch('https://tourwebbe.onrender.com/tours/count-active', { headers });
                 const tourData = await tourRes.json();
 
                 // Gọi API lấy số lượng đơn đặt tour
-                const bookingRes = await fetch('http://localhost:8080/bookings/count-completed', { headers });
+                const bookingRes = await fetch('https://tourwebbe.onrender.com/bookings/count-completed', { headers });
                 const bookingData = await bookingRes.json();
 
                 // Lấy năm hiện tại và năm trước
@@ -39,11 +39,11 @@ function Dashboard() {
                 const lastYear = currentYear - 1;
 
                 // Gọi API lấy tổng doanh thu năm nay
-                const revenueRes = await fetch(`http://localhost:8080/bookings/revenue?year=${currentYear}`, { headers });
+                const revenueRes = await fetch(`https://tourwebbe.onrender.com/bookings/revenue?year=${currentYear}`, { headers });
                 const revenueData = await revenueRes.json();
 
                 // Gọi API lấy tổng doanh thu năm ngoái
-                const lastYearRevenueRes = await fetch(`http://localhost:8080/bookings/revenue?year=${lastYear}`, { headers });
+                const lastYearRevenueRes = await fetch(`https://tourwebbe.onrender.com/bookings/revenue?year=${lastYear}`, { headers });
                 const lastYearRevenueData = await lastYearRevenueRes.json();
 
                 console.log('Dữ liệu thống kê:', customerData, tourData, bookingData, revenueData, lastYearRevenueData);

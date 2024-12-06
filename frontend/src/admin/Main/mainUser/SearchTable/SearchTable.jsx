@@ -31,7 +31,7 @@ function SearchTable() {
         try {
             const token = localStorage.getItem('token');
             const queryParams = new URLSearchParams(params).toString();
-            const response = await fetch(`http://localhost:8080/users/search?${queryParams}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/users/search?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function SearchTable() {
     const handleDelete = async (email) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/users/${email}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/users/${email}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ function SearchTable() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/users/adminCreate', {
+            const response = await fetch('https://tourwebbe.onrender.com/users/adminCreate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

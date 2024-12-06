@@ -31,7 +31,7 @@ function SearchTableCustomer() {
     const fetchData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/customers', {
+            const response = await fetch('https://tourwebbe.onrender.com/customers', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function SearchTableCustomer() {
     const handleDelete = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/customers/${id}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/customers/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ function SearchTableCustomer() {
     const checkEmailExists = async (email, currentCustomerId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/customers', {
+            const response = await fetch('https://tourwebbe.onrender.com/customers', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ function SearchTableCustomer() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:8080/customers/${selectedCustomer.idAsString}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/customers/${selectedCustomer.idAsString}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ function SearchTableCustomer() {
                 limit: 100, // Default limit
             }).toString();
 
-            const response = await fetch(`http://localhost:8080/customers/searchCustomer?${queryParams}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/customers/searchCustomer?${queryParams}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

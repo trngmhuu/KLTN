@@ -27,7 +27,7 @@ function TourDescriptionForm({ changeComponent, tourCode }) {
 
     const getTourDescriptions = async (tourCode) => {
         try {
-            const response = await fetch(`http://localhost:8080/tours-description/by-tourcode/${tourCode}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours-description/by-tourcode/${tourCode}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -66,7 +66,7 @@ function TourDescriptionForm({ changeComponent, tourCode }) {
         if (tourDescription.image) formData.append('image', tourDescription.image);
 
         try {
-            const response = await fetch('http://localhost:8080/tours-description', {
+            const response = await fetch('https://tourwebbe.onrender.com/tours-description', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
@@ -91,7 +91,7 @@ function TourDescriptionForm({ changeComponent, tourCode }) {
             content: 'Once deleted, this action cannot be undone.',
             onOk: async () => {
                 try {
-                    const response = await fetch(`http://localhost:8080/tours-description/${id}`, {
+                    const response = await fetch(`https://tourwebbe.onrender.com/tours-description/${id}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` },
                     });
@@ -121,7 +121,7 @@ function TourDescriptionForm({ changeComponent, tourCode }) {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/tours-description/${desc.idAsString}`, {
+            const response = await fetch(`https://tourwebbe.onrender.com/tours-description/${desc.idAsString}`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` },  // Không thêm 'Content-Type' khi dùng FormData
                 body: formData,
