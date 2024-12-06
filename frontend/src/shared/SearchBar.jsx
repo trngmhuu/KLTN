@@ -18,8 +18,8 @@ const SearchBar = () => {
         try {
             const queryParams = new URLSearchParams(searchParams).toString();
             const apiUrl = travelType === "Du lịch trong nước"
-                ? `http://localhost:8080/tours/searchTourTypeId1?${queryParams}`
-                : `http://localhost:8080/tours/searchTourTypeId2?${queryParams}`;
+                ? `https://tourwebbe.onrender.com/tours/searchTourTypeId1?${queryParams}`
+                : `https://tourwebbe.onrender.com/tours/searchTourTypeId2?${queryParams}`;
 
             const response = await fetch(apiUrl, {
                 method: 'GET',
