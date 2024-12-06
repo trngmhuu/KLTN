@@ -3,6 +3,13 @@
     "cleanUrls": true,
     "rewrites": [
       { "source": "**", "destination": "/index.html" }
-    ]
+    ],
+    "routes": {
+    "/admin/*": "/index.html",
+    "/home/*": "/index.html",
+    "/bookings/*": "/index.html",
+    "/tours/*": "/index.html",
+    "/searchTours/*": "/index.html"
+  }
   }
   
