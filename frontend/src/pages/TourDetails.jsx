@@ -21,7 +21,7 @@ const TourDetails = () => {
   };
   const fetchDescriptions = useCallback(async (tourCode) => {
     try {
-      const response = await fetch(`http://localhost:8080/tours-description/by-tourcode/${tourCode}`, {
+      const response = await fetch(`https://tourwebbe.onrender.com/tours-description/by-tourcode/${tourCode}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -37,7 +37,7 @@ const TourDetails = () => {
 
   const fetchTour = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8080/tours/by-tourcode/${id}`, {
+      const response = await fetch(`https://tourwebbe.onrender.com/tours/by-tourcode/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
