@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     const fetchAllTours = async () => {
       try {
-        const response = await fetch('http://localhost:8080/tours');
+        const response = await fetch('https://tourwebbe.onrender.com/tours');
         const data = await response.json();
         const saleTours = data.result.filter(tour => tour.saleTour === true);
         setToursOnSale(saleTours);
@@ -40,7 +40,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDomesticTours = async () => {
       try {
-        const response = await fetch('http://localhost:8080/tours/by-type/1');
+        const response = await fetch('https://tourwebbe.onrender.com/tours/by-type/1');
         const data = await response.json();
         setDomesticTours(data.result);
       } catch (error) {
@@ -55,7 +55,7 @@ const Home = () => {
   useEffect(() => {
     const fetchInternationalTours = async () => {
       try {
-        const response = await fetch('http://localhost:8080/tours/by-type/2');
+        const response = await fetch('https://tourwebbe.onrender.com/tours/by-type/2');
         const data = await response.json();
         setInternationalTours(data.result);
       } catch (error) {

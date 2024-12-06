@@ -65,7 +65,7 @@ function UpdateBookingForm({ changeComponent, bookingCode }) {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch("http://localhost:8080/tours", {
+        const response = await fetch("https://tourwebbe.onrender.com/tours", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
