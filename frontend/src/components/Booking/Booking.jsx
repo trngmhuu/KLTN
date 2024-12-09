@@ -309,6 +309,7 @@ const Booking = ({ tour }) => {
               onChange={handleChange}
               ref={emailRef}
             />
+            <span style={{ color: "red", marginTop: "5px" }}>(*)</span>
           </FormGroup>
 
           {/* Chọn tỉnh thành, quận huyện */}
