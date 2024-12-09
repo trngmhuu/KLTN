@@ -153,7 +153,7 @@ const Booking = ({ tour }) => {
     // Kiểm tra email
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!customerEmail || !emailRegex.test(customerEmail)) {
-      toast.error("Email không hợp lệ.");
+      toast.error("Email không được rỗng và phải đúng định dạng email");
       emailRef.current?.focus();
       return false;
     }
