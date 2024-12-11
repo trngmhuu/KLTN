@@ -32,7 +32,7 @@ function SearchBookingStat() {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:8080/bookings/filter?startDate=${startDate}&endDate=${endDate}`,
+        `https://tourwebbe.onrender.com/bookings/filter?startDate=${startDate}&endDate=${endDate}`,
         {
           method: "GET",
           headers: {
