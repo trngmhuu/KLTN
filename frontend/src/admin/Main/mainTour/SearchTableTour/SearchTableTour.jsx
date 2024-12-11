@@ -270,14 +270,22 @@ function SearchTableTour({ changeComponent }) {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (text, record) => (
-                <div className="action-buttons">
-                    <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
-                    <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
-                    <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
-                </div>
-            ),
-        }
+            render: (text, record) => {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                const isAdmin = userInfo?.roles?.includes("ADMIN"); // Kiểm tra quyền admin
+        
+                return (
+                    <div className="action-buttons">
+                        <Button type="link" onClick={() => handleTourDescription(record)}>Mô tả</Button>
+                        <Button type="link" onClick={() => handleEdit(record)}><EyeOutlined /></Button>
+                        {isAdmin && (
+                            <Button type="link" danger onClick={() => showDeleteConfirm(record)}><DeleteFilled /></Button>
+                        )}
+                    </div>
+                );
+            },
+        },
+        
     ];
 
     return (
