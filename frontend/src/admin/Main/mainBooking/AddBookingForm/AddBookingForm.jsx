@@ -48,13 +48,16 @@ function AddBookingForm({ changeComponent }) {
     const fetchCustomers = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("https://tourwebbe.onrender.com/customers", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://tourwebbe.onrender.com/customers",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) throw new Error("Lỗi khi lấy danh sách khách hàng");
         const data = await response.json();
         setCustomers(data.result);
@@ -300,23 +303,29 @@ function AddBookingForm({ changeComponent }) {
     };
 
     // Lưu thông tin khách hàng trước
-    const customerResponse = await fetch("https://tourwebbe.onrender.com/customers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customerData),
-    });
+    const customerResponse = await fetch(
+      "https://tourwebbe.onrender.com/customers",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(customerData),
+      }
+    );
 
     const token = localStorage.getItem("token");
-    const response = await fetch("https://tourwebbe.onrender.com/bookings/admin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(formattedBooking),
-    });
+    const response = await fetch(
+      "https://tourwebbe.onrender.com/bookings/admin",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formattedBooking),
+      }
+    );
 
     if (!response.ok) throw new Error("Lỗi khi thêm booking");
     const bookingData = await response.json();
@@ -561,12 +570,18 @@ function AddBookingForm({ changeComponent }) {
               <Select
                 name="tourCode"
                 value={booking.tourCode}
-                onChange={handleTourChange} // Cập nhật thông tin khi chọn tour
+                onChange={handleTourChange}
                 placeholder="Chọn mã tour"
+                showSearch
+                optionFilterProp="label"
                 ref={(el) => (inputRefs.current.tourCode = el)}
               >
                 {tours.map((tour) => (
-                  <Option key={tour.tourCode} value={tour.tourCode}>
+                  <Option
+                    key={tour.tourCode}
+                    value={tour.tourCode}
+                    label={`${tour.tourCode} - ${tour.name}`}
+                  >
                     {tour.tourCode} - {tour.name}
                   </Option>
                 ))}
