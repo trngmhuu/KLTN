@@ -42,7 +42,7 @@ const Tours = () => {
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   
-  const itemsPerPage = 2; // Hiển thị 8 item mỗi trang
+  const itemsPerPage = 8; // Hiển thị 8 item mỗi trang
 
 
   useEffect(() => {
