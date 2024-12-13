@@ -10,11 +10,7 @@ import SearchBar from "../shared/SearchBar"
 const Tours = () => {
   const tourtypename = useParams();
   const [tours, setTours] = useState([]);
-  const [page, setPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
   
-  const itemsPerPage = 8; // Hiển thị 8 item mỗi trang
-
   // Lấy dữ liệu các tour
   const fetchTour = useCallback(async () => {
     try {
@@ -42,6 +38,12 @@ const Tours = () => {
       fetchTour();
     }
   }, [tourtypename, fetchTour]);
+
+  const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  
+  const itemsPerPage = 2; // Hiển thị 8 item mỗi trang
+
 
   useEffect(() => {
     const pages = Math.ceil(tours.length / itemsPerPage); // Tính số trang
