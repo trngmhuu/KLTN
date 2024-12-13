@@ -301,7 +301,7 @@ const Booking = ({ tour }) => {
           </FormGroup>
 
           {/* Email */}
-          <FormGroup>
+          <FormGroup className="d-flex align-items-center gap-3">
             <input
               type="text"
               placeholder="Email"
