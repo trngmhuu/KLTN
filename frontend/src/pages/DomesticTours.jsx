@@ -38,14 +38,16 @@ const DomesticTours = () => {
     useEffect(() => {
         const currentTours = searchResults.length > 0 ? searchResults : domesticTours;
         setToursToDisplay(currentTours);
-
-        // Tính toán số trang
+    
+        // Cập nhật số trang
         const pages = Math.ceil(currentTours.length / itemsPerPage);
         setPageCount(pages);
-
-        // Reset về trang đầu
-        setPage(0);
     }, [searchResults, domesticTours]);
+    
+    useEffect(() => {
+        // Không reset trang khi chỉ đổi `page`
+        console.log("Page updated:", page);
+    }, [page]);
 
     // Lấy dữ liệu của trang hiện tại
     const paginatedTours = toursToDisplay.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
