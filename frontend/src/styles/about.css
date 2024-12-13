@@ -1,0 +1,38 @@
+.about {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+}
+
+.about__title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.about__subtitle {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.about__content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.about__branches li {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+
+.header-about {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-about img {
+    border-radius: 20px;
+    border: 2px solid var(--secondary-color);
+}
