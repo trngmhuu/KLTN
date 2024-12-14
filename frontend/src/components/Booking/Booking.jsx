@@ -401,7 +401,7 @@ const Booking = ({ tour }) => {
           {/* Nội dung của các hình thức thanh toán */}
           {paymentMethod === "Tiền mặt" && (
             <p style={{ textAlign: "justify" }}>
-              Quý khách vui lòng đến trực tiếp tại bất kỳ văn phòng HTravel trên toàn quốc để thực hiện việc thanh toán. <a href="">Xem chi tiết</a>
+              Quý khách vui lòng đến trực tiếp tại bất kỳ văn phòng HTravel trên toàn quốc để thực hiện việc thanh toán. <a href="/about">Xem chi tiết</a>
             </p>
           )}
           {paymentMethod === "Chuyển khoản" && (
