@@ -206,12 +206,12 @@ function NavAvatar() {
                         <Form.Item label="Địa chủ" name="address" rules={[{ required: true, message: 'Please enter your address!' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
+                        {/* <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
                             <Select>
                                 <Select.Option value="Nam">Nam</Select.Option>
                                 <Select.Option value="Nữ">Nữ</Select.Option>
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item label="Ngày sinh" name="dateOfBirth" rules={[{ required: true, message: 'Please select your date of birth!' }]}>
                             <DatePicker format="YYYY-MM-DD" />
                         </Form.Item>
@@ -266,7 +266,7 @@ function NavAvatar() {
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" loading={loading}>
-                            Change Password
+                            Đổi mật khẩu
                         </Button>
                     </Form.Item>
                 </Form>

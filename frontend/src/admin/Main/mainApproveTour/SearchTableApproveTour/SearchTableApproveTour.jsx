@@ -136,7 +136,7 @@ function ApproveTour({ changeComponent }) {
     // const handleDelete = async (tourCode) => {
     //     try {
     //         const token = localStorage.getItem('token');
-    //         const response = await fetch(`http://localhost:8080/tours/${tourCode}`, {
+    //         const response = await fetch(`https://tourwebbe.onrender.com/tours/${tourCode}`, {
     //             method: 'DELETE',
     //             headers: {
     //                 'Content-Type': 'application/json',

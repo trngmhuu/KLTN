@@ -72,19 +72,6 @@ function AddTourForm({ changeComponent }) {
     };
 
     const addTour = async () => {
-        const tourCodePattern = /^[A-Z]{2}-\d{3}$/;
-
-        if (!tour.tourCode.trim()) {
-            message.error('Mã tour không được để trống!');
-            focusInput('tourCode');
-            return;
-        }
-
-        if (!tourCodePattern.test(tour.tourCode)) {
-            message.error('Mã tour không hợp lệ! Vui lòng nhập theo định dạng: 2 chữ cái in hoa + dấu gạch + 3 chữ số (VD: CT-001)', 20);
-            focusInput('tourCode');
-            return;
-        }
 
         if (!tour.name.trim()) {
             message.error('Tên tour không được để trống!');
@@ -188,13 +175,17 @@ function AddTourForm({ changeComponent }) {
                 console.error('Response Error:', errorData);
                 throw new Error('Lỗi khi thêm tour');
             }
+            else {
+                const data = await response.json();
+                // Lấy tên người dùng từ localStorage
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                const username = userInfo?.username || 'Người dùng';
 
-            // Lấy tên người dùng từ localStorage
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            const username = userInfo?.username || 'Người dùng';
+                // Thêm thông báo
+                addNotification(`${username} vừa tạo tour mới với mã ${data.result.tourCode}`);
+            }
 
-            // Thêm thông báo
-            addNotification(`${username} vừa tạo tour mới với mã ${tour.tourCode}`);
+            
 
             message.success('Tour mới đã được thêm!');
             changeComponent('list');
@@ -207,14 +198,6 @@ function AddTourForm({ changeComponent }) {
         <div className="add-tour-form-container">
             <div className="form-left">
                 <Form layout="vertical">
-                    <Form.Item label="Mã Tour">
-                        <Input
-                            name="tourCode"
-                            value={tour.tourCode}
-                            onChange={handleInputChange}
-                            ref={(el) => (inputRefs.current.tourCode = el)}
-                        />
-                    </Form.Item>
                     <Form.Item label="Tên Tour">
                         <Input
                             name="name"

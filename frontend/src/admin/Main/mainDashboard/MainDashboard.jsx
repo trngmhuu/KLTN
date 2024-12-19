@@ -9,10 +9,6 @@ function MainDashboard() {
         <main id="main" className="main">
             <PageTitle page="Tổng quan" />
             <Dashboard />
-            <div style={{ width: '100%', height: 400 }}>
-                <h3>Chúc ngày tốt đẹp HIHI</h3>
-
-            </div>
         </main>
     )
 }

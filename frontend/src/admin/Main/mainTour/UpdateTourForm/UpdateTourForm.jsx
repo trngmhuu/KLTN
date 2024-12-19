@@ -108,19 +108,6 @@ function UpdateTourForm({ changeComponent, tourCode }) {
     };
 
     const updateTour = async () => {
-        const tourCodePattern = /^[A-Z]{2}-\d{3}$/;
-
-        if (!tour.tourCode?.trim()) {
-            message.error('Mã tour không được để trống!');
-            focusInput('tourCode');
-            return;
-        }
-
-        if (!tourCodePattern.test(tour.tourCode)) {
-            message.error('Mã tour không hợp lệ! Vui lòng nhập theo định dạng: 2 chữ cái in hoa + dấu gạch + 3 chữ số (VD: CT-001)', 20);
-            focusInput('tourCode');
-            return;
-        }
 
         if (!tour.name?.trim()) {
             message.error('Tên tour không được để trống!');
@@ -251,6 +238,7 @@ function UpdateTourForm({ changeComponent, tourCode }) {
                             value={tour.tourCode}
                             onChange={handleInputChange}
                             ref={(el) => (inputRefs.current.tourCode = el)}
+                            disabled
                         />
                     </Form.Item>
                     <Form.Item label="Tên Tour">

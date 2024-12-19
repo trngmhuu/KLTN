@@ -7,17 +7,16 @@ const { confirm } = Modal;
 const { Option } = Select;
 
 function SearchTableCoupon() {
-    const [searchParams, setSearchParams] = useState({ codeCoupon: '', discount: '' });
+    const [searchParams, setSearchParams] = useState({ codeCoupon: '', discount: '', description: '' });
 
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [newCoupon, setNewCoupon] = useState({ codeCoupon: '', discount: '', description: '', activeCoupon: true });
+    const [newCouponCount, setNewCouponCount] = useState(1); // Số lượng mã giảm giá
 
-    // State để lưu coupon đang được xem chi tiết
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
 
-    // Fetch dữ liệu từ API
     const fetchData = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -40,11 +39,22 @@ function SearchTableCoupon() {
     const fetchSearchData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const queryParams = new URLSearchParams({
-                codeCoupon: searchParams.codeCoupon,
-                discount: searchParams.discount,
-                limit: '10',
-            });
+            const queryParams = new URLSearchParams();
+
+            if ((searchParams.codeCoupon || '').trim() !== '') {
+                queryParams.append('codeCoupon', searchParams.codeCoupon);
+            }
+            
+            if ((searchParams.description || '').trim() !== '') {
+                queryParams.append('description', searchParams.description);
+            }
+            
+            if ((searchParams.discount || '').trim() !== '') {
+                queryParams.append('discount', searchParams.discount);
+            }
+            
+
+            queryParams.append('limit', '10');
 
             const response = await fetch(`https://tourwebbe.onrender.com/coupons/searchCoupon?${queryParams.toString()}`, {
                 method: 'GET',
@@ -62,32 +72,31 @@ function SearchTableCoupon() {
         }
     };
 
+
     useEffect(() => {
-        fetchData(); // Lấy dữ liệu khi component mount
+        fetchData();
     }, []);
 
-    // Handle thay đổi input tìm kiếm
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setSearchParams({ ...searchParams, [name]: value });
+        setSearchParams({ ...searchParams, [name]: value || '' });
     };
+    
 
     const handleReset = () => setSearchParams({ codeCoupon: '' });
-    const handleReload = () => fetchData(); // Reload lại dữ liệu
-    const handleAdd = () => setIsModalVisible(true); // Mở modal thêm mới coupon
+    const handleReload = () => fetchData();
+    const handleAdd = () => setIsModalVisible(true);
 
-    // Handle chỉnh sửa coupon
     const handleEdit = (record) => {
         setSelectedCoupon(record);
-        setIsDetailModalVisible(true); // Mở modal chỉnh sửa coupon
+        setIsDetailModalVisible(true);
     };
 
     const handleDetailModalClose = () => {
         setIsDetailModalVisible(false);
-        setSelectedCoupon(null); // Đóng modal chi tiết
+        setSelectedCoupon(null);
     };
 
-    // Handle xóa coupon
     const handleDelete = async (codeCoupon) => {
         try {
             const token = localStorage.getItem('token');
@@ -101,7 +110,7 @@ function SearchTableCoupon() {
 
             if (response.ok) {
                 message.success('Đã xóa thành công!');
-                fetchData(); // Tải lại dữ liệu
+                fetchData();
             } else throw new Error('Failed to delete coupon');
         } catch (error) {
             console.error('Error deleting coupon:', error);
@@ -110,7 +119,6 @@ function SearchTableCoupon() {
     };
 
     const showDeleteConfirm = (record) => {
-
         if (record.activeCoupon) {
             message.error('Phải chuyển mã giảm giá này về trạng thái không hoạt động mới có thể xóa.');
             return;
@@ -128,43 +136,54 @@ function SearchTableCoupon() {
         });
     };
 
-    // Handle thay đổi thông tin coupon khi thêm mới
     const handleNewCouponChange = (name, value) => {
         setNewCoupon({ ...newCoupon, [name]: value });
     };
 
-    // Save coupon mới
+    // Save coupon mới với số lượng
     const handleSaveNewCoupon = async () => {
-
         if (!newCoupon.discount || isNaN(newCoupon.discount) || Number(newCoupon.discount) <= 0) {
             message.error('Chiết khấu phải là số lớn hơn 0!');
+            return;
+        }
+        if (isNaN(newCouponCount) || newCouponCount <= 0) {
+            message.error('Số lượng phải là số nguyên lớn hơn 0!');
             return;
         }
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('https://tourwebbe.onrender.com/coupons', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(newCoupon),
-            });
+            const requests = Array.from({ length: newCouponCount }, () =>
+                fetch('https://tourwebbe.onrender.com/coupons', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(newCoupon),
+                })
+            );
 
-            if (response.ok) {
-                message.success('Mã giảm giá đã được thêm thành công!');
+            // Thực hiện tất cả các request
+            const responses = await Promise.all(requests);
+
+            // Kiểm tra tất cả các phản hồi
+            const allSuccess = responses.every((response) => response.ok);
+            if (allSuccess) {
+                message.success(`Đã thêm ${newCouponCount} mã giảm giá thành công`);
                 setIsModalVisible(false);
-                fetchData(); // Reload dữ liệu sau khi thêm
-                setNewCoupon({ codeCoupon: '', discount: '', description: '', activeCoupon: true }); // Reset form
-            } else throw new Error('Failed to add coupon');
+                fetchData();
+                setNewCoupon({ codeCoupon: '', discount: '', description: '', activeCoupon: true });
+                setNewCouponCount(1); // Reset số lượng
+            } else {
+                message.error('Có lỗi xảy ra khi thêm mã giảm giá!');
+            }
         } catch (error) {
             console.error('Error adding coupon:', error);
             message.error('Kiểm tra dữ liệu thêm mới đã bị trùng!');
         }
     };
 
-    // Cập nhật coupon đã chọn
     const handleUpdateCoupon = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -184,8 +203,8 @@ function SearchTableCoupon() {
 
             if (response.ok) {
                 message.success('Mã giảm giá đã được cập nhật thành công!');
-                fetchData(); // Tải lại dữ liệu sau khi cập nhật
-                handleDetailModalClose(); // Đóng modal
+                fetchData();
+                handleDetailModalClose();
             } else throw new Error('Failed to update coupon');
         } catch (error) {
             console.error('Error updating coupon:', error);
@@ -193,7 +212,6 @@ function SearchTableCoupon() {
         }
     };
 
-    // Cấu hình cột của bảng
     const columns = [
         { title: 'Mã giảm giá', dataIndex: 'codeCoupon', key: 'codeCoupon' },
         { title: 'Chiết khấu', dataIndex: 'discount', key: 'discount' },
@@ -221,7 +239,7 @@ function SearchTableCoupon() {
                     </Button>
                 </div>
             ),
-        },        
+        },
     ];
 
     return (
@@ -243,6 +261,14 @@ function SearchTableCoupon() {
                                 name="discount"
                                 placeholder="Chiết khấu"
                                 value={searchParams.discount}
+                                onChange={handleInputChange}
+                            />
+                        </Form.Item>
+                        <Form.Item>
+                            <Input
+                                name="description"
+                                placeholder="Mô tả"
+                                value={searchParams.description}
                                 onChange={handleInputChange}
                             />
                         </Form.Item>
@@ -272,7 +298,7 @@ function SearchTableCoupon() {
             <div className='table-container'>
                 <Table
                     columns={columns}
-                    dataSource={data} // Kiểm tra data là mảng
+                    dataSource={data}
                     rowKey="id"
                     pagination={{ pageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20'] }}
                 />
@@ -296,6 +322,13 @@ function SearchTableCoupon() {
                         <Input
                             value={newCoupon.description}
                             onChange={(e) => handleNewCouponChange('description', e.target.value)}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Số lượng">
+                        <Input
+                            type="number"
+                            value={newCouponCount}
+                            onChange={(e) => setNewCouponCount(Number(e.target.value))}
                         />
                     </Form.Item>
                     <Form.Item label="Trạng thái">

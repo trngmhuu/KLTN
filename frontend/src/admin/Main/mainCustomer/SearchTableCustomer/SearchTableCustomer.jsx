@@ -133,39 +133,6 @@ function SearchTableCustomer() {
     setNewCustomer({ ...newCustomer, [name]: value });
   };
 
-  // const handleSaveNewCustomer = async () => {
-  //     try {
-  //         const token = localStorage.getItem('token');
-  //         const response = await fetch('http://localhost:8080/customers', {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //                 'Authorization': `Bearer ${token}`,
-  //             },
-  //             body: JSON.stringify(newCustomer),
-  //         });
-
-  //         if (response.ok) {
-  //             message.success('Khách hàng đã được thêm thành công!');
-  //             setIsModalVisible(false);
-  //             fetchData();
-  //             setNewCustomer({
-  //                 customerName: '',
-  //                 customerEmail: '',
-  //                 customerPhoneNumber: '',
-  //                 customerType: '',
-  //                 customerCity: '',
-  //                 customerDistrict: '',
-  //                 customerAddress: '',
-  //                 customerDateOfBirth: null,  // Reset Date of Birth
-  //             });
-  //         } else throw new Error('Failed to add customer');
-  //     } catch (error) {
-  //         console.error('Error adding customer:', error);
-  //         message.error('Kiểm tra dữ liệu thêm mới!');
-  //     }
-  // };
-
   const [citiesData] = useState(cites); // Dữ liệu các thành phố từ cites.json
   const [districtData] = useState(districts); // Dữ liệu quận/huyện từ districtData.json
   const [selectedCity, setSelectedCity] = useState(""); // Thành phố được chọn
